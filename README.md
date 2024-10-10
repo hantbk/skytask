@@ -21,25 +21,19 @@
 1. Clone the repository:
    ```
    git clone https://github.com/hantbk/taskflow.git
-   ```
-
-2. Install dependencies:
-   ```
    cd taskflow
+   ```
+
+2. Start frontend:
+   ```
    cd frontend
-   yarn
+   yarn && yarn dev
    ```
 
-3. Start the development server:
-   ```
-   yarn dev
-   ```
-
-4. Start the backend server:
+3. Start backend:
    ```
    cd backend
-   yarn
-   yarn dev
+   yarn && yarn dev
    ```
 
 
