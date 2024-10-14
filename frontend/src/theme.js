@@ -1,5 +1,4 @@
-import { createTheme } from '@mui/material/styles'
-import { experimental_extendTheme as extendTheme} from '@mui/material/styles'
+import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 import { teal, deepOrange, orange, cyan } from '@mui/material/colors'
 
 // Create a theme instance.
