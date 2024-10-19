@@ -7,8 +7,6 @@
 - **Collaboration**: Invite team members to collaborate on tasks.
 - **Kanban Board**: Visualize tasks in a kanban board format.
 - **Task Details**: View and edit task details.
-- **Task Completion**: Mark tasks as completed.
-- **Task Deletion**: Delete tasks.
 
 ### Technologies Used
 
@@ -35,5 +33,14 @@
    cd backend
    yarn && yarn dev
    ```
+### ERD
 
+![](./docs/erd.png)
 
+### Schema
+
+![](./docs/schema.png)
+
+### Backend Flow
+
+![](./docs/be-flow.png)
