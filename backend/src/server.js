@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 import express from 'express'
+import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
+import { APIs_V1 } from './routes/v1'
 import { CONNECT_DB, GET_DB } from '~/config/mongodb'
 
 const START_SERVER = () => {
@@ -8,11 +10,17 @@ const START_SERVER = () => {
   const hostname = 'localhost'
   const port = 8888
 
+  app.use(express.json())
+  
   app.get('/', async (req, res) => {
     console.log(await GET_DB().listCollections().toArray())
 
     res.end('<h1>Hello World!</h1>')
   })
+  
+  app.use('/v1', APIs_V1)
+
+  app.use(errorHandlingMiddleware)
 
   app.listen(port, hostname, () => {
     console.log(`Hello World, I am running at http://${ hostname }:${ port }`)
