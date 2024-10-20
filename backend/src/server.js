@@ -1,15 +1,28 @@
+/* eslint-disable no-console */
 import express from 'express'
+import { CONNECT_DB, GET_DB } from '~/config/mongodb'
 
-const app = express()
+const START_SERVER = () => {
+  const app = express()
 
-const hostname = 'localhost'
-const port = 8888
+  const hostname = 'localhost'
+  const port = 8888
 
-app.get('/', (req, res) => {
-  res.end('<h1>Hello World!</h1>')
-})
+  app.get('/', async (req, res) => {
+    console.log(await GET_DB().listCollections().toArray())
 
-app.listen(port, hostname, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Hello World, I am running at http://${ hostname }:${ port }`)
-})
+    res.end('<h1>Hello World!</h1>')
+  })
+
+  app.listen(port, hostname, () => {
+    console.log(`Hello World, I am running at http://${ hostname }:${ port }`)
+  })
+}
+
+CONNECT_DB()
+  .then(() => console.log('Connected to MongoDB Cloud Atlas!'))
+  .then(() => START_SERVER())
+  .catch(err => {
+    console.error(err)
+    process.exit(0)
+  })

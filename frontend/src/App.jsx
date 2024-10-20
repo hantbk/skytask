@@ -20,7 +20,7 @@ function ModeSelect() {
   const { mode, setMode } = useColorScheme()
   const handleChange = (event) => {
     const selectedMode = event.target.value
-    console.log(selectedMode)
+    // console.log(selectedMode)
     setMode(selectedMode)
   }
 
