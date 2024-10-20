@@ -1,6 +1,6 @@
 import { MongoClient, ServerApiVersion } from 'mongodb'
 
-const MONGODB_URI = 'mongodb+srv://admin:lJm4RLswTQXaybrV@cluster0.efv8t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+const MONGODB_URI = ''
 const DATABASE_NAME = 'taskflow'
 
 // Init a object taskflowDatabaseInstance first is null to store the connection to MongoDB
