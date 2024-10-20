@@ -1,29 +1,33 @@
 /* eslint-disable no-console */
 import express from 'express'
+import exitHook from 'async-exit-hook'
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 import { APIs_V1 } from './routes/v1'
-import { CONNECT_DB, GET_DB } from '~/config/mongodb'
+import { CONNECT_DB, CLOSE_DB } from '~/config/mongodb'
+import { env } from '~/config/environment'
 
 const START_SERVER = () => {
   const app = express()
 
-  const hostname = 'localhost'
-  const port = 8888
-
   app.use(express.json())
-  
-  app.get('/', async (req, res) => {
-    console.log(await GET_DB().listCollections().toArray())
 
+  app.get('/', async (req, res) => {
     res.end('<h1>Hello World!</h1>')
   })
-  
+
   app.use('/v1', APIs_V1)
 
   app.use(errorHandlingMiddleware)
 
-  app.listen(port, hostname, () => {
-    console.log(`Hello World, I am running at http://${ hostname }:${ port }`)
+  app.listen(env.APP_PORT, env.APP_HOST, () => {
+    console.log(`Hello World, I am running at http://${ env.APP_HOST }:${ env.APP_PORT }`)
+  })
+
+  // Doing a cleanup action just before Node.js exits
+  // https://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits
+  exitHook(() => {
+    console.log('Server is shutting down...')
+    CLOSE_DB()
   })
 }
 

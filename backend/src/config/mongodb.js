@@ -1,13 +1,11 @@
 import { MongoClient, ServerApiVersion } from 'mongodb'
-
-const MONGODB_URI = ''
-const DATABASE_NAME = 'taskflow'
+import { env } from '~/config/environment'
 
 // Init a object taskflowDatabaseInstance first is null to store the connection to MongoDB
 let taskflowDatabaseInstance = null
 
 // Init a instance of MongoClient to connect to MongoDB
-const mongoClientInstance = new MongoClient(MONGODB_URI, {
+const mongoClientInstance = new MongoClient(env.MONGODB_URI, {
   /*
     Instantiate a MongoClient that sets the Stable API version and connects to a server by performing the following operations:
     - Specify a server URI to connect to.
@@ -28,7 +26,7 @@ export const CONNECT_DB = async () => {
     await mongoClientInstance.connect()
 
     // Connect successfully to MongoDB Atlas and get Database by name and store it in taskflowDatabaseInstance
-    taskflowDatabaseInstance = mongoClientInstance.db(DATABASE_NAME)
+    taskflowDatabaseInstance = mongoClientInstance.db(env.DATABASE_NAME)
 }
 
 // This GET_DB (non-async) function is responsible for exporting the taskflowDatabaseInstance after successfully
@@ -39,4 +37,9 @@ export const GET_DB = () => {
         throw new Error('You must connect to the database first')
     }
     return taskflowDatabaseInstance
+}
+
+// Close the connection to MongoDB Atlas
+export const CLOSE_DB = async () => {
+    await mongoClientInstance.close()
 }
