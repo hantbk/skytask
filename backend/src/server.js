@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import express from 'express'
 import exitHook from 'async-exit-hook'
-import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
+import { errorHandlingMiddleware } from '~/middlewares/errorHandlingMiddleware'
 import { APIs_V1 } from './routes/v1'
 import { CONNECT_DB, CLOSE_DB } from '~/config/mongodb'
 import { env } from '~/config/environment'
@@ -15,6 +15,7 @@ const START_SERVER = () => {
   // Use APIs V1
   app.use('/v1', APIs_V1)
 
+  // Centralized error handling
   app.use(errorHandlingMiddleware)
 
   app.listen(env.APP_PORT, env.APP_HOST, () => {
