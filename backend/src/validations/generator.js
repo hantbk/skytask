@@ -17,6 +17,7 @@ export function validationGenerator(correctCondition, target = 'body') {
       }
 
       const dataToValidate = req[target]
+      // abortEarly: false if has many validation errors will return all errors
       await correctCondition.validateAsync(dataToValidate, { abortEarly: false })
       next()
     } catch (error) {

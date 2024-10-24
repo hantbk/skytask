@@ -8,7 +8,7 @@ const createNewCondition = Joi.object({
     'any.required': 'Title is required',
     'string.empty': 'Title is not allowed to be empty',
     'string.min': 'Title length must be at least 3 characters long',
-    'string.max': 'Title length must be less than or equal to 5 characters long',
+    'string.max': 'Title length must be less than or equal to 50 characters long',
     'string.trim': 'Title must not have leading or trailing whitespace'
   }),
   description: Joi.string().required().min(3).max(255).trim().strict(),

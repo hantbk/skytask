@@ -8,4 +8,4 @@ Router.route('/test-validation')
     res.json({ data: req.body, message: 'Validation passed!' })
   })
 
-export const boardRoutes = Router
+export const boardRoute = Router
