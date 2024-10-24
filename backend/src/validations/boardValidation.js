@@ -1,7 +1,6 @@
 import Joi from 'joi'
 import { BOARD_TYPES } from '~/utils/constants'
 import ApiError from '~/utils/ApiError'
-import { validationGenerator } from './generator'
 import { StatusCodes } from 'http-status-codes'
 
 const createNew = async (req, res, next) => {
