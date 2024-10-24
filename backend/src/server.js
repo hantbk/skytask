@@ -9,12 +9,10 @@ import { env } from '~/config/environment'
 const START_SERVER = () => {
   const app = express()
 
+  // Enable req.body json data
   app.use(express.json())
 
-  app.get('/', async (req, res) => {
-    res.end('<h1>Hello World!</h1>')
-  })
-
+  // Use APIs V1
   app.use('/v1', APIs_V1)
 
   app.use(errorHandlingMiddleware)
