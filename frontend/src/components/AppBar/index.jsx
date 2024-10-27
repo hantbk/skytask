@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Box from '@mui/material/Box'
 import ModeSelect from '~/components/ModeSelect'
 import AppsIcon from '@mui/icons-material/Apps'
-import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
+// import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
 import SvgIcon from '@mui/material/SvgIcon'
 import Typography from '@mui/material/Typography'
 import Workspaces from './Menus/Workspaces'
@@ -19,6 +19,7 @@ import Profiles from './Menus/Profiles'
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 
 function AppBar() {
   const [searchValue, setSearchValue] = useState('')
@@ -38,7 +39,7 @@ function AppBar() {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <AppsIcon sx={{ color: 'white' }}/>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <SvgIcon component={TrelloIcon} fontSize="small" inheritViewBox sx={{ color: 'white' }}/>
+          {/* <SvgIcon component={TrelloIcon} fontSize="small" inheritViewBox sx={{ color: 'white' }}/> */}
           <Typography variant='span' sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}
           >Trello</Typography>
         </Box>
