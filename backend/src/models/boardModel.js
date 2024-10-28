@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import { GET_DB } from '~/config/mongodb'
+import { ObjectId } from 'mongodb'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 
 // Define Collection (Name & Schema)
@@ -18,11 +19,48 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
+const validateBeforeCreate = async (data) => {
+  return await BOARD_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
+}
+
 const createNew = async (data) => {
+  try {
+    const validData = await validateBeforeCreate(data)
+    const createdBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).insertOne(validData)
+    return createdBoard
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const findOneById = async (id) => {
+  try {
+    const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({
+      _id: new ObjectId(String(id))
+    })
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+// Query tổng hợp (aggregate) để lấy thông tin toàn bộ Columns và Cards thuộc về Board
+const getDetails = async (id) => {
+  try {
+    // Hôm nay tạm thời dùng giống hệt hàm findOneById - sẽ update phần aggregate tiếp ở những video tới
+    const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({
+      _id: new ObjectId(String(id))
+    })
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
-  createNew
+  createNew,
+  findOneById,
+  getDetails
 }
