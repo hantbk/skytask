@@ -1,0 +1,417 @@
+[33mcommit 32a2aadcc57bf6ddf1cc57fb7af7f45593b14653[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 1924054 bb81a77
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sat Oct 26 15:55:55 2024 +0700
+
+    Merge pull request #20 from gianghanguyen/feat/service-model
+    
+    Feat/service model
+
+[33mcommit bb81a7766723695eb623560a40e0653d8d3bc118[m
+Author: gianghanguyen <giangnguyen20032010@gmail.com>
+Date:   Sat Oct 26 15:21:27 2024 +0700
+
+    feat: add model definition
+
+[33mcommit 1924054f4c49b3e4412834986119f8b88b9effde[m
+Merge: 65ac172 e1675d3
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Fri Oct 25 23:43:55 2024 +0700
+
+    Merge pull request #19 from khuongduy308/khuongduy
+    
+    code tralloBar va chinh sua giao dien
+
+[33mcommit e1675d3711f6223dd537e5b01ee46cae7f9ebf21[m
+Author: khuongduy308 <144948375+khuongduy308@users.noreply.github.com>
+Date:   Fri Oct 25 23:40:10 2024 +0700
+
+    code tralloBar va chinh sua giao dien
+
+[33mcommit 1fdf5dc5a1e771be57315169ebb7d3ba063ffc94[m
+Author: gianghanguyen <giangnguyen20032010@gmail.com>
+Date:   Thu Oct 24 23:57:20 2024 +0700
+
+    feat: implement service logic
+
+[33mcommit 65ac1725e282be48e48bb009badddd03e97e30bb[m
+Merge: 613dd53 ad3ac7d
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 21:42:02 2024 +0700
+
+    Merge pull request #18 from hantbk/feat/mode_dev_prod
+    
+    feat: cross env dev & prod for all platform
+
+[33mcommit ad3ac7d42948dd531817e47baa625bae0d351554[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 21:39:45 2024 +0700
+
+    feat: cross env dev & prod for all platform
+
+[33mcommit 613dd5301ee811b9c0c0bef8a5d6bcd7d87b0cb9[m
+Merge: f720ef9 ed99b75
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 21:23:01 2024 +0700
+
+    Merge pull request #17 from hantbk/feat/error_handling
+    
+    Feat: Centralized error handling with custom API Error
+
+[33mcommit ed99b75d783e4be1b5d8927cb7d0410acd22c153[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 21:20:29 2024 +0700
+
+    Refactor boardController.js: Remove unused import
+
+[33mcommit cfdaf76395b2b19a02f96c2424d40a8accd46d9d[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 21:09:04 2024 +0700
+
+    Refactor board routes and configuration, and add createNew endpoint
+
+[33mcommit f720ef980e5d2c1b80d62be4f5cdda46dc55101d[m
+Merge: 0fe2a4f c3669c7
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 14:51:02 2024 +0700
+
+    Merge pull request #16 from hantbk/hantbk
+    
+    Feature: create boardController, change routes of validation
+
+[33mcommit 0fe2a4f2da6423b1136912c945b09e4967ad7e6f[m
+Merge: 7920d53 512d3c9
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 14:49:25 2024 +0700
+
+    Merge pull request #15 from giangnv1601/app_bar_p3
+    
+    update app bar p3
+
+[33mcommit 7920d535a7a80e5241e30dbc3fdc2cf357d336c1[m
+Merge: 8361c76 6f1de44
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 14:49:11 2024 +0700
+
+    Merge pull request #14 from giangnv1601/app_bar_p2
+    
+    update app bar p2
+
+[33mcommit c3669c7a77e9ec75af49215986f576e837152f4e[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 14:47:16 2024 +0700
+
+    Refactor board routes and configuration, and add createNew endpoint
+    
+    - Refactored the board routes and configuration files to improve code organization and readability.
+    - Added a new endpoint, createNew, to handle the creation of a new board.
+    - The createNew endpoint returns a success message upon successful creation and handles internal server errors.
+
+[33mcommit e72292447db3bf70a3944e010e9d619c4d2d3eee[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 14:24:18 2024 +0700
+
+    Refactor board routes and configuration
+
+[33mcommit 512d3c9360cef272d2259c65db19a660452e2b40[m[33m ([m[1;31morigin/app_bar_p3[m[33m, [m[1;32mapp_bar_p3[m[33m)[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Thu Oct 24 13:06:05 2024 +0700
+
+    update app bar p3
+
+[33mcommit 6f1de44465493d3fe41a12ffefb5aa788e2a8c99[m[33m ([m[1;31morigin/app_bar_p2[m[33m, [m[1;32mapp_bar_p2[m[33m)[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Thu Oct 24 12:24:03 2024 +0700
+
+    update app bar p2
+
+[33mcommit 6c6ba2dab7dcd01ca48d6226383adf332b9f73cc[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 09:17:22 2024 +0700
+
+    Refactor board routes and configuration
+
+[33mcommit 8361c76ac1c161ab47a4f83e1a058d73cb7ed477[m
+Merge: 4c93849 0c4b684
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 08:05:14 2024 +0700
+
+    Merge pull request #13 from giangnv1601/app_bar_p1
+    
+    app bar p1
+
+[33mcommit 0c4b684d3ea46283e03bca386abbc051986b6471[m
+Merge: d972365 4c93849
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 08:05:06 2024 +0700
+
+    Merge branch 'main' into app_bar_p1
+
+[33mcommit 4c938497bdeb795816c0c85c29f10d17336783c5[m
+Merge: ae6a63f 08cc92f
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 08:04:17 2024 +0700
+
+    Merge pull request #12 from giangnv1601/fix_refactor_project_structure
+    
+    fix refactor project structure
+
+[33mcommit ae6a63f7e5749de69781efbb9a0726db9da648c3[m
+Merge: d9b7df3 c08b5da
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 24 08:04:03 2024 +0700
+
+    Merge pull request #11 from giangnv1601/fix_basic_layout
+    
+    fix basix layout
+
+[33mcommit d9723658779a2e20e18f403e2bfae33092641eb7[m[33m ([m[1;31morigin/app_bar_p1[m[33m)[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Thu Oct 24 00:10:00 2024 +0700
+
+    app bar p1
+
+[33mcommit a578bbe418a98e38f427ef3b312214bf32615f7a[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Wed Oct 23 21:35:56 2024 +0700
+
+    fix refactor project structure
+
+[33mcommit 08cc92f595e40e6339de4a2e1a99d142c22b88b5[m[33m ([m[1;31morigin/fix_refactor_project_structure[m[33m)[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Wed Oct 23 21:12:57 2024 +0700
+
+    fix refactor project structure
+
+[33mcommit c08b5dac0d00bc748706d86334cb6fc29f997a34[m[33m ([m[1;31morigin/fix_basic_layout[m[33m)[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Wed Oct 23 18:24:27 2024 +0700
+
+    fix basix layout
+
+[33mcommit d9b7df374bfdfa83378796abb8291996e4fe7937[m
+Merge: 140e0f9 5f8b9d3
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sun Oct 20 20:34:30 2024 +0700
+
+    Merge pull request #10 from hantbk/hantbk
+    
+    Refactor environment configuration and MongoDB connection
+
+[33mcommit 5f8b9d3786858f782e23fbe1ea01dc0e1ee1bc22[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sun Oct 20 20:34:02 2024 +0700
+
+    Refactor environment configuration and MongoDB connection
+    
+    - Update environment variables in the environment configuration file
+    - Refactor MongoDB connection configuration to use environment variables
+    
+    Closes: #issue-number
+
+[33mcommit 140e0f9a1c981bbc38d60e599b8375377bb899f4[m
+Merge: 0569243 e822b8a
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sun Oct 20 12:37:58 2024 +0700
+
+    Merge pull request #9 from gianghanguyen/feat/validation
+    
+    feat: add error handler, validation middleware
+
+[33mcommit e822b8ad837947cee848b9ec45f923aeb487582d[m
+Merge: 6a739ef 0569243
+Author: Giang Nguyen <128506599+gianghanguyen@users.noreply.github.com>
+Date:   Sun Oct 20 12:24:36 2024 +0700
+
+    Merge branch 'main' into feat/validation
+
+[33mcommit 0569243fed64264bbb82e7506a8b67ec87a67d6c[m
+Merge: b378d02 5d60d12
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sun Oct 20 12:15:44 2024 +0700
+
+    Merge pull request #8 from hantbk/fix/connect-db
+    
+    Refactor MongoDB connection configuration
+
+[33mcommit 5d60d12215574fd9f4876eba5585fc8bb620de3a[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sun Oct 20 12:15:04 2024 +0700
+
+    Refactor MongoDB connection configuration
+
+[33mcommit 6a739ef10cc07eb1dbc6669d09e5310955932cdc[m
+Author: gianghanguyen <giangnguyen20032010@gmail.com>
+Date:   Sun Oct 20 11:59:29 2024 +0700
+
+    feat: add error handler, validation middleware
+
+[33mcommit b378d02fa2bd8b0388838036552194cb0f315080[m
+Merge: 438a867 2c49134
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sun Oct 20 11:36:22 2024 +0700
+
+    Merge pull request #7 from hantbk/hantbk
+    
+    Make connection to mongodb
+
+[33mcommit 2c49134c8abb90aa53f85d582680b62dbe302fe5[m
+Merge: bb0e53e 438a867
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sun Oct 20 11:36:08 2024 +0700
+
+    Merge branch 'main' into hantbk
+
+[33mcommit bb0e53e8d3fde93730a2477ba0810842b3ce42e0[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sun Oct 20 11:31:55 2024 +0700
+
+    Refactor backend configuration and dependencies, make mongodb connection
+
+[33mcommit 62bfd481013f668183ef260226f2f5e8dc0d7ea6[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sat Oct 19 21:25:35 2024 +0700
+
+    chore: be-flow fix flow
+
+[33mcommit 438a8677d581c1c7e1e998a0a04074ae6de2ab8e[m
+Merge: bfd9158 9a9e590
+Author: Ha Nguyen <90432271+hantbk@users.noreply.github.com>
+Date:   Sat Oct 19 21:08:58 2024 +0700
+
+    Merge pull request #6 from hantbk/hantbk
+    
+    Update Schema, ERD, Backend Flow docs
+
+[33mcommit 9a9e5904f6a0fc0ce553e0ba2d611ea1f8949f19[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sat Oct 19 21:07:44 2024 +0700
+
+    Refactor README.md and add ERD, Schema, and Backend Flow diagrams
+
+[33mcommit cd194d57bd57940f19452bc4791649f22649f7f1[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Sat Oct 19 13:52:53 2024 +0700
+
+    Refactor server.js and remove unused import
+    
+    - Removed the unused import of `mapOrder` from '~/utils/sorts.js' in server.js
+    - Cleaned up the code by removing the commented out test code and unnecessary console.log statement
+    - Updated the console.log statement in the server.listen callback to include the full URL
+
+[33mcommit bfd91588167a75b5f28b13f8d8b6d5d90692929c[m
+Merge: 3c57aff 25568d3
+Author: Ha Nguyen <90432271+hantbk@users.noreply.github.com>
+Date:   Fri Oct 18 06:52:07 2024 +0700
+
+    Merge pull request #5 from khuongduy308/khuongduy
+    
+    chinh sua cau truc file
+
+[33mcommit 25568d32eddb89a5318ff1cb20f4b58b18d5e165[m
+Author: khuongduy308 <144948375+khuongduy308@users.noreply.github.com>
+Date:   Fri Oct 18 02:51:53 2024 +0700
+
+    chinh sua cau truc file
+
+[33mcommit 3c57affe6925554786bff45a23f50648db1d8c70[m
+Merge: c7eaad7 15b4bb6
+Author: Ha Nguyen <90432271+hantbk@users.noreply.github.com>
+Date:   Tue Oct 15 12:18:23 2024 +0700
+
+    Merge pull request #4 from giangnv1601/dark_light_p2
+    
+    dark light p2
+
+[33mcommit 15b4bb64a83f10e7f6bcf5f27683b9c225c1afc5[m[33m ([m[1;31morigin/dark_light_p2[m[33m)[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Mon Oct 14 22:36:08 2024 +0700
+
+    dark light p2
+
+[33mcommit 2f8267d1c9f1226f5dd6ab2cb24faab3a1dce4d3[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Mon Oct 14 22:11:18 2024 +0700
+
+    dark light p2
+
+[33mcommit 5145f0ebb0ed81d126bbc962107807affa082073[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Mon Oct 14 20:25:57 2024 +0700
+
+    dark_light_ts
+
+[33mcommit c7eaad73752de149ad591479f6e66ee57ef4fc61[m
+Merge: 57292f1 ab01aa9
+Author: Ha Nguyen <90432271+hantbk@users.noreply.github.com>
+Date:   Mon Oct 14 09:00:53 2024 +0700
+
+    Merge pull request #3 from giangnv1601/dark_light_p1
+    
+    dark light p1
+
+[33mcommit 57292f1922f74662fbde9fcb55329fa64d5030f9[m
+Merge: ab1a8db d0beab8
+Author: Ha Nguyen <90432271+hantbk@users.noreply.github.com>
+Date:   Mon Oct 14 09:00:37 2024 +0700
+
+    Merge pull request #2 from giangnv1601/config_mui_theme
+    
+    config mui theme
+
+[33mcommit ab01aa929174782f120731255a92897906eb7081[m[33m ([m[1;31morigin/dark_light_p1[m[33m)[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Mon Oct 14 07:58:30 2024 +0700
+
+    dark light p1
+
+[33mcommit d0beab806f3eeded2175dd1d68ace1463d0e30fe[m[33m ([m[1;31morigin/config_mui_theme[m[33m)[m
+Author: Nguyen Van Giang <giang16012405@gmail.com>
+Date:   Sun Oct 13 20:43:39 2024 +0700
+
+    config mui theme
+
+[33mcommit ab1a8dbbe83cf6b7d96614f8d8a5ae068125663b[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Fri Oct 11 18:01:39 2024 +0700
+
+    install css baseline
+
+[33mcommit c6d59fdbb3dfd0b3ed2c56da67e8a498e71da206[m
+Merge: ee1bca3 c13f0c5
+Author: Ha Nguyen <90432271+hantbk@users.noreply.github.com>
+Date:   Fri Oct 11 17:35:32 2024 +0700
+
+    Merge pull request #1 from hantbk/install-mui
+    
+    install mui and setup eslint for mui
+
+[33mcommit c13f0c582cd2a1c59cbb5bfae5fd1d5c2a46963f[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Fri Oct 11 17:33:02 2024 +0700
+
+    install mui and setup eslint for mui
+
+[33mcommit ee1bca309e510b7f240bccfd17c345672c43e9f0[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 10 16:15:16 2024 +0700
+
+    updates Eslint Rules
+
+[33mcommit 08b67990b18680200966fabde4e252e62c2b0920[m
+Author: Ha Nguyen <captainnemot1k60@gmail.com>
+Date:   Thu Oct 10 14:53:57 2024 +0700
+
+    init taskflow structure for frontend and backend
+
+[33mcommit 56cca0c3e6b80a7006734907bc61060249d7caea[m
+Author: Ha Nguyen <90432271+hantbk@users.noreply.github.com>
+Date:   Fri Oct 4 23:01:27 2024 +0700
+
+    Update README.md
+
+[33mcommit 9fe995840a5fb12cbe10c39362de25f152c83efb[m
+Author: Ha Nguyen <90432271+hantbk@users.noreply.github.com>
+Date:   Fri Oct 4 22:18:24 2024 +0700
+
+    Initial commit
