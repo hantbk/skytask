@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/constants'
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 
 // Define Collection (Name & Schema)
 const COLUMN_COLLECTION_NAME = 'columns'
