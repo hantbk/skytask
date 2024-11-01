@@ -21,7 +21,7 @@ const getDetails = async (req, res, next) => {
         const board = await boardService.getDetails(boardId)
 
         // Return data to client
-        res.status(StatusCodes.CREATED).json(board)
+        res.status(StatusCodes.OK).json(board)
     } catch (error) {
         next(error)
     }
