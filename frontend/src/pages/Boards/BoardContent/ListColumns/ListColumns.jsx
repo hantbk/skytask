@@ -19,7 +19,6 @@ function ListColumns({ columns }) {
       }}>
         {/* Box Column Test 01*/}
         {columns?.map(column => <Column key={column._id} column={column} />)}
-        
 
         {/* Box Add new column CTA */}
         <Box sx={{
