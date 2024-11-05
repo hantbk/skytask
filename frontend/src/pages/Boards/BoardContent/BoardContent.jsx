@@ -11,11 +11,14 @@ import {
   useSensors,
   DragOverlay,
   defaultDropAnimationSideEffects,
-  closestCorners
+  closestCorners,
+  pointerWithin,
+  getFirstCollision
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
-import { useEffect, useState } from 'react'
-import { cloneDeep } from 'lodash'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import { cloneDeep, isEmpty } from 'lodash'
+import { generatePlaceholderCard } from '~/utils/formatters'
 
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
@@ -42,6 +45,9 @@ function BoardContent({ board }) {
   const [activeDragItemType, setActiveDragItemType] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] = useState(null)
+
+  // Điểm va chạm cuối cùng trước đó (xử lý thuật toán phát hiện va chạm, video 37)
+  const lastOverId = useRef(null)
 
   useEffect(() => {
     setOrderedColumns( mapOrder(board?.columns, board?.columnOrderIds, '_id'))
@@ -85,6 +91,12 @@ function BoardContent({ board }) {
       if (nextActiveColumn) {
         // Xóa card ở cái column active (cũng có thẻ hiểu là column cũ, cái lúc mà kéo card ra khỏi nó để sang column khác)
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
+
+        // Thêm Placeholder Card nếu Column rỗng: Bị kéo hết Card đi, không còn cái nào nữa.
+        if (isEmpty(nextActiveColumn.cards)) {
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+        }
+
         // Cập nhập lại mảng OrderIds cho chuẩn dữ liệu
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
       }
@@ -99,10 +111,15 @@ function BoardContent({ board }) {
           columnId: nextOverColumn._id
         }
         nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebuild_activeDraggingCardData)
+
+        //xóa Placeholder Card đi nếu nó đang tồn tại
+        nextOverColumn.cards = nextOverColumn.cards.filter(card => !card.FE_PlaceholderCard)
+
         // Cập nhập lại mảng OrderIds cho chuẩn dữ liệu
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
 
+      console.log('NextColumn: ', nextColumns)
       return nextColumns
     })
   }
@@ -258,10 +275,48 @@ function BoardContent({ board }) {
     sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: '0.5' } } })
   }
 
+  const collisionDetectionStrategy = useCallback((args) => {
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+      return closestCorners({ ...args })
+    }
+
+    // Tìm các điểm giao nhau, va chạm - intersections với con trỏ
+    const pointerIntersections = pointerWithin(args)
+    // console.log('pointerIntersections: ', pointerIntersections)
+
+    if (!pointerIntersections?.length) return
+
+    // Tìm overId đầu tiên trong đám pointerIntersections ở trên
+    let overId = getFirstCollision(pointerIntersections, 'id')
+    // console.log('overId: ', overId)
+    if (overId) {
+      // Trường hợp kéo column thì dùng thuật toán closestCorners là chuẩn nhất
+      const checkColumn = orderedColumns.find(column => column._id === overId)
+      if (checkColumn) {
+        // console.log('overId before: ', overId)
+        overId = closestCorners({
+          ...args,
+          droppableContainers: args.droppableContainers.filter(container => {
+            return (container.id !== overId) && (checkColumn?.cardOrderIds?.includes(container.id))
+          })
+        })[0]?.id
+        // console.log('overId after: ', overId)
+      }
+
+      lastOverId.current = overId
+      return [{ id: overId }]
+    }
+
+    // Nếu overId là null thì trả về mảng rỗng - tránh bug crash trang
+    return lastOverId.current ? [{ id: lastOverId.current }] : []
+  }, [activeDragItemType])
+
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      // collisionDetection={closestCorners}
+
+      collisionDetection={collisionDetectionStrategy}
       //Thuật toán phát hiện va chạm
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
