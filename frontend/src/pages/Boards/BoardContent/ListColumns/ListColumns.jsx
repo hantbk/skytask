@@ -7,23 +7,22 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
+import TextField from '@mui/material/TextField'
+import CloseIcon from '@mui/icons-material/Close'
 
 
 function ListColumns({ columns }) {
-  const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
+  const [openNewColumnForm, setOpenNewColumnForm] =  useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
-  
+
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
   const addNewColumn = () => {
     if (!newColumnTitle) {
-      toast.error('Please enter Column Title')
+      toast.error('Please enter Column Title!')
       return
     }
-    // console.log(newColumnTitle)
-    //goi Api o day
 
-    //dong trang thai them column moi & clear input
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
   }
@@ -39,12 +38,11 @@ function ListColumns({ columns }) {
         overflowY: 'hidden',
         '&::-webkit-scrollbar-track': { m: 2 }
       }}>
-        {/* Box Column Test 01*/}
         {columns?.map(column => <Column key={column._id} column={column} />)}
 
         {/* Box Add new column CTA */}
         {!openNewColumnForm
-          ?<Box onClick={toggleOpenNewColumnForm} sx={{
+          ? <Box onClick={toggleOpenNewColumnForm} sx={{
             minWidth: '250px',
             maxWidth: '250px',
             mx: 2,
@@ -68,8 +66,8 @@ function ListColumns({ columns }) {
           : <Box sx={{
             minWidth: '250px',
             maxWidth: '250px',
-            mx:  2,
-            p:  1,
+            mx: 2,
+            p: 1,
             borderRadius: '6px',
             height: 'fit-content',
             bgcolor: '#ffffff3d',
@@ -81,11 +79,10 @@ function ListColumns({ columns }) {
               label="Enter column title..."
               type="text"
               size="small"
-              variant='outlined'
+              variant="outlined"
               autoFocus
               value={newColumnTitle}
               onChange={(e) => setNewColumnTitle(e.target.value)}
-              
               sx={{
                 '& label': { color: 'white' },
                 '& input': { color: 'white' },
@@ -96,30 +93,33 @@ function ListColumns({ columns }) {
                   '&.Mui-focused fieldset': { borderColor: 'white' }
                 }
               }}/>
-              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}> 
                 <Button
                   onClick={addNewColumn}
-                  variant='contained' color='success' size='small'
+                  variant='contained'
+                  color='success'
+                  size='small'
                   sx={{
                     boxShadow: 'none',
                     border: '0.5px solid',
                     borderColor: (theme) => theme.palette.success.main,
-                    '&:hover': { bgcolor: (theme) => theme.palette.success.main}
+                    '&:hover': { pgcolor: (theme)  => theme.palette.success.main }
                   }}
-                >Add Column</Button>
+                >
+                  Add Column
+                </Button>
                 <CloseIcon
                   fontSize='small'
                   sx={{ 
-                    color: 'white',
-                    cursor: 'pointer',
+                    color: 'white', 
+                    cursor: 'pointer', 
                     '&:hover': { color: (theme) => theme.palette.warning.light }
-                   }}
+                  }}
                   onClick = {toggleOpenNewColumnForm}
                 />
               </Box>
-          </Box>
+            </Box>
         }
-        
       </Box>
     </SortableContext>
   )

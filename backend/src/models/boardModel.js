@@ -24,6 +24,9 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
+// Chỉ định ra những fields không cho phép cập nhật trong hàm update
+const INVALID_UPDATE_FIELDS = ['_id', 'createdAt']
+
 const validateBeforeCreate = async (data) => {
   return await BOARD_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
 }
@@ -76,10 +79,55 @@ const getDetails = async (id) => {
         }
       }
     ]).toArray()
-    return result[0] || {}
+    return result[0] || null
   } catch (error) {
     throw new Error(error)
   }
+}
+
+// Push ColumnId vào mảng columnOrderIds của Board
+const pushColumnOrderIds = async (column) => {
+  try {
+    const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(String(column.boardId)) },
+      { $push: { columnOrderIds: new ObjectId(String(column._id)) } },
+      { returnDocument: 'after' }
+    )
+    return result
+  } catch (error) { throw new Error(error) }
+}
+
+// Lấy ColumnId ra khỏi mảng columnOrderIds của Board
+const pullColumnOrderIds = async (column) => {
+  try {
+    const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(String(column.boardId)) },
+      { $pull: { columnOrderIds: new ObjectId(String(column._id)) } },
+      { returnDocument: 'after' }
+    )
+    return result
+  } catch (error) { throw new Error(error) }
+}
+
+const update = async (boardId, updateData) => {
+  try {
+    Object.keys(updateData).forEach(key => {
+      if (INVALID_UPDATE_FIELDS.includes(key)) {
+        delete updateData[key]
+      }
+    })
+
+    if (updateData.columnOrderIds) {
+      updateData.columnOrderIds = updateData.columnOrderIds.map(_id => new ObjectId(String(_id)))
+    }
+
+    const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(String(boardId)) },
+      { $set: updateData },
+      { returnDocument: 'after' }
+    )
+    return result
+  } catch (error) { throw new Error(error) }
 }
 
 export const boardModel = {
@@ -87,5 +135,8 @@ export const boardModel = {
   BOARD_COLLECTION_SCHEMA,
   createNew,
   findOneById,
-  getDetails
+  getDetails,
+  pushColumnOrderIds,
+  update,
+  pullColumnOrderIds
 }
