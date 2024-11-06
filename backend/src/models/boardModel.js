@@ -140,4 +140,3 @@ export const boardModel = {
   update,
   pullColumnOrderIds
 }
-
