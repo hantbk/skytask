@@ -4,9 +4,6 @@ import { mapOrder } from '~/utils/sorts'
 
 import {
   DndContext,
-  PointerSensor,
-  MouseSensor,
-  TouchSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -15,6 +12,7 @@ import {
   pointerWithin,
   getFirstCollision
 } from '@dnd-kit/core'
+import { MouseSensor, TouchSensor } from '~/customLibraries/DndKitSensors'
 import { arrayMove } from '@dnd-kit/sortable'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { cloneDeep, isEmpty } from 'lodash'
@@ -30,8 +28,6 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 
 function BoardContent({ board }) {
 
-  const pointerSensor = useSensor(PointerSensor, {activationConstraint: { distance: 10 } })
-
   const mouseSensor = useSensor(MouseSensor, {activationConstraint: { distance: 10 } })
 
   const touchSensor = useSensor(TouchSensor, {activationConstraint: { delay: 250, tolerance: 500 } })
@@ -46,7 +42,7 @@ function BoardContent({ board }) {
   const [activeDragItemData, setActiveDragItemData] = useState(null)
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] = useState(null)
 
-  // Điểm va chạm cuối cùng trước đó (xử lý thuật toán phát hiện va chạm, video 37)
+  // Điểm va chạm cuối cùng trước đó (xử lý thuật toán phát hiện va chạm)
   const lastOverId = useRef(null)
 
   useEffect(() => {
