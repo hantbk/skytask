@@ -21,7 +21,8 @@ function Board() {
   }, [])
 
   return (
-    <Container maxWidth={false} sx={{ height: '100vh' }}>
+    // https://stackoverflow.com/questions/64577132/how-to-get-rid-of-padding-in-material-ui-container-component
+    <Container disableGutters maxWidth={false} sx={{height: '100vh'}}>
       <AppBar />
       <BoardBar board={board} />
       <BoardContent board={board} />
