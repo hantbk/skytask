@@ -25,6 +25,7 @@ const validateBeforeCreate = async (data) => {
 const createNew = async (data) => {
   try {
     const validData = await validateBeforeCreate(data)
+    // Transform data before insert to database to ObjectId
     const newCardToAdd = {
       ...validData,
       boardId: new ObjectId(String(validData.boardId)),
