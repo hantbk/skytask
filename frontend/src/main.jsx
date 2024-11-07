@@ -8,6 +8,10 @@ import theme from './theme'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+// Cấu hình Redux Store
+import { Provider } from 'react-redux'
+import { store } from '~/redux/store.js'
+
 // ToastContainer wrapper component
 // eslint-disable-next-line react-refresh/only-export-components
 function ThemedToastContainer() {
@@ -23,9 +27,11 @@ function ThemedToastContainer() {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <CssVarsProvider theme={theme}>
-    <CssBaseline />
-    <App />
-    <ThemedToastContainer />
-  </CssVarsProvider>
+  <Provider store={store}>
+    <CssVarsProvider theme={theme}>
+      <CssBaseline />
+      <App />
+      <ThemedToastContainer />
+    </CssVarsProvider>
+  </Provider>
 )
