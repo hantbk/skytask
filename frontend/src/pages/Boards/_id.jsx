@@ -9,7 +9,8 @@ import {
   createNewCardAPI,
   createNewColumnAPI,
   updateBoardDetailsAPI,
-  updateColumnDetailsAPI
+  updateColumnDetailsAPI,
+  moveCardToDifferentColumnAPI
 } from '~/apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty } from 'lodash'
@@ -34,6 +35,8 @@ function Board() {
         // Cần xử lí để kéo thả vào một column rỗng
         board.columns.forEach(column => {
           if (isEmpty(column.cards)) {
+          // If  column has no cards, create a placeholder card for it
+          // This is to make sure that the column always has at least one card
             column.cards = [generatePlaceholderCard(column)]
             column.cardOrderIds = [generatePlaceholderCard(column)._id]
           } else {
@@ -51,12 +54,17 @@ function Board() {
       boardId: board._id
     })
 
-    // cập nhật lại state board
-    // Phía frontend cần tự cập nhật lại state board sau khi tạo mới Column thay vì gọi api fetchBoardDetailsAPI
+    // If column has no cards, create a placeholder card for it when F5 page
+    createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+
+    // Update state after creating new column
+    // Make right state data board instead of calling fetchBoardDetailsAPI again
     const newBoard = { ...board }
     newBoard.columns.push(createdColumn)
     newBoard.columnOrderIds.push(createdColumn._id)
     setBoard(newBoard)
+
   }
 
   // Call API to create new card and update state
@@ -66,6 +74,8 @@ function Board() {
       boardId: board._id
     })
 
+    // Update state after creating new card
+    // Make right state data board instead of calling fetchBoardDetailsAPI again
     const newBoard = { ...board }
     const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
     if (columnToUpdate) {
@@ -78,6 +88,8 @@ function Board() {
   // Function này có nhiện vụ gọi API và xử lí kh kéo thả Column xong xuôi
   // Chỉ cần gọi API update columnOrderIds của Board
   const moveColumns = (dndOrderedColumns) => {
+    // Update state after moving columns
+    // Make right state data board instead of calling fetchBoardDetailsAPI again
     const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
 
     const newBoard = { ...board }
@@ -105,12 +117,38 @@ function Board() {
     updateColumnDetailsAPI(columnId, { cardOrderIds: dndOrderedCardIds })
   }
 
+  const moveCardToDifferentColumn = (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
+
+    const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
+
+    const newBoard = { ...board }
+    newBoard.columns = dndOrderedColumns
+    newBoard.columnOrderIds = dndOrderedColumnsIds
+    setBoard(newBoard)
+
+    // Gọi API xử lí phía BE
+    let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+
+    // Fix bug when move the last card in column to another column
+    if (prevCardOrderIds[0].includes('placeholder-card')) { prevCardOrderIds = [] }
+
+    moveCardToDifferentColumnAPI({
+      currentCardId,
+      prevColumnId,
+      prevCardOrderIds,
+      nextColumnId,
+      nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds
+    })
+  }
+
   if (!board) {
     return <Box sx={{
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 2
+      gap: 2,
+      width: '100vw',
+      height: '100vh'
     }}>
       <CircularProgress />
     </Box>
@@ -127,6 +165,7 @@ function Board() {
         createNewCard={createNewCard}
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
+        moveCardToDifferentColumn={moveCardToDifferentColumn}
       />
     </Container>
   )

@@ -9,16 +9,17 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 // ToastContainer wrapper component
+// eslint-disable-next-line react-refresh/only-export-components
 function ThemedToastContainer() {
-  const theme = useTheme();
+  const theme = useTheme()
 
   return (
     <ToastContainer
       position="top-right"
       autoClose={3000}
-      theme = {theme.palette.mode === 'dark' ? 'dark' : 'light'}
+      theme = {theme.palette.mode === 'dark' ? 'dark' : 'colored'}
     />
-  );
+  )
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -27,4 +28,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
     <ThemedToastContainer />
   </CssVarsProvider>
-);
+)

@@ -26,8 +26,14 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardInTheSameColumn, moveCardToDifferentColumn }) {
-
+function BoardContent({
+  board,
+  createNewColumn,
+  createNewCard,
+  moveColumns,
+  moveCardInTheSameColumn,
+  moveCardToDifferentColumn
+}) {
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
 
   const touchSensor = useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 500 } })
@@ -171,6 +177,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
     // Xử lý logic ở đây chỉ khi kéo card qua 2 column khác nhau, còn nếu kéo card trong chính column ban đầu
     //của nó thì không làm gì
     // Vì đây đang là đoạn xử lý lúc kéo (handleDragOver), còn xử lý lúc kéo xong xuôi thì nó lại là vẫn đề
+    // Vì đây đang là đoạn xử lý lúc kéo (handleDragOver), còn xử lý lúc kéo xong xuôi thì nó lại là vẫn đề
     //khác ở (handleDragEnd)
     if (activeColumn._id !== overColumn._id) {
       moveCardBetweenDifferentColumns(
@@ -255,7 +262,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
       }
     }
 
-    // Xử lý kéo thả Columns trong một cái boardContent
+    //Xưr lý kéo thả column
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
       // Nếu vị trí sau khi kéo thả khác với vị trí ban đầu
       if (active.id !== over.id) {
@@ -264,8 +271,6 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
         // Lấy vị trí mới (từ thằng over)
         const newColumnIndex = orderedColumns.findIndex(c => c._id === over.id)
 
-        // Dùng arrayMove của thằng dnd-kit để sắp xếp lại mảng Columns ban đầu
-        // Code của arrayMove ở đây: dnd-kit/packages/sortable/src/utilities/arrayMove.ts
         const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
 
 
@@ -327,7 +332,6 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
   return (
     <DndContext
       sensors={sensors}
-      // collisionDetection={closestCorners}
 
       collisionDetection={collisionDetectionStrategy}
       //Thuật toán phát hiện va chạm

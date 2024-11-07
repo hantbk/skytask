@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import DashboardIcon from '@mui/icons-material/Dashboard'
-import VpnLockIcon from '@mui/icons-material/VpnLock'
+import PublicIcon from '@mui/icons-material/Public'
+import LockIcon from '@mui/icons-material/Lock'
 import AddToDriveIcon from '@mui/icons-material/AddToDrive'
 import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
@@ -51,8 +52,8 @@ function BoardBar({ board }) {
 
         <Chip
           sx={MENU_STYLES}
-          icon={<VpnLockIcon/>}
-          label={capitalizeFirstLetter(board?.type)}
+          icon={board?.type === 'private' ? <LockIcon /> : <PublicIcon />}
+          label={capitalizeFirstLetter(board?.type )}
           clickable
 
         />
