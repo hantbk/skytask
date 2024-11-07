@@ -3,10 +3,10 @@ import { toast } from 'react-toastify'
 import Box from '@mui/material/Box'
 import Column from './Column/Column'
 import { Button } from '@mui/material'
-import NoteAddIcon from '@mui/icons-material/NoteAdd'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
+import AddIcon from '@mui/icons-material/Add';
 
 function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] =  useState(false)
@@ -54,7 +54,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
             bgcolor: '#ffffff3d'
           }}>
             <Button
-              startIcon={ <NoteAddIcon /> }
+              startIcon={ <AddIcon /> }
               sx={{
                 color: 'white',
                 width: '100%',
@@ -63,7 +63,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
                 py: 1
               }}
             >
-              Add new column
+              Add another list
             </Button>
           </Box>
           : <Box sx={{
@@ -79,7 +79,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
             gap: 1
           }}>
             <TextField
-              label="Enter column title..."
+              label="Enter list name..."
               type="text"
               size="small"
               variant="outlined"
@@ -109,7 +109,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
                     '&:hover': { pgcolor: (theme)  => theme.palette.success.main }
                   }}
                 >
-                  Add Column
+                  Add list
                 </Button>
                 <CloseIcon
                   fontSize='small'

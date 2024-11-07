@@ -4,6 +4,8 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { fetchBoardDetailsAPI, createNewCardAPI, createNewColumnAPI } from '~/apis'
+import { generatePlaceholderCard } from '~/utils/formatters'
+import { isEmpty } from 'lodash'
 
 function Board() {
   const [board, setBoard] = useState(null)
@@ -16,6 +18,14 @@ function Board() {
     // Call API
     fetchBoardDetailsAPI(boardId)
       .then(board => {
+        board.columns.forEach(column => {
+          // If  column has no cards, create a placeholder card for it
+          // This is to make sure that the column always has at least one card
+            if (isEmpty(column.cards)) {
+              column.cards = [generatePlaceholderCard(column)]
+              column.cardOrderIds = [generatePlaceholderCard(column)._id]
+            }
+        })
         setBoard(board)
       })
   }, [])
@@ -27,6 +37,17 @@ function Board() {
       boardId: board._id
     })
 
+  // If column has no cards, create a placeholder card for it when F5 page
+  createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+  createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+
+  // Update state after creating new column
+  // Make right state data board instead of calling fetchBoardDetailsAPI again
+  const newBoard = { ...board }
+  newBoard.columns.push(createdColumn)
+  newBoard.columnOrderIds.push(createdColumn._id)
+  setBoard(newBoard)
+
   }
 
   // Call API to create new card and update state
@@ -35,6 +56,16 @@ function Board() {
       ...newCardData,
       boardId: board._id
     })
+
+    // Update state after creating new card
+    // Make right state data board instead of calling fetchBoardDetailsAPI again
+    const newBoard = { ...board }
+    const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
+    if(columnToUpdate) {
+      columnToUpdate.cards.push(createdCard)
+      columnToUpdate.cardOrderIds.push(createdCard._id)
+    }
+    setBoard(newBoard)
   }
 
   return (
