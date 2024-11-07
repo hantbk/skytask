@@ -26,11 +26,11 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
 
-  const mouseSensor = useSensor(MouseSensor, {activationConstraint: { distance: 10 } })
+  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
 
-  const touchSensor = useSensor(TouchSensor, {activationConstraint: { delay: 250, tolerance: 500 } })
+  const touchSensor = useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 500 } })
 
   // const sensors = useSensors(pointerSensor)
   const sensors = useSensors(mouseSensor, touchSensor)
@@ -46,7 +46,7 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
   const lastOverId = useRef(null)
 
   useEffect(() => {
-    setOrderedColumns( mapOrder(board?.columns, board?.columnOrderIds, '_id'))
+    setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
   }, [board])
 
   // Tìm một cái column theo cardId
@@ -115,7 +115,6 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
 
-      console.log('NextColumn: ', nextColumns)
       return nextColumns
     })
   }
@@ -162,7 +161,7 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
 
     // Xử lý logic ở đây chỉ khi kéo card qua 2 column khác nhau, còn nếu kéo card trong chính column ban đầu
     //của nó thì không làm gì
-    // Vì đây đang là đoạn xử lý lúc kéo (handleDragOver), còn xử lý lúc kéo xong xuôi thì nó lại là vẫn đề 
+    // Vì đây đang là đoạn xử lý lúc kéo (handleDragOver), còn xử lý lúc kéo xong xuôi thì nó lại là vẫn đề
     //khác ở (handleDragEnd)
     if (activeColumn._id !== overColumn._id) {
       moveCardBetweenDifferentColumns(
@@ -186,7 +185,7 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
     if (!active || !over) return
     // console.log('handleDragEnd: ', event)
 
-      // Xử lý kéo thả card
+    // Xử lý kéo thả card
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
       // activeDraggingCardId: Là cái card đang dược kéo
       const { id: activeDraggingCardId, data: { current: activeDraggingCardData } } = active
@@ -212,7 +211,7 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
           activeDraggingCardId,
           activeDraggingCardData
         )
-      }else {
+      } else {
         //hanh dong keo tha card trong cung column
 
         // console.log('keo tha card trong cung column')
@@ -220,28 +219,28 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
         const oldCardIndex = oldColumnWhenDraggingCard?.cards.findIndex(c => c._id === activeDragItemId.id)
         // lay vi tri moi tu active
         const newCardIndex = overColumn?.card?.findIndex(c => c._id === overCardId)
-  
+
         //dung arrayMove vi keo card tuong tu voi logic keo column
         const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex)
 
-        setOrderedColumns(prevColumns =>{
+        setOrderedColumns(prevColumns => {
           // Clone mảng OrderedColumnState cũ ra một cái mới để xử lý data rồi return - cập nhập lại
-        //OrderedColumnsState mới
-        const nextColumns = cloneDeep(prevColumns)
+          //OrderedColumnsState mới
+          const nextColumns = cloneDeep(prevColumns)
 
-        //tim toi cai column minh dang tha
-        const targetColumn = nextColumns.find(c => c._id === overColumn._id)
+          //tim toi cai column minh dang tha
+          const targetColumn = nextColumns.find(c => c._id === overColumn._id)
 
-        //cap nhat lai 2 gia tri moi
-        targetColumn.cards = dndOrderedCards
-        targetColumn.cardOrderIds = dndOrderedCards.map(card => card._id)
+          //cap nhat lai 2 gia tri moi
+          targetColumn.cards = dndOrderedCards
+          targetColumn.cardOrderIds = dndOrderedCards.map(card => card._id)
 
-        return nextColumns
+          return nextColumns
         })
       }
 
     }
-      
+
     //Xưr lý kéo thả column
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
       if (active.id !== over.id) {
@@ -249,13 +248,13 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
         const oldColumnIndex = orderedColumns.findIndex(c => c._id === active.id)
         // lay vi tri moi tu active
         const newColumnIndex = orderedColumns.findIndex(c => c._id === over.id)
-  
+
         const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
-        // const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
-  
-        // console.log('dndOrderedColumns: ',dndOrderedColumns)
-        // console.log('dndOrderedColumnsIds: ',dndOrderedColumnsIds)
-        // cái này để sau này xử lý api
+
+        // Call props  function moveColumns in highest parent component (boards/_id.jsx)
+        moveColumns(dndOrderedColumns)
+
+        // Avoid delay or flickering layout when dragging column
         setOrderedColumns(dndOrderedColumns)
       }
     }
@@ -305,12 +304,11 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
 
     // Nếu overId là null thì trả về mảng rỗng - tránh bug crash trang
     return lastOverId.current ? [{ id: lastOverId.current }] : []
-  }, [activeDragItemType])
+  }, [activeDragItemType, orderedColumns])
 
   return (
     <DndContext
       sensors={sensors}
-      // collisionDetection={closestCorners}
 
       collisionDetection={collisionDetectionStrategy}
       //Thuật toán phát hiện va chạm
@@ -326,10 +324,10 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
         overflowY: 'hidden',
         p: '10px 0'
       }}>
-        <ListColumns 
-        columns={orderedColumns} 
-        createNewColumn={createNewColumn}
-        createNewCard={createNewCard}
+        <ListColumns
+          columns={orderedColumns}
+          createNewColumn={createNewColumn}
+          createNewCard={createNewCard}
         />
         <DragOverlay dropAnimation={customDropAnimation}>
           {!activeDragItemType && null}

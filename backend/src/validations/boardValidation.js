@@ -32,11 +32,11 @@ const update = async (req, res, next) => {
     type: Joi.string().valid(BOARD_TYPES.PUBLIC, BOARD_TYPES.PRIVATE),
     columnOrderIds: Joi.array().items(
       Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
-    ).default([]),
+    ).default([])
   })
 
   try {
-    // Cho phép unknow fields trong trường hợp không cần đẩy một số fields lên
+    // Cho phép unknown fields trong trường hợp không cần đẩy một số fields lên
     await correctCondition.validateAsync(req.body, {
       abortEarly: false,
       allowUnknown: true

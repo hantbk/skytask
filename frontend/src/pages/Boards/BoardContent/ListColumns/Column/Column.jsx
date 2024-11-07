@@ -46,7 +46,7 @@ function Column({ column, createNewCard }) {
 
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
 
-  const [openNewCardForm, setOpenNewCardForm] =  useState(false)
+  const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
 
   const [newCardTitle, setNewCardTitle] = useState('')
@@ -155,7 +155,7 @@ function Column({ column, createNewCard }) {
           height: 'fit-content',
           p: 2
         }}>
-          {!openNewCardForm 
+          {!openNewCardForm
             ? <Box sx={{
               height: '100%',
               display: 'flex',
@@ -164,8 +164,9 @@ function Column({ column, createNewCard }) {
             }}>
               <Button startIcon={<AddIcon />} onClick={toggleOpenNewCardForm}>Add a card</Button>
               <Tooltip title="Drag to move">
-                <DragHandleIcon sx={{ 
-                  cursor: 'pointer' }} />
+                <DragHandleIcon sx={{
+                  cursor: 'pointer'
+                }} />
               </Tooltip>
             </Box>
             : <Box sx={{
@@ -175,15 +176,15 @@ function Column({ column, createNewCard }) {
               gap: 1
             }}>
               <TextField
-              label="Enter card title..."
-              type="text"
-              size="small"
-              variant="outlined"
-              autoFocus
-              data-no-dnd="true"
-              value={newCardTitle}
-              onChange={(e) => setNewCardTitle(e.target.value)}
-              sx={{
+                label="Enter card title..."
+                type="text"
+                size="small"
+                variant="outlined"
+                autoFocus
+                data-no-dnd="true"
+                value={newCardTitle}
+                onChange={(e) => setNewCardTitle(e.target.value)}
+                sx={{
                   '& label': { color: 'text.primary' },
                   '& input': {
                     color: (theme) => theme.palette.primary.main,
@@ -201,11 +202,11 @@ function Column({ column, createNewCard }) {
                 }}
               />
               <Box sx={{
-                display: 'flex', 
-                alignItems: 'center', 
+                display: 'flex',
+                alignItems: 'center',
                 gap: 1
-                }}
-              > 
+              }}
+              >
                 <Button
                   onClick={addNewCard}
                   variant='contained'
@@ -215,7 +216,7 @@ function Column({ column, createNewCard }) {
                     boxShadow: 'none',
                     border: '0.5px solid',
                     borderColor: (theme) => theme.palette.success.main,
-                    '&:hover': { pgcolor: (theme)  => theme.palette.success.main }
+                    '&:hover': { pgcolor: (theme) => theme.palette.success.main }
                   }}
                 >
                   Add card
@@ -226,7 +227,7 @@ function Column({ column, createNewCard }) {
                     color: (theme) => theme.palette.warning.light,
                     cursor: 'pointer'
                   }}
-                  onClick = {toggleOpenNewCardForm}
+                  onClick={toggleOpenNewCardForm}
                 />
               </Box>
             </Box>
