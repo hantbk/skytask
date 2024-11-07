@@ -16,7 +16,7 @@ function ThemedToastContainer() {
     <ToastContainer
       position="top-right"
       autoClose={3000}
-      theme = {theme.palette.mode === 'dark' ? 'dark' : 'light'}
+      theme = {theme.palette.mode === 'dark' ? 'dark' : 'colored'}
     />
   );
 }

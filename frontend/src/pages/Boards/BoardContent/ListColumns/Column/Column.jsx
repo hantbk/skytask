@@ -15,7 +15,7 @@ import Cloud from '@mui/icons-material/Cloud'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import AddCardIcon from '@mui/icons-material/AddCard'
+import AddIcon from '@mui/icons-material/Add'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ListCards from './ListCards/ListCards'
 import { mapOrder } from '~/utils/sorts'
@@ -119,8 +119,8 @@ function Column({ column, createNewCard }) {
               }}
             >
               <MenuItem>
-                <ListItemIcon><AddCardIcon fontSize="small" /></ListItemIcon>
-                <ListItemText>Add new card</ListItemText>
+                <ListItemIcon><AddIcon fontSize="small" /></ListItemIcon>
+                <ListItemText>Add a card</ListItemText>
               </MenuItem>
               <MenuItem>
                 <ListItemIcon><ContentCut fontSize="small" /></ListItemIcon>
@@ -152,7 +152,7 @@ function Column({ column, createNewCard }) {
 
         {/* Box Column Footer */}
         <Box sx={{
-          height: (theme) => theme.trello.columnFooterHeight,
+          height: 'fit-content',
           p: 2
         }}>
           {!openNewCardForm 
@@ -162,15 +162,16 @@ function Column({ column, createNewCard }) {
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <Button startIcon={<AddCardIcon />} onClick={toggleOpenNewCardForm}>Add new card</Button>
+              <Button startIcon={<AddIcon />} onClick={toggleOpenNewCardForm}>Add a card</Button>
               <Tooltip title="Drag to move">
-                <DragHandleIcon sx={{ cursor: 'pointer' }} />
+                <DragHandleIcon sx={{ 
+                  cursor: 'pointer' }} />
               </Tooltip>
             </Box>
             : <Box sx={{
-              height: '100%',
+              height: 'fit-content',
               display: 'flex',
-              alignItems: 'center',
+              flexDirection: 'column',
               gap: 1
             }}>
               <TextField
@@ -199,7 +200,12 @@ function Column({ column, createNewCard }) {
                   }
                 }}
               />
-              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}> 
+              <Box sx={{
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1
+                }}
+              > 
                 <Button
                   onClick={addNewCard}
                   variant='contained'
@@ -212,7 +218,7 @@ function Column({ column, createNewCard }) {
                     '&:hover': { pgcolor: (theme)  => theme.palette.success.main }
                   }}
                 >
-                  Add
+                  Add card
                 </Button>
                 <CloseIcon
                   fontSize='small'
