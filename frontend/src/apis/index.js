@@ -32,7 +32,7 @@ export const updateColumnDetailsAPI = async (columnId, updatedData) => {
   return response.data
 }
 
-export const deleteColumnAPI = async (columnId) => {
+export const deleteColumnDetailsAPI = async (columnId) => {
   const response = await axios.delete(`${API_ROOT}/v1/columns/${columnId}`)
   return response.data
 }

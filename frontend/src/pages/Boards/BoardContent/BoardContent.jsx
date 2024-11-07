@@ -32,7 +32,8 @@ function BoardContent({
   createNewCard,
   moveColumns,
   moveCardInTheSameColumn,
-  moveCardToDifferentColumn
+  moveCardToDifferentColumn,
+  deleteColumnDetails
 }) {
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
 
@@ -233,21 +234,20 @@ function BoardContent({
       } else {
         // Hành động kéo thả card trong cùng một cái column
 
-        // Lấy vị trí cũ (từ thằng oldColumnWhenDraggingCard)
+        // Lấy vị trí cũ (từ oldColumnWhenDraggingCard)
         const oldCardIndex = oldColumnWhenDraggingCard?.cards?.findIndex(c => c._id === activeDragItemId)
-        // Lấy vị trí mới (từ thằng overColumn)
+        // Lấy vị trí mới (từ overColumn)
         const newCardIndex = overColumn?.cards?.findIndex(c => c._id === overCardId)
 
         // Dùng arrayMove vì kéo card trong một cái column thì tương tự với logic kéo column trong một cái board content
         const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex)
         const dndOrderedCardIds = dndOrderedCards.map(card => card._id)
 
-        // Vẫn gọi update State ở đây để tránh delay hoặc Flickering giao diện lúc kéo thả cần phải chờ gọi API (small trick)
+        // Vẫn gọi update State ở đây để tránh delay hoặc Flickering giao diện lúc kéo thả cần phải chờ gọi API
         setOrderedColumns(prevColumns => {
           // Clone mảng OrderedColumnsState cũ ra một cái mới để xử lý data rồi return - cập nhật lại OrderedColumnsState mới
           const nextColumns = cloneDeep(prevColumns)
 
-          // Tìm tới cái Column mà chúng ta đang thả
           const targetColumn = nextColumns.find(column => column._id === overColumn._id)
 
           // cập nhật lại 2 giá trị mới là card và cardOrderIds trong cái targetColumn
@@ -352,6 +352,7 @@ function BoardContent({
           columns={orderedColumns}
           createNewColumn={createNewColumn}
           createNewCard={createNewCard}
+          deleteColumnDetails={deleteColumnDetails}
         />
         <DragOverlay dropAnimation={customDropAnimation}>
           {!activeDragItemType && null}
