@@ -9,22 +9,22 @@ import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 
 function ListColumns({ columns, createNewColumn, createNewCard }) {
-  const [openNewColumnForm, setOpenNewColumnForm] =  useState(false)
+  const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
-  const addNewColumn = async () => {
+  const addNewColumn = () => {
     if (!newColumnTitle) {
       toast.error('Please enter Column Title!')
       return
     }
 
     const newColumnData = {
-      title: newColumnTitle,
+      title: newColumnTitle
     }
 
-    await createNewColumn(newColumnData)
+    createNewColumn(newColumnData)
 
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -96,32 +96,32 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
                   '&.Mui-focused fieldset': { borderColor: 'white' }
                 }
               }}/>
-              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}> 
-                <Button
-                  onClick={addNewColumn}
-                  variant='contained'
-                  color='success'
-                  size='small'
-                  sx={{
-                    boxShadow: 'none',
-                    border: '0.5px solid',
-                    borderColor: (theme) => theme.palette.success.main,
-                    '&:hover': { pgcolor: (theme)  => theme.palette.success.main }
-                  }}
-                >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Button
+                onClick={addNewColumn}
+                variant='contained'
+                color='success'
+                size='small'
+                sx={{
+                  boxShadow: 'none',
+                  border: '0.5px solid',
+                  borderColor: (theme) => theme.palette.success.main,
+                  '&:hover': { pgcolor: (theme) => theme.palette.success.main }
+                }}
+              >
                   Add Column
-                </Button>
-                <CloseIcon
-                  fontSize='small'
-                  sx={{ 
-                    color: 'white', 
-                    cursor: 'pointer', 
-                    '&:hover': { color: (theme) => theme.palette.warning.light }
-                  }}
-                  onClick = {toggleOpenNewColumnForm}
-                />
-              </Box>
+              </Button>
+              <CloseIcon
+                fontSize='small'
+                sx={{
+                  color: 'white',
+                  cursor: 'pointer',
+                  '&:hover': { color: (theme) => theme.palette.warning.light }
+                }}
+                onClick = {toggleOpenNewColumnForm}
+              />
             </Box>
+          </Box>
         }
       </Box>
     </SortableContext>

@@ -18,7 +18,6 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ListCards from './ListCards/ListCards'
-import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
@@ -44,14 +43,15 @@ function Column({ column, createNewCard }) {
   const handleClick = (event) => setAnchorEl(event.currentTarget)
   const handleClose = () => setAnchorEl(null)
 
-  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+  // Cards đã được sắp xếp tại board/_id.jsx
+  const orderedCards = column.cards
 
-  const [openNewCardForm, setOpenNewCardForm] =  useState(false)
+  const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
 
   const [newCardTitle, setNewCardTitle] = useState('')
 
-  const addNewCard = async () => {
+  const addNewCard = () => {
     if (!newCardTitle) {
       toast.error('Please enter Card Title!')
       return
@@ -63,7 +63,7 @@ function Column({ column, createNewCard }) {
     }
     // Call props function CreateNewCard in highest parent component (boards/_id.jsx)
     //  update state in highest parent component
-    await createNewCard(newCardData)
+    createNewCard(newCardData)
 
     toggleOpenNewCardForm()
     setNewCardTitle('')
@@ -155,7 +155,7 @@ function Column({ column, createNewCard }) {
           height: (theme) => theme.trello.columnFooterHeight,
           p: 2
         }}>
-          {!openNewCardForm 
+          {!openNewCardForm
             ? <Box sx={{
               height: '100%',
               display: 'flex',
@@ -174,15 +174,15 @@ function Column({ column, createNewCard }) {
               gap: 1
             }}>
               <TextField
-              label="Enter card title..."
-              type="text"
-              size="small"
-              variant="outlined"
-              autoFocus
-              data-no-dnd="true"
-              value={newCardTitle}
-              onChange={(e) => setNewCardTitle(e.target.value)}
-              sx={{
+                label="Enter card title..."
+                type="text"
+                size="small"
+                variant="outlined"
+                autoFocus
+                data-no-dnd="true"
+                value={newCardTitle}
+                onChange={(e) => setNewCardTitle(e.target.value)}
+                sx={{
                   '& label': { color: 'text.primary' },
                   '& input': {
                     color: (theme) => theme.palette.primary.main,
@@ -199,7 +199,7 @@ function Column({ column, createNewCard }) {
                   }
                 }}
               />
-              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}> 
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Button
                   onClick={addNewCard}
                   variant='contained'
@@ -209,7 +209,7 @@ function Column({ column, createNewCard }) {
                     boxShadow: 'none',
                     border: '0.5px solid',
                     borderColor: (theme) => theme.palette.success.main,
-                    '&:hover': { pgcolor: (theme)  => theme.palette.success.main }
+                    '&:hover': { pgcolor: (theme) => theme.palette.success.main }
                   }}
                 >
                   Add
