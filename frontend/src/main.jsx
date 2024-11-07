@@ -8,6 +8,8 @@ import theme from './theme'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+// Cấu hinh MUI dialog
+import { ConfirmProvider } from 'material-ui-confirm'
 // ToastContainer wrapper component
 // eslint-disable-next-line react-refresh/only-export-components
 function ThemedToastContainer() {
@@ -24,8 +26,16 @@ function ThemedToastContainer() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <CssVarsProvider theme={theme}>
-    <CssBaseline />
-    <App />
+    <ConfirmProvider defaultOptions={{
+      allowClose: false,
+      dialogProps: { maxWidth: 'xs' },
+      buttonOrder: ['confirm', 'cancel'],
+      cancellationButtonProps: { color: 'inherit' },
+      confirmationButtonProps: { color: 'secondary', variant: 'outlined' }
+    }}>
+      <CssBaseline />
+      <App />
+    </ConfirmProvider>
     <ThemedToastContainer />
   </CssVarsProvider>
 )
