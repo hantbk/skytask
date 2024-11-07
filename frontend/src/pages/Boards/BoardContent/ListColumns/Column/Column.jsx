@@ -151,10 +151,16 @@ function Column({ column, createNewCard }) {
         <ListCards cards={orderedCards} />
 
         {/* Box Column Footer */}
-        <Box sx={{
-          height: 'fit-content',
-          p: 2
-        }}>
+        <Box
+          sx={{
+            position: 'sticky',
+            bottom: 0,
+            p: 2,
+            bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#333643' : '#ebecf0'),
+            borderTop: '1px solid',
+            borderColor: (theme) => theme.palette.divider
+          }}
+        >
           {!openNewCardForm
             ? <Box sx={{
               height: '100%',
