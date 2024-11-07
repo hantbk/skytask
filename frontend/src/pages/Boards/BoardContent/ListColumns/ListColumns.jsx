@@ -8,13 +8,13 @@ import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import AddIcon from '@mui/icons-material/Add'
 
-function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter Column Title!')
       return
@@ -24,7 +24,7 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
       title: newColumnTitle
     }
 
-    createNewColumn(newColumnData)
+    await createNewColumn(newColumnData)
 
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -41,12 +41,7 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
         overflowY: 'hidden',
         '&::-webkit-scrollbar-track': { m: 2 }
       }}>
-        {columns?.map(column =>
-          <Column
-            key={column._id} column={column}
-            createNewCard={createNewCard}
-            deleteColumnDetails={deleteColumnDetails}
-          />)}
+        {columns?.map(column => <Column key={column._id} column={column} createNewCard={createNewCard} />)}
 
         {/* Box Add new column CTA */}
         {!openNewColumnForm
