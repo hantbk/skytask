@@ -6,10 +6,10 @@ import { Button } from '@mui/material'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add'
 
 function ListColumns({ columns, createNewColumn, createNewCard }) {
-  const [openNewColumnForm, setOpenNewColumnForm] =  useState(false)
+  const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
@@ -21,7 +21,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
     }
 
     const newColumnData = {
-      title: newColumnTitle,
+      title: newColumnTitle
     }
 
     await createNewColumn(newColumnData)
@@ -54,7 +54,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
             bgcolor: '#ffffff3d'
           }}>
             <Button
-              startIcon={ <AddIcon /> }
+              startIcon={<AddIcon />}
               sx={{
                 color: 'white',
                 width: '100%',
@@ -95,33 +95,33 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
                   '&:hover fieldset': { borderColor: 'white' },
                   '&.Mui-focused fieldset': { borderColor: 'white' }
                 }
-              }}/>
-              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}> 
-                <Button
-                  onClick={addNewColumn}
-                  variant='contained'
-                  color='success'
-                  size='small'
-                  sx={{
-                    boxShadow: 'none',
-                    border: '0.5px solid',
-                    borderColor: (theme) => theme.palette.success.main,
-                    '&:hover': { pgcolor: (theme)  => theme.palette.success.main }
-                  }}
-                >
-                  Add list
-                </Button>
-                <CloseIcon
-                  fontSize='small'
-                  sx={{ 
-                    color: 'white', 
-                    cursor: 'pointer', 
-                    '&:hover': { color: (theme) => theme.palette.warning.light }
-                  }}
-                  onClick = {toggleOpenNewColumnForm}
-                />
-              </Box>
+              }} />
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Button
+                onClick={addNewColumn}
+                variant='contained'
+                color='success'
+                size='small'
+                sx={{
+                  boxShadow: 'none',
+                  border: '0.5px solid',
+                  borderColor: (theme) => theme.palette.success.main,
+                  '&:hover': { pgcolor: (theme) => theme.palette.success.main }
+                }}
+              >
+                Add list
+              </Button>
+              <CloseIcon
+                fontSize='small'
+                sx={{
+                  color: 'white',
+                  cursor: 'pointer',
+                  '&:hover': { color: (theme) => theme.palette.warning.light }
+                }}
+                onClick={toggleOpenNewColumnForm}
+              />
             </Box>
+          </Box>
         }
       </Box>
     </SortableContext>

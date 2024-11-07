@@ -93,7 +93,7 @@ const pushColumnOrderIds = async (column) => {
       { $push: { columnOrderIds: new ObjectId(String(column._id)) } },
       { returnDocument: 'after' }
     )
-    return result.value || null
+    return result
   } catch (error) { throw new Error(error) }
 }
 
@@ -111,9 +111,9 @@ const pullColumnOrderIds = async (column) => {
 
 const update = async (boardId, updateData) => {
   try {
-    Object.keys(updateData).forEach(key => {
-      if (INVALID_UPDATE_FIELDS.includes(key)) {
-        delete updateData[key]
+    Object.keys(updateData).forEach(fieldName => {
+      if (INVALID_UPDATE_FIELDS.includes(fieldName)) {
+        delete updateData[fieldName]
       }
     })
 
