@@ -3,9 +3,15 @@ import Container from '@mui/material/Container'
 import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
-import { fetchBoardDetailsAPI, createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI } from '~/apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty } from 'lodash'
+import {
+  fetchBoardDetailsAPI,
+  createNewCardAPI,
+  createNewColumnAPI,
+  updateBoardDetailsAPI,
+  updateColumnDetailsAPI
+} from '~/apis'
 
 function Board() {
   const [board, setBoard] = useState(null)
@@ -69,7 +75,7 @@ function Board() {
   }
 
   // Call API to move columns and update state
-  const moveColumns = async (dndOrderedColumns) => {
+  const moveColumns = (dndOrderedColumns) => {
     // Update state after moving columns
     // Make right state data board instead of calling fetchBoardDetailsAPI again
     const dndOrderedColumnIds = dndOrderedColumns.map(c => c._id)
@@ -79,7 +85,23 @@ function Board() {
     setBoard(newBoard)
 
     // Call API to update columnOrderIds
-    await updateBoardDetailsAPI(newBoard._id, { columnOrderIds: dndOrderedColumnIds })
+    updateBoardDetailsAPI(newBoard._id, { columnOrderIds: dndOrderedColumnIds })
+  }
+
+  // Khi di chuyển Card trong cùng một Column
+  // Gọi API update cardOrderIds của Column
+  const moveCardInTheSameColumn = (dndOrderedCards, dndOrderedCardIds, columnId) => {
+    // update dữ liệu board
+    const newBoard = { ...board }
+    const columnToUpdate = newBoard.columns.find(column => column._id === columnId)
+    if (columnToUpdate) {
+      columnToUpdate.cards = dndOrderedCards
+      columnToUpdate.cardOrderIds = dndOrderedCardIds
+    }
+    setBoard(newBoard)
+
+    // Gọi API update column
+    updateColumnDetailsAPI(columnId, { cardOrderIds: dndOrderedCardIds })
   }
 
   return (
@@ -92,6 +114,7 @@ function Board() {
         createNewColumn={createNewColumn}
         createNewCard={createNewCard}
         moveColumns={moveColumns}
+        moveCardInTheSameColumn={moveCardInTheSameColumn}
       />
     </Container>
   )

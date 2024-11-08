@@ -51,7 +51,7 @@ function Column({ column, createNewCard }) {
 
   const [newCardTitle, setNewCardTitle] = useState('')
 
-  const addNewCard = async () => {
+  const addNewCard = () => {
     if (!newCardTitle) {
       toast.error('Please enter Card Title!')
       return
@@ -63,7 +63,7 @@ function Column({ column, createNewCard }) {
     }
     // Call props function CreateNewCard in highest parent component (boards/_id.jsx)
     //  update state in highest parent component
-    await createNewCard(newCardData)
+    createNewCard(newCardData)
 
     toggleOpenNewCardForm()
     setNewCardTitle('')
