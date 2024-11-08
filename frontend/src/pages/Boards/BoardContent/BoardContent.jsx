@@ -26,7 +26,13 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
+function BoardContent({
+  board,
+  createNewColumn,
+  createNewCard,
+  moveColumns,
+  moveCardInTheSameColumn
+}) {
 
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
 
@@ -135,7 +141,6 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
   // Trigger trong quá trình kéo (drag) một phần tử
   const handleDragOver = (event) => {
 
-
     // Không làm gì thêm nếu đang kéo Column
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return
 
@@ -222,6 +227,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
 
         //dung arrayMove vi keo card tuong tu voi logic keo column
         const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex)
+        const dndOrderedCardIds = dndOrderedCards.map(card => card._id)
 
         setOrderedColumns(prevColumns => {
           // Clone mảng OrderedColumnState cũ ra một cái mới để xử lý data rồi return - cập nhập lại
@@ -233,10 +239,12 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
 
           //cap nhat lai 2 gia tri moi
           targetColumn.cards = dndOrderedCards
-          targetColumn.cardOrderIds = dndOrderedCards.map(card => card._id)
+          targetColumn.cardOrderIds = dndOrderedCardIds
 
           return nextColumns
         })
+
+        moveCardInTheSameColumn(dndOrderedCards, dndOrderedCardIds, oldColumnWhenDraggingCard._id)
       }
 
     }
@@ -251,11 +259,11 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
 
         const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
 
-        // Call props  function moveColumns in highest parent component (boards/_id.jsx)
-        moveColumns(dndOrderedColumns)
-
         // Avoid delay or flickering layout when dragging column
         setOrderedColumns(dndOrderedColumns)
+
+        // Call props  function moveColumns in highest parent component (boards/_id.jsx)
+        moveColumns(dndOrderedColumns)
       }
     }
 
