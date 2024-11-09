@@ -7,14 +7,25 @@ import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortabl
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import AddIcon from '@mui/icons-material/Add'
+import {createNewColumnAPI} from '~/apis'
+import { generatePlaceholderCard } from '~/utils/formatters'
+import {
+  updateCurrentActiveBoard,
+   selectCurrentActiveBoard
+} from '~/redux/activeBoard/activeBoardSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { cloneDeep } from 'lodash'
 
-function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
+function ListColumns({ columns }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard)
+  
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter Column Title!')
       return
@@ -24,7 +35,23 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
       title: newColumnTitle
     }
 
-    createNewColumn(newColumnData)
+    const createdColumn = await createNewColumnAPI({
+      ...newColumnData,
+      boardId: board._id
+    })
+
+    // If column has no cards, create a placeholder card for it when F5 page
+    createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+
+    // Update state after creating new column
+    // Make right state data board instead of calling fetchBoardDetailsAPI again
+    // const newBoard = { ...board }
+    const newBoard = cloneDeep(board)
+    newBoard.columns.push(createdColumn)
+    newBoard.columnOrderIds.push(createdColumn._id)
+    // setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -44,8 +71,6 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
         {columns?.map(column =>
           <Column
             key={column._id} column={column}
-            createNewCard={createNewCard}
-            deleteColumnDetails={deleteColumnDetails}
           />)}
 
         {/* Box Add new column CTA */}

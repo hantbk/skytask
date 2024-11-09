@@ -28,12 +28,9 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 
 function BoardContent({
   board,
-  createNewColumn,
-  createNewCard,
   moveColumns,
   moveCardInTheSameColumn,
-  moveCardToDifferentColumn,
-  deleteColumnDetails
+  moveCardToDifferentColumn
 }) {
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
 
@@ -350,9 +347,6 @@ function BoardContent({
       }}>
         <ListColumns
           columns={orderedColumns}
-          createNewColumn={createNewColumn}
-          createNewCard={createNewCard}
-          deleteColumnDetails={deleteColumnDetails}
         />
         <DragOverlay dropAnimation={customDropAnimation}>
           {!activeDragItemType && null}
