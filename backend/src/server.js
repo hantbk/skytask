@@ -22,9 +22,18 @@ const START_SERVER = () => {
   // Centralized error handling
   app.use(errorHandlingMiddleware)
 
-  app.listen(env.APP_PORT, env.APP_HOST, () => {
-    console.log(`Hello World, I am running at http://${ env.APP_HOST }:${ env.APP_PORT }`)
-  })
+  if (env.BUILD_MODE === 'production') {
+    // Production development
+    app.listen(process.env.PORT, () => {
+      console.log(`Prod: Server is running at port: ${ process.env.PORT }`)
+    })
+  } else {
+    // Localhost development
+    app.listen(env.LOCAL_DEV_APP_PORT, env.LOCAL_DEV_APP_HOST, () => {
+      console.log(`Local: Server is running at http://${ env.LOCAL_DEV_APP_HOST }:${ env.LOCAL_DEV_APP_PORT }`)
+    })
+  }
+
 
   // Doing a cleanup action just before Node.js exits
   // https://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits
