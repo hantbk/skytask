@@ -15,8 +15,6 @@ import {
 } from '~/apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty } from 'lodash'
-import { Box } from '@mui/material'
-import { CircularProgress } from '@mui/material'
 import { toast } from 'react-toastify'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 
