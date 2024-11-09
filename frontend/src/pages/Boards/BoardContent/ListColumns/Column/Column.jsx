@@ -23,8 +23,19 @@ import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { useConfirm } from 'material-ui-confirm'
+import { createNewCardAPI, deleteColumnDetailsAPI } from '~/apis'
+import {
+  updateCurrentActiveBoard,
+   selectCurrentActiveBoard
+} from '~/redux/activeBoard/activeBoardSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { cloneDeep } from 'lodash'
 
-function Column({ column, createNewCard, deleteColumnDetails }) {
+function Column({ column }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard)
+  
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     data: { ...column }
@@ -51,7 +62,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
 
   const [newCardTitle, setNewCardTitle] = useState('')
 
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
       toast.error('Please enter Card Title!')
       return
@@ -63,7 +74,22 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
     }
     // Call props function CreateNewCard in highest parent component (boards/_id.jsx)
     //  update state in highest parent component
-    createNewCard(newCardData)
+    const createdCard = await createNewCardAPI({
+      ...newCardData,
+      boardId: board._id
+    })
+
+    // Update state after creating new card
+    // Make right state data board instead of calling fetchBoardDetailsAPI again
+    // const newBoard = { ...board }
+    const newBoard = cloneDeep(board)
+    const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
+    if (columnToUpdate) {
+      columnToUpdate.cards.push(createdCard)
+      columnToUpdate.cardOrderIds.push(createdCard._id)
+    }
+    // setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     toggleOpenNewCardForm()
     setNewCardTitle('')
@@ -77,8 +103,20 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       description: 'This action will permanently delete your Column and its Cards! Are you sure?',
       confirmationText: 'Confirm',
       cancellationText: 'Cancel'
-    }).then(() => { deleteColumnDetails(column._id) }
-    ).catch(() => {})
+    }).then(() => {
+        // Update dữ liệu cho state Board
+      const newBoard = { ...board }
+      newBoard.columns = newBoard.columns.filter(column => column._id !== column._id)
+      newBoard.columnOrderIds = newBoard.columnOrderIds.filter(columnId => columnId !== column._id)
+      // setBoard(newBoard)
+      dispatch(updateCurrentActiveBoard(newBoard))
+
+      // Gọi API xử lí phía backend
+      deleteColumnDetailsAPI(column._id).then(res => {
+        toast.success(res?.deleteResult)
+      })
+
+    }).catch(() => {})
 
   }
 
