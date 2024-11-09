@@ -11,7 +11,7 @@ const initialState = {
 }
 
 // Các hành động gọi API (bất đồng bộ) và cập nhập dữ liệu vào Redux, dùng Middleware createAsysncThunk đi kèm với extraReducers
-export const fetchBoarđetailsAPI = createAsyncThunk(
+export const fetchBoardDetailsAPI = createAsyncThunk(
   'activeBoard/fetchBoardDetailsAPI',
   async (boardId) => {
     const response = await axios.get(`${API_ROOT}/v1/boards/${boardId}`)
@@ -40,7 +40,7 @@ export const activeBoardSlice = createSlice({
   },
   // ExtraReducers: Nơi xử lý dữ liệu bất đồng bộ
   extraReducers: (builder) => {
-    builder.addCase(fetchBoarđetailsAPI.fulfilled, (state, action) => {
+    builder.addCase(fetchBoardDetailsAPI.fulfilled, (state, action) => {
       // action.payload ở đây chính là cái response.data trả về ở trên
       let board = action.payload
 
