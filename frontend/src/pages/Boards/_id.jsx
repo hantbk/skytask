@@ -6,14 +6,14 @@ import BoardContent from './BoardContent/BoardContent'
 import {
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
-  moveCardToDifferentColumnAPI,
+  moveCardToDifferentColumnAPI
 } from '~/apis'
 import { cloneDeep } from 'lodash'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 import {
-   fetchBoardDetailsAPI,
-   updateCurrentActiveBoard,
-    selectCurrentActiveBoard
+  fetchBoardDetailsAPI,
+  updateCurrentActiveBoard,
+  selectCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -27,9 +27,6 @@ function Board() {
   // console.log(boardId)
 
   useEffect(() => {
-    // Tạm thời fix cứng boardId
-    // Sử dụng react-router-dom để lấy boardId từ URL
-    // const boardId = '672a55cbb042a7b34289efd0'
 
     // Call API
     dispatch(fetchBoardDetailsAPI(boardId))

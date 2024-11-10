@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 import Board from './pages/Boards/_id'
+import NotFound from './pages/404/NotFound'
 
 function App() {
   return (
@@ -15,8 +16,11 @@ function App() {
       {/* Board Details */}
       <Route path='/boards/:boardId' element={<Board />} />
 
+      {/* Authentication */}
+
+
       {/* 404 not found page */}
-      <Route path='*' element={<div>404 not found</div>} />
+      <Route path='*' element={<NotFound />} />
     </Routes>
   )
 }
