@@ -26,7 +26,7 @@ import { useConfirm } from 'material-ui-confirm'
 import { createNewCardAPI, deleteColumnDetailsAPI } from '~/apis'
 import {
   updateCurrentActiveBoard,
-   selectCurrentActiveBoard
+  selectCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { cloneDeep } from 'lodash'
@@ -34,7 +34,7 @@ import { cloneDeep } from 'lodash'
 function Column({ column }) {
   const dispatch = useDispatch()
   const board = useSelector(selectCurrentActiveBoard)
-  
+
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
@@ -104,7 +104,7 @@ function Column({ column }) {
       confirmationText: 'Confirm',
       cancellationText: 'Cancel'
     }).then(() => {
-        // Update dữ liệu cho state Board
+      // Update dữ liệu cho state Board
       const newBoard = { ...board }
       newBoard.columns = newBoard.columns.filter(column => column._id !== column._id)
       newBoard.columnOrderIds = newBoard.columnOrderIds.filter(columnId => columnId !== column._id)

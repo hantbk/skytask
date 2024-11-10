@@ -6,14 +6,14 @@ import BoardContent from './BoardContent/BoardContent'
 import {
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
-  moveCardToDifferentColumnAPI,
+  moveCardToDifferentColumnAPI
 } from '~/apis'
 import { cloneDeep } from 'lodash'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 import {
-   fetchBoardDetailsAPI,
-   updateCurrentActiveBoard,
-    selectCurrentActiveBoard
+  fetchBoardDetailsAPI,
+  updateCurrentActiveBoard,
+  selectCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -111,14 +111,14 @@ function Board() {
       <BoardContent
         board={board}
 
-        
+
         // createNewCard={createNewCard}
         // deleteColumnDetails={deleteColumnDetails}
 
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCardToDifferentColumn={moveCardToDifferentColumn}
-        
+
       />
     </Container>
   )
