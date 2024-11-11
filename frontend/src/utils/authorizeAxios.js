@@ -31,6 +31,7 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
 }, (error) => {
   // Chặn spam click
   interceptorLoadingElements(false)
+
   // Mọi Status Code nằm ngoài khoảng 2xx sẽ vào đây
   let errorMessage = error?.message
   if (error.response?.data?.message) {
