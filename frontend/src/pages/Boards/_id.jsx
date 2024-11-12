@@ -112,14 +112,14 @@ function Board() {
       <BoardContent
         board={board}
 
-        
+
         // createNewCard={createNewCard}
         // deleteColumnDetails={deleteColumnDetails}
 
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCardToDifferentColumn={moveCardToDifferentColumn}
-        
+
       />
     </Container>
   )

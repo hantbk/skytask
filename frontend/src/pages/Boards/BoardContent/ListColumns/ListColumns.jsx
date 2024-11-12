@@ -7,11 +7,11 @@ import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortabl
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import AddIcon from '@mui/icons-material/Add'
-import {createNewColumnAPI} from '~/apis'
+import { createNewColumnAPI } from '~/apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import {
   updateCurrentActiveBoard,
-   selectCurrentActiveBoard
+  selectCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { cloneDeep } from 'lodash'
@@ -19,7 +19,7 @@ import { cloneDeep } from 'lodash'
 function ListColumns({ columns }) {
   const dispatch = useDispatch()
   const board = useSelector(selectCurrentActiveBoard)
-  
+
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
