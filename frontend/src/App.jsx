@@ -2,6 +2,9 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 
 import Board from './pages/Boards/_id'
 import NotFound from './pages/404/NotFound'
+import Welcome from './pages/Welcome/Welcome'
+import LoginForm from './pages/Auth/LoginForm'
+import RegisterForm from './pages/Auth/RegisterForm'
 
 function App() {
   return (
@@ -17,7 +20,9 @@ function App() {
       <Route path='/boards/:boardId' element={<Board />} />
 
       {/* Authentication */}
-
+      <Route path='/welcome' element={<Welcome />} />
+      <Route path='/login' element={<LoginForm />} />
+      <Route path='/register' element={<RegisterForm />} />
 
       {/* 404 not found page */}
       <Route path='*' element={<NotFound />} />
