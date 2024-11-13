@@ -7,7 +7,7 @@ import { ReactComponent as IconLeft } from '~/assets/login/left.svg'
 import { ReactComponent as IconRight } from '~/assets/login/right.svg'
 import TextField from '@mui/material/TextField'
 import Alert from '@mui/material/Alert'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import {
   EMAIL_RULE,
@@ -18,13 +18,8 @@ import {
 } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { useTheme } from '@mui/material/styles'
-import { useDispatch } from 'react-redux'
-import { toast } from 'react-toastify'
-// import { loginUserAPI } from '~/redux/user/userSlice'
 
 function LoginForm() {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   const { register, handleSubmit, formState: { errors } } = useForm()
   let [searchParams] = useSearchParams()
@@ -32,7 +27,7 @@ function LoginForm() {
   const verifiedEmail = searchParams.get('verifiedEmail')
   const theme = useTheme()
 
-  const submitLogIn = (data) => {
+  const submitLogIn = () => {
     // const { email, password } = data
     // toast.promise(
     //   dispatch(loginUserAPI({ email, password })),

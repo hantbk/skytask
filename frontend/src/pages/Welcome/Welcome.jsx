@@ -47,7 +47,7 @@ function Welcome() {
                 color: theme.palette.text.primary,
                 '&:hover': {
                   textDecoration: 'underline',
-                  color: theme.palette.primary.main,
+                  color: theme.palette.primary.main
                 }
               }}
             >
@@ -62,7 +62,7 @@ function Welcome() {
                 backgroundColor: theme.palette.success.main,
                 color: theme.palette.common.white,
                 '&:hover': {
-                  backgroundColor: theme.palette.success.dark,
+                  backgroundColor: theme.palette.success.dark
                 }
               }}
             >
@@ -137,7 +137,7 @@ function Welcome() {
         </Box>
       </Box>
     </Box>
-  );
+  )
 }
 
 export default Welcome

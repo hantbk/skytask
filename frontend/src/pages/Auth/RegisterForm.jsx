@@ -30,7 +30,7 @@ function RegisterForm() {
     toast.promise(
       registerUserAPI({ email, password }),
       {
-        pending: 'Registering is in progress...',
+        pending: 'Registering is in progress...'
       }
     ).then(user => {
       navigate(`/login?registeredEmail=${user.email}`)
