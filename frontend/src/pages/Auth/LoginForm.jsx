@@ -16,9 +16,11 @@ import {
   EMAIL_RULE_MESSAGE
 } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
+import { useTheme } from '@mui/material/styles'
 
 function LoginForm() {
   const { register, handleSubmit, formState: { errors } } = useForm()
+  const theme = useTheme()
 
   const submitLogIn = (data) => {
     console.log('submit Login: ', data)
@@ -30,7 +32,8 @@ function LoginForm() {
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundImage: `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.paper})`
       }}>
         <Box sx={{
           display: 'flex',
@@ -39,8 +42,8 @@ function LoginForm() {
           margin: '40px 0px',
           gap: 0.5
         }}>
-          <SvgIcon component={TrelloIcon} fontSize="large" inheritViewBox sx={{ color: '#0079BF' }} />
-          <Typography variant='span' sx={{ fontSize: '2rem', fontWeight: 'bold', color: 'black' }}>
+          <SvgIcon component={TrelloIcon} fontSize="large" inheritViewBox sx={{ color: theme.palette.primary.main }} />
+          <Typography variant='span' sx={{ fontSize: '2rem', fontWeight: 'bold', color: theme.palette.text.primary }}>
             TaskFlow
           </Typography>
         </Box>
@@ -62,7 +65,13 @@ function LoginForm() {
               height: 'auto',
               display: 'block',
               verticalAlign: 'middle',
-              borderStyle: 'none'
+              borderStyle: 'none',
+              animation: 'slideInLeft 2s ease-out forwards',
+              opacity: 0,
+              '@keyframes slideInLeft': {
+                '0%': { opacity: 0, transform: 'translateX(-100px)' },
+                '100%': { opacity: 1, transform: 'translateX(0)' }
+              }
             }}
           />
           <SvgIcon
@@ -77,7 +86,13 @@ function LoginForm() {
               height: 'auto',
               display: 'block',
               verticalAlign: 'middle',
-              borderStyle: 'none'
+              borderStyle: 'none',
+              animation: 'slideInRight 2s ease-out forwards',
+              opacity: 0,
+              '@keyframes slideInRight': {
+                '0%': { opacity: 0, transform: 'translateX(100px)' },
+                '100%': { opacity: 1, transform: 'translateX(0)' }
+              }
             }}
           />
           {/* Form Login */}
@@ -88,9 +103,12 @@ function LoginForm() {
             borderWidth: '1px',
             borderStyle: 'solid',
             boxSizing: 'border-box',
-            borderColor: '#ccc',
+            borderColor: theme.palette.divider,
             borderRadius: '8px',
-            boxShadow: 'rgb(0 0 0 / 10%) 0 0 10px',
+            boxShadow: theme.shadows[1],
+            backgroundColor: theme.palette.background.paper,
+            position: 'relative',
+            zIndex: 1
             // '@media (max-width: 1366px)': {
             //   width: '60%'
             // },
@@ -104,7 +122,8 @@ function LoginForm() {
               sx={{
                 marginTop: '20px',
                 marginBottom: '25px',
-                textAlign: 'center'
+                textAlign: 'center',
+                color: theme.palette.text.primary
               }}>
               Log in to Taskflow
             </Typography>
@@ -125,10 +144,11 @@ function LoginForm() {
                     message: EMAIL_RULE_MESSAGE
                   }
                 })}
+                sx={{ backgroundColor: theme.palette.background.default }}
               />
-              <FieldErrorAlert errors={errors} fieldName={'email'}/>
+              <FieldErrorAlert errors={errors} fieldName={'email'} />
             </Box>
-            
+
             <Box>
               <TextField
                 label="Enter Password"
@@ -144,22 +164,44 @@ function LoginForm() {
                     message: PASSWORD_RULE_MESSAGE
                   }
                 })}
+                sx={{ backgroundColor: theme.palette.background.default }}
               />
-              <FieldErrorAlert errors={errors} fieldName={'password'}/>
+              <FieldErrorAlert errors={errors} fieldName={'password'} />
             </Box>
-            
+
             <Button
               type="submit"
               variant="contained"
               color="primary"
               size="large"
               fullWidth
-              sx={{ mt: 2, mb: 2, fontWeight: 'bold', backgroundColor: '#0079BF' }}
+              sx={{
+                mt: 2,
+                mb: 2,
+                fontWeight: 'bold',
+                backgroundColor: theme.palette.primary.main,
+                '&:hover': {
+                  backgroundColor: theme.palette.primary.dark
+                }
+              }}
             >
               Sign In
             </Button>
             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-              <Link to="/register" style={{ textDecoration: 'none' }}>Sign up for an account</Link>
+              <Typography variant="body1">
+                <Link
+                  to="/register"
+                  style={{
+                    textDecoration: 'none',
+                    color: theme.palette.primary.main,
+                    fontWeight: 'bold'
+                  }}
+                  onMouseEnter={(e) => (e.target.style.color = theme.palette.primary.dark)}
+                  onMouseLeave={(e) => (e.target.style.color = theme.palette.primary.main)}
+                >
+                  Sign up for an account
+                </Link>
+              </Typography>
             </Box>
 
           </Box>

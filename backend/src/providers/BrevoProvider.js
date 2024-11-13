@@ -29,6 +29,7 @@ const sendEmail = async (recipientEmail, customSubject, customHtmlContent) => {
   sendSmtpEmail.htmlContent = customHtmlContent
 
   // Call the send email action
+  // Return a promise with the API response
   return apiInstance.sendTransacEmail(sendSmtpEmail)
 }
 
