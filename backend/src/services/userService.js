@@ -4,6 +4,7 @@ import ApiError from '~/utils/ApiError'
 import bcryptjs from 'bcryptjs'
 import { v4 as uuidv4 } from 'uuid'
 import { pickUser } from '~/utils/formatters'
+import { WEBSITE_DOMAIN } from '~/utils/constants'
 
 const createNew = async (reqBody) => {
   try {
@@ -30,6 +31,17 @@ const createNew = async (reqBody) => {
     const getNewUser = await userModel.findOneById(createdUser.insertedId)
 
     // Gửi email cho người xác thực tài khoản
+    const verificationLink = `${WEBSITE_DOMAIN}/account/verification?email=${getNewUser.email}&token=${getNewUser.verifyToken}`
+    const customSubject = 'Please verify your email address before logging in'
+    const htmlContent = `
+      <h3>Hi ${getNewUser.username},</h3>
+      <p>Please click the link below to verify your email address before logging in:</p>
+      <a href="${verificationLink}" target="_blank">Verify my email address</a>
+      <p>If you did not sign up for an account, please ignore this email.</p>
+      <p>Thank you!</p>
+    `
+
+    // Call Brevo Provider send mail
 
     // return dữ liệu cho phía Controller
     return pickUser(getNewUser)
