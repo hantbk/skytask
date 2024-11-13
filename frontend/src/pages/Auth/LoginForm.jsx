@@ -6,7 +6,8 @@ import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
 import { ReactComponent as IconLeft } from '~/assets/login/left.svg'
 import { ReactComponent as IconRight } from '~/assets/login/right.svg'
 import TextField from '@mui/material/TextField'
-import { Link } from 'react-router-dom'
+import Alert from '@mui/material/Alert'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import {
   EMAIL_RULE,
@@ -17,13 +18,29 @@ import {
 } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { useTheme } from '@mui/material/styles'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
+// import { loginUserAPI } from '~/redux/user/userSlice'
 
 function LoginForm() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const { register, handleSubmit, formState: { errors } } = useForm()
+  let [searchParams] = useSearchParams()
+  const registeredEmail = searchParams.get('registeredEmail')
+  const verifiedEmail = searchParams.get('verifiedEmail')
   const theme = useTheme()
 
   const submitLogIn = (data) => {
-    console.log('submit Login: ', data)
+    // const { email, password } = data
+    // toast.promise(
+    //   dispatch(loginUserAPI({ email, password })),
+    //   { pending: 'Logging in...' }
+    // ).then(res => {
+    //   console.log(res)
+    //   if (!res.error) navigate('/')
+    // })
   }
 
   return (
@@ -46,6 +63,22 @@ function LoginForm() {
           <Typography variant='span' sx={{ fontSize: '2rem', fontWeight: 'bold', color: theme.palette.text.primary }}>
             TaskFlow
           </Typography>
+        </Box>
+        <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '0 1em' }}>
+          {verifiedEmail &&
+            <Alert severity="success" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
+              Your email&nbsp;
+              <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>{verifiedEmail}</Typography>
+              &nbsp;has been verified.<br />Now you can login to enjoy our services! Have a good day!
+            </Alert>
+          }
+          {registeredEmail &&
+            <Alert severity="info" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
+              An email has been sent to&nbsp;
+              <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>{registeredEmail}</Typography>
+              <br />Please check and verify your account before logging in!
+            </Alert>
+          }
         </Box>
 
         <Box sx={{

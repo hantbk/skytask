@@ -6,8 +6,9 @@ import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
 import { ReactComponent as IconLeftSignUp } from '~/assets/register/sign-up-left.svg'
 import { ReactComponent as IconRightSignUp } from '~/assets/register/sign-up-right.svg'
 import TextField from '@mui/material/TextField'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { registerUserAPI } from '~/apis'
 import {
   EMAIL_RULE,
   PASSWORD_RULE,
@@ -17,13 +18,23 @@ import {
 } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { useTheme } from '@mui/material/styles'
+import { toast } from 'react-toastify'
 
 function RegisterForm() {
   const { register, handleSubmit, formState: { errors }, watch } = useForm()
+  const navigate = useNavigate()
   const theme = useTheme()
 
   const submitRegister = (data) => {
-    console.log('submit Register: ', data)
+    const { email, password } = data
+    toast.promise(
+      registerUserAPI({ email, password }),
+      {
+        pending: 'Registering is in progress...',
+      }
+    ).then(user => {
+      navigate(`/login?registeredEmail=${user.email}`)
+    })
   }
 
   return (
