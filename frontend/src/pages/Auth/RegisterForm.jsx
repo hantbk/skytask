@@ -6,8 +6,9 @@ import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
 import { ReactComponent as IconLeftSignUp } from '~/assets/register/sign-up-left.svg'
 import { ReactComponent as IconRightSignUp } from '~/assets/register/sign-up-right.svg'
 import TextField from '@mui/material/TextField'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { registerUserAPI } from '~/apis'
 import {
   EMAIL_RULE,
   PASSWORD_RULE,
@@ -16,12 +17,24 @@ import {
   EMAIL_RULE_MESSAGE
 } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
+import { useTheme } from '@mui/material/styles'
+import { toast } from 'react-toastify'
 
 function RegisterForm() {
   const { register, handleSubmit, formState: { errors }, watch } = useForm()
+  const navigate = useNavigate()
+  const theme = useTheme()
 
   const submitRegister = (data) => {
-    console.log('submit Register: ', data)
+    const { email, password } = data
+    toast.promise(
+      registerUserAPI({ email, password }),
+      {
+        pending: 'Registering is in progress...',
+      }
+    ).then(user => {
+      navigate(`/login?registeredEmail=${user.email}`)
+    })
   }
 
   return (
@@ -30,7 +43,8 @@ function RegisterForm() {
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundImage: `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.paper})`
       }}>
         <Box sx={{
           display: 'flex',
@@ -39,8 +53,8 @@ function RegisterForm() {
           margin: '40px 0px',
           gap: 0.5
         }}>
-          <SvgIcon component={TrelloIcon} fontSize="large" inheritViewBox sx={{ color: '#0079BF' }} />
-          <Typography variant='span' sx={{ fontSize: '2rem', fontWeight: 'bold', color: 'black' }}>
+          <SvgIcon component={TrelloIcon} fontSize="large" inheritViewBox sx={{ color: theme.palette.primary.main }} />
+          <Typography variant='span' sx={{ fontSize: '2rem', fontWeight: 'bold', color: theme.palette.text.primary }}>
             TaskFlow
           </Typography>
         </Box>
@@ -62,7 +76,13 @@ function RegisterForm() {
               height: 'auto',
               display: 'block',
               verticalAlign: 'middle',
-              borderStyle: 'none'
+              borderStyle: 'none',
+              animation: 'slideInLeft 2s ease-out forwards',
+              opacity: 0,
+              '@keyframes slideInLeft': {
+                '0%': { opacity: 0, transform: 'translateX(-100px)' },
+                '100%': { opacity: 1, transform: 'translateX(0)' }
+              }
             }}
           />
           <SvgIcon
@@ -77,7 +97,13 @@ function RegisterForm() {
               height: 'auto',
               display: 'block',
               verticalAlign: 'middle',
-              borderStyle: 'none'
+              borderStyle: 'none',
+              animation: 'slideInRight 2s ease-out forwards',
+              opacity: 0,
+              '@keyframes slideInRight': {
+                '0%': { opacity: 0, transform: 'translateX(100px)' },
+                '100%': { opacity: 1, transform: 'translateX(0)' }
+              }
             }}
           />
           {/* Form Register */}
@@ -88,9 +114,12 @@ function RegisterForm() {
             borderWidth: '1px',
             borderStyle: 'solid',
             boxSizing: 'border-box',
-            borderColor: '#ccc',
+            borderColor: theme.palette.divider,
             borderRadius: '8px',
-            boxShadow: 'rgb(0 0 0 / 10%) 0 0 10px',
+            boxShadow: theme.shadows[1],
+            backgroundColor: theme.palette.background.paper,
+            position: 'relative',
+            zIndex: 1
             // '@media (max-width: 1366px)': {
             //   width: '60%'
             // },
@@ -104,7 +133,8 @@ function RegisterForm() {
               sx={{
                 marginTop: '20px',
                 marginBottom: '25px',
-                textAlign: 'center'
+                textAlign: 'center',
+                color: theme.palette.text.primary
               }}>
               Sign up for your account
             </Typography>
@@ -124,10 +154,11 @@ function RegisterForm() {
                     message: EMAIL_RULE_MESSAGE
                   }
                 })}
+                sx={{ backgroundColor: theme.palette.background.default }}
               />
-              <FieldErrorAlert errors={errors} fieldName={'email'}/>
+              <FieldErrorAlert errors={errors} fieldName={'email'} />
             </Box>
-            
+
             <Box>
               <TextField
                 label="Create Password"
@@ -143,10 +174,11 @@ function RegisterForm() {
                     message: PASSWORD_RULE_MESSAGE
                   }
                 })}
+                sx={{ backgroundColor: theme.palette.background.default }}
               />
-              <FieldErrorAlert errors={errors} fieldName={'password'}/>
+              <FieldErrorAlert errors={errors} fieldName={'password'} />
             </Box>
-            
+
             <Box>
               <TextField
                 label="Confirm Password"
@@ -162,21 +194,43 @@ function RegisterForm() {
                   }
                 })}
               />
-              <FieldErrorAlert errors={errors} fieldName={'password_confirmation'}/>
+              <FieldErrorAlert errors={errors} fieldName={'password_confirmation'} />
             </Box>
-            
+
             <Button
               type="submit"
               variant="contained"
               color="primary"
               size="large"
               fullWidth
-              sx={{ mt: 2, mb: 2, fontWeight: 'bold', backgroundColor: '#0079BF' }}
+              sx={{
+                mt: 2,
+                mb: 2,
+                fontWeight: 'bold',
+                backgroundColor: theme.palette.primary.main,
+                '&:hover': {
+                  backgroundColor: theme.palette.primary.dark
+                }
+              }}
             >
               Sign Up
             </Button>
             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-              <Link to="/login" style={{ textDecoration: 'none' }}>Already have an account? Log in.</Link>
+              <Typography variant="body1" sx={{ color: theme.palette.text.primary }}>
+                Already have an account?{' '}
+                <Link
+                  to="/login"
+                  style={{
+                    textDecoration: 'underline',
+                    color: theme.palette.primary.main,
+                    fontWeight: 'bold'
+                  }}
+                  onMouseEnter={(e) => (e.target.style.color = theme.palette.primary.dark)}
+                  onMouseLeave={(e) => (e.target.style.color = theme.palette.primary.main)}
+                >
+                  Log in
+                </Link>
+              </Typography>
             </Box>
 
           </Box>
