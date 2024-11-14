@@ -2,11 +2,18 @@ import { Box, Button, SvgIcon, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
 import { ReactComponent as HomeIllustration } from '~/assets/homepage/home-illustration.svg'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '~/redux/user/userSlice'
 
 function Welcome() {
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
+
+  const currentUser = useSelector(selectCurrentUser)
+  if (currentUser) {
+    return <Navigate to='/' replace={true} />
+  }
 
   return (
     <Box sx={{

@@ -1,4 +1,6 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '~/redux/user/userSlice'
 
 import Board from './pages/Boards/_id'
 import NotFound from './pages/404/NotFound'
@@ -7,26 +9,40 @@ import LoginForm from './pages/Auth/LoginForm'
 import RegisterForm from './pages/Auth/RegisterForm'
 import AccountVerification from '~/pages/Auth/AccountVerification'
 
+// ProtectedRoute component for authenticated routes
+const ProtectedRoute = ({ user }) => {
+  if (!user) return <Navigate to='/welcome' replace={true} />
+  return <Outlet />
+}
+
+// PublicRoute component for unauthenticated routes
+const PublicRoute = ({ user }) => {
+  if (user) return <Navigate to='/' replace={true} />
+  return <Outlet />
+}
+
 function App() {
+  const currentUser = useSelector(selectCurrentUser)
+
   return (
     <Routes>
-      {/* Redirect Route */}
-      <Route path='/' element={
-        // Ở đây cần replace giá trị true để nó thay thế route /, có thể hiểu là route / sẽ không còn nằm trong history của Browser
-        // Thực hành dễ hiểu hơn bằng cách nhấn Go Home từ trang 404 xong thử quay lại bằng nút back của trình duyệt giữa 2 trường hợp có replace hoặc không có
-        <Navigate to="boards/672a55cbb042a7b34289efd0" replace={true} />
-      } />
+      {/* Redirect root path to a default board */}
+      <Route path='/' element={<Navigate to="boards/672a55cbb042a7b34289efd0" replace={true} />} />
 
-      {/* Board Details */}
-      <Route path='/boards/:boardId' element={<Board />} />
+      {/* Protected Routes (Accessible only after login) */}
+      <Route element={<ProtectedRoute user={currentUser} />}>
+        <Route path='/boards/:boardId' element={<Board />} />
+      </Route>
 
-      {/* Authentication */}
-      <Route path='/welcome' element={<Welcome />} />
-      <Route path='/login' element={<LoginForm />} />
-      <Route path='/register' element={<RegisterForm />} />
-      <Route path='/account/verification' element={<AccountVerification />} />
+      {/* Public Routes (Accessible only when logged out) */}
+      <Route element={<PublicRoute user={currentUser} />}>
+        <Route path='/welcome' element={<Welcome />} />
+        <Route path='/login' element={<LoginForm />} />
+        <Route path='/register' element={<RegisterForm />} />
+        <Route path='/account/verification' element={<AccountVerification />} />
+      </Route>
 
-      {/* 404 not found page */}
+      {/* 404 Not Found */}
       <Route path='*' element={<NotFound />} />
     </Routes>
   )
