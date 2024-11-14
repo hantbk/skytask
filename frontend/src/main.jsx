@@ -16,6 +16,10 @@ import { store } from '~/redux/store.js'
 // Cấu hình react-router-dom với BrowserRouter
 import { BrowserRouter } from 'react-router-dom'
 
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistStore } from 'redux-persist'
+const persistor = persistStore(store)
+
 // ToastContainer wrapper component
 // eslint-disable-next-line react-refresh/only-export-components
 function ThemedToastContainer() {
@@ -33,19 +37,21 @@ function ThemedToastContainer() {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter basename='/'>
     <Provider store={store}>
-      <CssVarsProvider theme={theme}>
-        <ConfirmProvider defaultOptions={{
-          allowClose: false,
-          dialogProps: { maxWidth: 'xs' },
-          buttonOrder: ['confirm', 'cancel'],
-          cancellationButtonProps: { color: 'inherit' },
-          confirmationButtonProps: { color: 'secondary', variant: 'outlined' }
-        }}>
-          <CssBaseline />
-          <App />
-        </ConfirmProvider>
-        <ThemedToastContainer />
-      </CssVarsProvider>
+      <PersistGate persistor={persistor}>
+        <CssVarsProvider theme={theme}>
+          <ConfirmProvider defaultOptions={{
+            allowClose: false,
+            dialogProps: { maxWidth: 'xs' },
+            buttonOrder: ['confirm', 'cancel'],
+            cancellationButtonProps: { color: 'inherit' },
+            confirmationButtonProps: { color: 'secondary', variant: 'outlined' }
+          }}>
+            <CssBaseline />
+            <App />
+          </ConfirmProvider>
+          <ThemedToastContainer />
+        </CssVarsProvider>
+      </PersistGate>
     </Provider>
   </BrowserRouter>
 )

@@ -21,6 +21,10 @@ import { useTheme } from '@mui/material/styles'
 import { useDispatch } from 'react-redux'
 import { loginUserAPI } from '~/redux/user/userSlice'
 import { toast } from 'react-toastify'
+import { useState } from 'react'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { IconButton, InputAdornment } from '@mui/material'
 
 function LoginForm() {
   const dispatch = useDispatch()
@@ -40,6 +44,12 @@ function LoginForm() {
     ).then(res => {
       if (!res.error) navigate('/')
     })
+  }
+
+  const [showPassword, setShowPassword] = useState(false)
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
   }
 
   return (
@@ -187,7 +197,7 @@ function LoginForm() {
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 error={!!errors['password']}
                 {...register('password', {
                   required: FIELD_REQUIRED_MESSAGE,
@@ -196,9 +206,22 @@ function LoginForm() {
                     message: PASSWORD_RULE_MESSAGE
                   }
                 })}
-                sx={{ backgroundColor: theme.palette.background.default }}
+                sx={{ backgroundColor: theme => theme.palette.background.default }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={togglePasswordVisibility}
+                        edge="end"
+                        aria-label="toggle password visibility"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
               />
-              <FieldErrorAlert errors={errors} fieldName={'password'} />
+              <FieldErrorAlert errors={errors} fieldName="password" />
             </Box>
 
             <Button

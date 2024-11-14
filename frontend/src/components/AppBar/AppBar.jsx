@@ -37,12 +37,26 @@ function AppBar() {
       bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0')
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <AppsIcon sx={{ color: 'white' }}/>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <SvgIcon component={TrelloIcon} fontSize="small" inheritViewBox sx={{ color: 'white' }}/>
-          <Typography variant='span' sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}
-          >TaskFlow</Typography>
+        <AppsIcon sx={{ color: 'white' }} />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.3, md: 0.5 } }}>
+          <SvgIcon
+            component={TrelloIcon}
+            fontSize="small"
+            inheritViewBox
+            sx={{ color: 'white', fontSize: { xs: '1rem', md: '1.5rem' } }}
+          />
+          <Typography
+            variant="span"
+            sx={{
+              fontSize: { xs: '1rem', md: '1.2rem' },
+              fontWeight: 'bold',
+              color: 'white'
+            }}
+          >
+            TaskFlow
+          </Typography>
         </Box>
+
 
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
           <Workspaces />
@@ -56,7 +70,7 @@ function AppBar() {
               '&:hover': { border: 'none' }
             }}
             variant='outlined'
-            startIcon={<LibraryAddIcon/>}>Create</Button>
+            startIcon={<LibraryAddIcon />}>Create</Button>
         </Box>
       </Box>
 
@@ -71,7 +85,7 @@ function AppBar() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'white' }}/>
+                <SearchIcon sx={{ color: 'white' }} />
               </InputAdornment>
             ),
             endAdornment: (
@@ -79,7 +93,7 @@ function AppBar() {
                 <CloseIcon
                   fontSize='small'
                   sx={{ color: searchValue ? 'white' : 'transparent' }}
-                  onClick = {() => setSearchValue('')}
+                  onClick={() => setSearchValue('')}
                 />
               </InputAdornment>
             )
@@ -95,7 +109,7 @@ function AppBar() {
               '&:hover fieldset': { borderColor: 'white' },
               '&.Mui-focused fieldset': { borderColor: 'white' }
             }
-          }}/>
+          }} />
         <ModeSelect />
 
         <Tooltip title="Notification">
@@ -105,7 +119,7 @@ function AppBar() {
         </Tooltip>
 
         <Tooltip title="Help">
-          <HelpOutlineOutlinedIcon sx={{ cursor: 'pointer', color: 'white' }}/>
+          <HelpOutlineOutlinedIcon sx={{ cursor: 'pointer', color: 'white' }} />
         </Tooltip>
 
         <Profiles />

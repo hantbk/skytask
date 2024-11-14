@@ -19,11 +19,33 @@ import {
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { useTheme } from '@mui/material/styles'
 import { toast } from 'react-toastify'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline'
+import { green, red } from '@mui/material/colors'
+import { useState } from 'react'
+import { IconButton, InputAdornment } from '@mui/material'
+import { CancelOutlined } from '@mui/icons-material'
 
 function RegisterForm() {
   const { register, handleSubmit, formState: { errors }, watch } = useForm()
   const navigate = useNavigate()
   const theme = useTheme()
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword)
+  const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword)
+
+  // Watch the value of the password field for comparison
+  const passwordValue = watch('password')
+  const confirmPasswordValue = watch('password_confirmation')
+
+  // Prevent error by providing a fallback for undefined values
+  const passwordsMatch =
+    (confirmPasswordValue || '').length > 0 &&
+    confirmPasswordValue === (passwordValue || '')
 
   const submitRegister = (data) => {
     const { email, password } = data
@@ -165,7 +187,7 @@ function RegisterForm() {
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 error={!!errors['password']}
                 {...register('password', {
                   required: FIELD_REQUIRED_MESSAGE,
@@ -174,9 +196,22 @@ function RegisterForm() {
                     message: PASSWORD_RULE_MESSAGE
                   }
                 })}
-                sx={{ backgroundColor: theme.palette.background.default }}
+                sx={{ backgroundColor: theme => theme.palette.background.default }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={togglePasswordVisibility}
+                        edge="end"
+                        aria-label="toggle password visibility"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
               />
-              <FieldErrorAlert errors={errors} fieldName={'password'} />
+              <FieldErrorAlert errors={errors} fieldName="password" />
             </Box>
 
             <Box>
@@ -185,16 +220,36 @@ function RegisterForm() {
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                type="password"
+                type={showConfirmPassword ? 'text' : 'password'}
                 error={!!errors['password_confirmation']}
                 {...register('password_confirmation', {
                   validate: (value) => {
-                    if (value === watch('password')) return true
+                    if (value === passwordValue) return true
                     return 'Password Confirmation does not match!'
                   }
                 })}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={toggleConfirmPasswordVisibility}
+                        edge="end"
+                        aria-label="toggle confirm password visibility"
+                      >
+                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                      {confirmPasswordValue && (
+                        passwordsMatch ? (
+                          <CheckCircleOutline sx={{ color: green[500], ml: 1 }} />
+                        ) : (
+                          <CancelOutlined sx={{ color: red[500], ml: 1 }} />
+                        )
+                      )}
+                    </InputAdornment>
+                  )
+                }}
               />
-              <FieldErrorAlert errors={errors} fieldName={'password_confirmation'} />
+              <FieldErrorAlert errors={errors} fieldName="password_confirmation" />
             </Box>
 
             <Button
