@@ -22,6 +22,7 @@ const login = async (req, res, next) => {
   try {
     const result = await userService.login(req.body)
 
+    // Return http only cookies
     console.log(result)
 
     res.status(StatusCodes.OK).json(result)

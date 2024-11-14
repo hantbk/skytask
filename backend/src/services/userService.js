@@ -113,13 +113,11 @@ const login = async (reqBody) => {
     const accessToken = await JwtProvider.generateToken(
       userInfo,
       env.ACCESS_TOKEN_SECRET_SIGNATURE,
-      // 5 // 5 giây
       env.ACCESS_TOKEN_LIFE
     )
     const refreshToken = await JwtProvider.generateToken(
       userInfo,
       env.REFRESH_TOKEN_SECRET_SIGNATURE,
-      // 15 // 15 giây
       env.REFRESH_TOKEN_LIFE
     )
     // Trả về thông tin của user kèm theo 2 cái token vừa tạo ra
