@@ -8,12 +8,12 @@ services:
     container_name: frontend
     restart: always
     ports:
-      - 80:80
+      - 5173:80
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_DEV_API_ROOT=${VITE_DEV_API_ROOT}
+      - VITE_DEV_API_ROOT=http://localhost:8017
     env_file:
       - ./frontend/.env 
     networks:
@@ -32,6 +32,7 @@ services:
       - ./backend:/app
       - /app/node_modules
     environment:
+      - PORT=${PORT}
       - MONGODB_URI=${MONGODB_URI}
       - DATABASE_NAME=${DATABASE_NAME}
       - LOCAL_DEV_APP_HOST=${LOCAL_DEV_APP_HOST}
@@ -41,6 +42,10 @@ services:
       - BREVO_API_KEY=${BREVO_API_KEY}
       - ADMIN_EMAIL_ADDRESS=${ADMIN_EMAIL_ADDRESS}
       - ADMIN_EMAIL_NAME=${ADMIN_EMAIL_NAME}
+      - ACCESS_TOKEN_SECRET_SIGNATURE =${ACCESS_TOKEN_SECRET_SIGNATURE}
+      - REFRESH_TOKEN_SECRET_SIGNATURE =${REFRESH_TOKEN_SECRET_SIGNATURE}
+      - ACCESS_TOKEN_LIFE=${ACCESS_TOKEN_LIFE}
+      - REFRESH_TOKEN_LIFE=${REFRESH_TOKEN_LIFE}
     env_file:
       - ./backend/.env 
     networks:
