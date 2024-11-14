@@ -13,7 +13,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - DEV_API_ROOT=${DEV_API_ROOT}
+      - VITE_DEV_API_ROOT=${VITE_DEV_API_ROOT}
     env_file:
       - ./frontend/.env 
     networks:
