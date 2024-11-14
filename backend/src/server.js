@@ -10,6 +10,7 @@ import { env } from '~/config/environment'
 import { WEBSITE_DOMAIN } from '~/utils/constants'
 import axios from 'axios'
 
+// Allow Ping Health Check from Url Frontend
 const urlToPing = WEBSITE_DOMAIN
 const interval = 300000 // 5 minutes
 
