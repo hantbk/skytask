@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { pickUser } from '~/utils/formatters'
 import { WEBSITE_DOMAIN } from '~/utils/constants'
 import { BrevoProvider } from '~/providers/BrevoProvider'
+import { JwtProvider } from '~/providers/JwtProvider'
+import { env } from '~/config/environment'
 
 const createNew = async (reqBody) => {
   try {
@@ -20,7 +22,7 @@ const createNew = async (reqBody) => {
     const nameFromEmail = reqBody.email.split('@')[0]
     const newUser = {
       email: reqBody.email,
-      password: bcryptjs.hashSync(reqBody.password, 8), // Tham số thứ 2 là độ phức tạp, càng cao băm càng lâu
+      password: bcryptjs.hashSync(reqBody.password, 8), // Tham số thứ 2 là độ phức tạp, càng cao băm càng lâu????
       username: nameFromEmail,
       displayName: nameFromEmail, // mặc định để giống username, sau làm tính năng update user
       verifyToken: uuidv4()
@@ -67,6 +69,70 @@ const createNew = async (reqBody) => {
   }
 }
 
+const verifyAccount = async (reqBody) => {
+  try {
+    const existUser = await userModel.findOneByEmail(reqBody.email)
+
+    if (!existUser) throw new ApiError(StatusCodes.NOT_FOUND, 'User not found!')
+    if (existUser.isActive) throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Account is already verified!')
+
+    if (reqBody.token !== existUser.verifyToken) throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Token is invalid!')
+
+    const updateData = {
+      isActive: true,
+      verifyToken: null
+    }
+    // Update thông tin user
+    const updatedUser = await userModel.update(existUser._id, updateData)
+    return pickUser(updatedUser)
+
+  } catch (error) {
+    throw error
+  }
+}
+
+const login = async (reqBody) => {
+  try {
+    const existUser = await userModel.findOneByEmail(reqBody.email)
+    if (!existUser) throw new ApiError(StatusCodes.NOT_FOUND, 'User not found!')
+    if (!existUser.isActive) throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Your account is not activated!')
+
+    if (!bcryptjs.compareSync(reqBody.password, existUser.password)) {
+      throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Your email or password is not correct!')
+    }
+
+    /** Tạo Tokens đăng nhập và trả về cho FE */
+    // Thông tin đính kèm trong token bao gồm _id và email
+    const userInfo = {
+      _id: existUser._id,
+      email: existUser.email
+    }
+
+    // Tạo ra 2 loại token là accessToken và refreshToken
+    const accessToken = await JwtProvider.generateToken(
+      userInfo,
+      env.ACCESS_TOKEN_SECRET_SIGNATURE,
+      env.ACCESS_TOKEN_LIFE
+    )
+    const refreshToken = await JwtProvider.generateToken(
+      userInfo,
+      env.REFRESH_TOKEN_SECRET_SIGNATURE,
+      env.REFRESH_TOKEN_LIFE
+    )
+
+    // Trả token về cùng với thông tin user
+    return {
+      accessToken,
+      refreshToken,
+      ...pickUser(existUser)
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
 export const userService = {
-  createNew
+  createNew,
+  verifyAccount,
+  login
 }

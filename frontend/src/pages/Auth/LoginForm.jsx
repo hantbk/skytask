@@ -18,8 +18,14 @@ import {
 } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { useTheme } from '@mui/material/styles'
+import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { loginUserAPI } from '~/redux/user/userSlice'
+import { useNavigate } from 'react-router-dom'
 
 function LoginForm() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const { register, handleSubmit, formState: { errors } } = useForm()
   let [searchParams] = useSearchParams()
@@ -27,15 +33,16 @@ function LoginForm() {
   const verifiedEmail = searchParams.get('verifiedEmail')
   const theme = useTheme()
 
-  const submitLogIn = () => {
-    // const { email, password } = data
-    // toast.promise(
-    //   dispatch(loginUserAPI({ email, password })),
-    //   { pending: 'Logging in...' }
-    // ).then(res => {
-    //   console.log(res)
-    //   if (!res.error) navigate('/')
-    // })
+  const submitLogIn = (data) => {
+    const { email, password } = data
+    toast.promise(
+      dispatch(loginUserAPI({ email, password })),
+      { pending: 'Logging in...' }
+    ).then(res => {
+      console.log(res)
+      if (!res.error) navigate('/')
+    })
+
   }
 
   return (
@@ -198,6 +205,7 @@ function LoginForm() {
             </Box>
 
             <Button
+              className="interceptor-loading"
               type="submit"
               variant="contained"
               color="primary"
