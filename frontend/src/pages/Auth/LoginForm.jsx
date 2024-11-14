@@ -7,7 +7,7 @@ import { ReactComponent as IconLeft } from '~/assets/login/left.svg'
 import { ReactComponent as IconRight } from '~/assets/login/right.svg'
 import TextField from '@mui/material/TextField'
 import Alert from '@mui/material/Alert'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import {
   EMAIL_RULE,
@@ -18,10 +18,9 @@ import {
 } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { useTheme } from '@mui/material/styles'
-import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { loginUserAPI } from '~/redux/user/userSlice'
-import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 function LoginForm() {
   const dispatch = useDispatch()
@@ -39,10 +38,8 @@ function LoginForm() {
       dispatch(loginUserAPI({ email, password })),
       { pending: 'Logging in...' }
     ).then(res => {
-      console.log(res)
       if (!res.error) navigate('/')
     })
-
   }
 
   return (
@@ -205,7 +202,6 @@ function LoginForm() {
             </Box>
 
             <Button
-              className="interceptor-loading"
               type="submit"
               variant="contained"
               color="primary"
