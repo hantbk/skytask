@@ -1,8 +1,6 @@
-import { env } from '~/config/environment'
-
-export const API_ROOT = env.BUILD_MODE === 'dev'
-  ? env.DEV_API_ROOT
-  : env.PROD_API_ROOT
+export const API_ROOT = process.env.BUILD_MODE === 'dev'
+  ? import.meta.env.VITE_DEV_API_ROOT
+  : import.meta.env.VITE_PROD_API_ROOT
 
 export const DEFAULT_PAGE = 1
 export const DEFAULT_ITEMS_PER_PAGE = 12
