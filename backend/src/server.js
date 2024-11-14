@@ -7,27 +7,13 @@ import { errorHandlingMiddleware } from '~/middlewares/errorHandlingMiddleware'
 import { APIs_V1 } from './routes/v1'
 import { CONNECT_DB, CLOSE_DB } from '~/config/mongodb'
 import { env } from '~/config/environment'
-import { WEBSITE_DOMAIN } from '~/utils/constants'
-import axios from 'axios'
-
-// Allow Ping Health Check from Url Frontend
-const urlToPing = WEBSITE_DOMAIN
-const interval = 300000 // 5 minutes
-
-// Function to reload the server by pinging the server's health check URL
-function reloadWebsite() {
-  axios
-    .get(urlToPing)
-    .then(response => {
-      console.log(`Reloaded at ${new Date().toISOString()}: Status Code ${response.status}`)
-    })
-    .catch(error => {
-      console.error(`Error reloading at ${new Date().toISOString()}:`, error.message)
-    })
-}
+import cookieParser from 'cookie-parser'
 
 const START_SERVER = () => {
   const app = express()
+
+  // Cookie Parser
+  app.use(cookieParser())
 
   // Enable req.body json data
   app.use(express.json())
@@ -36,15 +22,6 @@ const START_SERVER = () => {
 
   // Use APIs V1
   app.use('/v1', APIs_V1)
-
-  // Health check endpoint
-  app.get('/health', (req, res) => {
-    res.status(200).json({
-      status: 'OK',
-      message: 'Server is healthy',
-      timestamp: new Date().toISOString()
-    })
-  })
 
   // Centralized error handling
   app.use(errorHandlingMiddleware)
@@ -69,8 +46,6 @@ const START_SERVER = () => {
     CLOSE_DB()
   })
 
-  // Start periodic ping to keep the server alive
-  setInterval(reloadWebsite, interval)
 }
 
 (async () => {
@@ -83,11 +58,3 @@ const START_SERVER = () => {
     process.exit(0)
   }
 })()
-
-// CONNECT_DB()
-//   .then(() => console.log('Connected to MongoDB Cloud Atlas!'))
-//   .then(() => START_SERVER())
-//   .catch(err => {
-//     console.error(err)
-//     process.exit(0)
-//   })
