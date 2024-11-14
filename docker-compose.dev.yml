@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - DEV_API_ROOT=${DEV_API_ROOT}
+    env_file:
+      - ./frontend/.env 
+    networks:
+      - network
+
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - 8017:8017
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - LOCAL_DEV_APP_HOST=${LOCAL_DEV_APP_HOST}
+      - LOCAL_DEV_APP_PORT=${LOCAL_DEV_APP_PORT}
+      - WEBSITE_DOMAIN_DEVELOPMENT=${WEBSITE_DOMAIN_DEVELOPMENT}
+      - WEBSITE_DOMAIN_PRODUCTION=${WEBSITE_DOMAIN_PRODUCTION}
+      - BREVO_API_KEY=${BREVO_API_KEY}
+      - ADMIN_EMAIL_ADDRESS=${ADMIN_EMAIL_ADDRESS}
+      - ADMIN_EMAIL_NAME=${ADMIN_EMAIL_NAME}
+    env_file:
+      - ./backend/.env 
+    networks:
+      - network
+
+
+networks:
+  network:
