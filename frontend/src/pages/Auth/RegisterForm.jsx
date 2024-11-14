@@ -198,6 +198,7 @@ function RegisterForm() {
             </Box>
 
             <Button
+              className="interceptor-loading"
               type="submit"
               variant="contained"
               color="primary"
