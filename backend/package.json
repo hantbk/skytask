@@ -17,6 +17,7 @@
     "@babel/runtime": "^7.22.10",
     "@getbrevo/brevo": "^2.2.0",
     "async-exit-hook": "^2.0.1",
+    "axios": "^1.7.7",
     "bcryptjs": "2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
