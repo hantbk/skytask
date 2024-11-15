@@ -127,8 +127,30 @@ const login = async (reqBody) => {
   }
 }
 
+const refreshToken = async (clienRefreshToken) => {
+  try {
+    // Bước 01: Thực hiện giải mã token xem nó có hợp lệ hay là không
+    const refreshTokenDecoded = await JwtProvider.verifyToken(
+      clienRefreshToken,
+      env.REFRESH_TOKEN_SECRET_SIGNATURE
+    )
+    // Lấy thông tin từ refreshTokenDecoded, không cần truy vấn database
+    const userInfo = { _id: refreshTokenDecoded._id, email: refreshTokenDecoded.email }
+
+    // Bước 02: Tạo ra một cái accessToken mới
+    const accessToken = await JwtProvider.generateToken(
+      userInfo,
+      env.ACCESS_TOKEN_SECRET_SIGNATURE,
+      env.ACCESS_TOKEN_LIFE
+    )
+
+    return { accessToken }
+  } catch (error) { throw error }
+}
+
 export const userService = {
   createNew,
   verifyAccount,
-  login
+  login,
+  refreshToken
 }

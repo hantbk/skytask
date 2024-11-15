@@ -18,6 +18,10 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
+import { injectStore } from '~/utils/authorizeAxios'
+
+// Kỹ thuật Inject Store để sử dụng biến store ở các file ngoài phạm vi component
+injectStore(store)
 const persistor = persistStore(store)
 
 // ToastContainer wrapper component
