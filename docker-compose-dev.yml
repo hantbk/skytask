@@ -1,35 +1,33 @@
-version: "3.9"
+version: '3.8'
 
 services:
   frontend:
+    container_name: frontend
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-    container_name: frontend
-    restart: always
+      dockerfile: Dockerfile.dev
     ports:
-      - 3000:3000
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "5173:5173"
     environment:
-      - VITE_DEV_API_ROOT=${VITE_DEV_API_ROOT}
-    env_file:
-      - ./frontend/.env
+      NODE_ENV: development
+      VITE_DEV_API_ROOT: http://${LOCAL_DEV_APP_HOST}:${LOCAL_DEV_APP_PORT}
     networks:
       - app_network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # For node_modules caching inside the container
 
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: backend
     restart: always
     ports:
-      - 8017:8017
+      - "8017:8017"
     volumes:
       - ./backend:/app
-      - /app/node_modules
+      - /app/node_modules  # For node_modules caching inside the container
     environment:
       - PORT=${PORT}
       - MONGODB_URI=${MONGODB_URI}
@@ -45,11 +43,10 @@ services:
       - REFRESH_TOKEN_SECRET_SIGNATURE=${REFRESH_TOKEN_SECRET_SIGNATURE}
       - ACCESS_TOKEN_LIFE=${ACCESS_TOKEN_LIFE}
       - REFRESH_TOKEN_LIFE=${REFRESH_TOKEN_LIFE}
-    env_file:
-      - ./backend/.env
     networks:
       - app_network
 
+# Network configuration for communication between services
 networks:
   app_network:
     driver: bridge
