@@ -8,17 +8,16 @@ services:
     container_name: frontend
     restart: always
     ports:
-      - 5173:80
+      - 3000:3000
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_DEV_API_ROOT=http://localhost:8017
+      - VITE_DEV_API_ROOT=${VITE_DEV_API_ROOT}
     env_file:
-      - ./frontend/.env 
+      - ./frontend/.env
     networks:
-      - network
-
+      - app_network
 
   backend:
     build:
@@ -42,15 +41,15 @@ services:
       - BREVO_API_KEY=${BREVO_API_KEY}
       - ADMIN_EMAIL_ADDRESS=${ADMIN_EMAIL_ADDRESS}
       - ADMIN_EMAIL_NAME=${ADMIN_EMAIL_NAME}
-      - ACCESS_TOKEN_SECRET_SIGNATURE =${ACCESS_TOKEN_SECRET_SIGNATURE}
-      - REFRESH_TOKEN_SECRET_SIGNATURE =${REFRESH_TOKEN_SECRET_SIGNATURE}
+      - ACCESS_TOKEN_SECRET_SIGNATURE=${ACCESS_TOKEN_SECRET_SIGNATURE}
+      - REFRESH_TOKEN_SECRET_SIGNATURE=${REFRESH_TOKEN_SECRET_SIGNATURE}
       - ACCESS_TOKEN_LIFE=${ACCESS_TOKEN_LIFE}
       - REFRESH_TOKEN_LIFE=${REFRESH_TOKEN_LIFE}
     env_file:
-      - ./backend/.env 
+      - ./backend/.env
     networks:
-      - network
-
+      - app_network
 
 networks:
-  network:
+  app_network:
+    driver: bridge

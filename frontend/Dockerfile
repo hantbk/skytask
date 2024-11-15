@@ -1,15 +1,20 @@
-FROM node:20-alpine as build
+# Stage 1: Build
+FROM node:20-alpine as builder
 
 WORKDIR /app
 COPY package.json yarn.lock ./
-RUN yarn install
+RUN yarn install --frozen-lockfile
 COPY . .
 RUN yarn build
 
-FROM nginx:stable-alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
+# Stage 2: Runtime
+FROM node:20-alpine
 
-EXPOSE 80
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --production
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+
+CMD ["yarn", "preview", "--host", "0.0.0.0", "--port", "3000"]
