@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
 import ModeSelect from '~/components/ModeSelect/ModeSelect'
 import AppsIcon from '@mui/icons-material/Apps'
@@ -20,9 +20,44 @@ import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
+import { useMediaQuery } from '@mui/material'
+import MoreMenu from './MoreMenu'
 
 function AppBar() {
   const [searchValue, setSearchValue] = useState('')
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('md'))
+
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+
+  const searchRef = useRef(null)
+
+  const toggleSearch = () => {
+    setIsSearchOpen(true)
+  }
+
+  const handleBlur = (e) => {
+    // Check if the target is outside the search input
+    if (!searchRef.current.contains(e.relatedTarget)) {
+      setIsSearchOpen(false)
+      setSearchValue('')  // Optionally clear the search value
+    }
+  }
+
+  // Close search when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setIsSearchOpen(false)
+        setSearchValue('') // Optionally clear the search field when clicking outside
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
 
   return (
     <Box sx={{
@@ -38,26 +73,29 @@ function AppBar() {
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <AppsIcon sx={{ color: 'white' }} />
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.3, md: 0.5 } }}>
+
+        {/* Logo and name container */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.3, md: 0.5 }, flexShrink: 0 }}>
           <SvgIcon
             component={TrelloIcon}
             fontSize="small"
             inheritViewBox
-            sx={{ color: 'white', fontSize: { xs: '1rem', md: '1.5rem' } }}
+            sx={{ color: 'white', fontSize: { xs: '1.2rem', md: '1.5rem' } }} // Adjust logo size for small screens
           />
           <Typography
             variant="span"
             sx={{
-              fontSize: { xs: '1rem', md: '1.2rem' },
+              fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' }, // Adjust font size for responsiveness
               fontWeight: 'bold',
-              color: 'white'
+              color: 'white',
+              display: 'inline-block'
             }}
           >
             TaskFlow
           </Typography>
         </Box>
 
-
+        {/* Conditionally render menu items */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
           <Workspaces />
           <Recent />
@@ -72,46 +110,75 @@ function AppBar() {
             variant='outlined'
             startIcon={<LibraryAddIcon />}>Create</Button>
         </Box>
+
+        {/* Show MoreMenu when on small screens */}
+        {isSmallScreen && (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <MoreMenu /> {/* Display MoreMenu component */}
+            <Button
+              sx={{
+                color: 'white',
+                border: 'none',
+                '&:hover': { border: 'none' }
+              }}
+              variant='outlined'
+              startIcon={<LibraryAddIcon />}></Button>
+          </Box>
+        )}
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <TextField
-          id="outlined-search"
-          label="Search..."
-          type="text"
-          size="small"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'white' }} />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <CloseIcon
-                  fontSize='small'
-                  sx={{ color: searchValue ? 'white' : 'transparent' }}
-                  onClick={() => setSearchValue('')}
-                />
-              </InputAdornment>
-            )
-          }}
-          sx={{
-            minWidth: '120px',
-            maxWidth: '170px',
-            '& label': { color: 'white' },
-            '& input': { color: 'white' },
-            '& label.Mui-focused': { color: 'white' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: 'white' },
-              '&:hover fieldset': { borderColor: 'white' },
-              '&.Mui-focused fieldset': { borderColor: 'white' }
-            }
-          }} />
+        {/* Search Icon */}
+        {!isSearchOpen ? (
+          <SearchIcon
+            sx={{ color: 'white', cursor: 'pointer' }}
+            onClick={toggleSearch}
+          />
+        ) : (
+          <TextField
+            id="outlined-search"
+            label="Search..."
+            type="text"
+            size="small"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onBlur={handleBlur}
+            inputRef={searchRef}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: 'white' }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <CloseIcon
+                    fontSize="small"
+                    sx={{ color: searchValue ? 'white' : 'transparent' }}
+                    onClick={() => setSearchValue('')}
+                  />
+                </InputAdornment>
+              )
+            }}
+            sx={{
+              minWidth: { xs: '100px', md: '120px' },  // Adjust for small screens
+              maxWidth: '170px',
+              '& label': { color: 'white' },
+              '& input': { color: 'white' },
+              '& label.Mui-focused': { color: 'white' },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: 'white' },
+                '&:hover fieldset': { borderColor: 'white' },
+                '&.Mui-focused fieldset': { borderColor: 'white' }
+              }
+            }}
+          />
+        )}
+
+        {/* ModeSelect component */}
         <ModeSelect />
 
+        {/* Notification and Help Icons */}
         <Tooltip title="Notification">
           <Badge color="warning" variant="dot" sx={{ cursor: 'pointer' }}>
             <NotificationsNoneIcon sx={{ cursor: 'pointer', color: 'white' }} />
