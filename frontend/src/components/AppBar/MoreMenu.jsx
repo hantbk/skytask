@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Button, Menu, MenuItem, Divider } from '@mui/material'
+import { Box, Button, Menu, MenuItem, Divider, useTheme } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Workspaces from './Menus/Workspaces'
 import Recent from './Menus/Recent'
@@ -18,6 +18,9 @@ function MoreMenu() {
     setAnchorEl(null)
   }
 
+  const theme = useTheme()
+  const menuBackgroundColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0'
+
   return (
     <Box>
       <Button
@@ -28,7 +31,7 @@ function MoreMenu() {
         onClick={handleClick}
         endIcon={<ExpandMoreIcon />}
       >
-                More
+        More
       </Button>
       <Menu
         id="more-menu"
@@ -38,8 +41,10 @@ function MoreMenu() {
         MenuListProps={{
           'aria-labelledby': 'basic-button-more',
           sx: {
-            display: 'block', // Keep the MoreMenu items vertically aligned
-            padding: 0
+            display: 'block',
+            padding: 0,
+            backgroundColor: menuBackgroundColor,
+            color: 'white'
           },
         }}
       >

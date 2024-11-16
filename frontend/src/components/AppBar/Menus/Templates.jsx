@@ -8,6 +8,7 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Check from '@mui/icons-material/Check'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { useTheme } from '@mui/material/styles'
 
 function Templates() {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -19,10 +20,20 @@ function Templates() {
     setAnchorEl(null)
   }
 
+  const theme = useTheme()
+  const buttonBackgroundColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0'
+  const hoverBackgroundColor = theme.palette.mode === 'dark' ? '#1c2833' : '#0d47a1'
+
   return (
     <Box>
       <Button
-        sx={{ color: 'white' }}
+        sx={{
+          color: 'white',
+          backgroundColor: buttonBackgroundColor,
+          '&:hover': {
+            backgroundColor: hoverBackgroundColor
+          }
+        }}
         id="basic-button-templates"
         aria-controls={open ? 'basic-menu-templates' : undefined}
         aria-haspopup="true"
@@ -39,6 +50,12 @@ function Templates() {
         onClose={handleClose}
         MenuListProps={{
           'aria-labelledby': 'basic-button-templates'
+        }}
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.primary
+          }
         }}
       >
         <MenuItem>

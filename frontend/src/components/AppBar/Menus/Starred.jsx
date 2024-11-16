@@ -8,6 +8,7 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Check from '@mui/icons-material/Check'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { useTheme } from '@mui/material/styles'
 
 function Starred() {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -19,10 +20,20 @@ function Starred() {
     setAnchorEl(null)
   }
 
+  // Sử dụng theme từ môi trường
+  const theme = useTheme()
+  const buttonColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0'
+
   return (
     <Box>
       <Button
-        sx={{ color: 'white' }}
+        sx={{
+          color: 'white',
+          backgroundColor: buttonColor,
+          '&:hover': {
+            backgroundColor: theme.palette.mode === 'dark' ? '#1c2833' : '#0d47a1'
+          },
+        }}
         id="basic-button-starred"
         aria-controls={open ? 'basic-menu-starred' : undefined}
         aria-haspopup="true"
@@ -38,7 +49,13 @@ function Starred() {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'basic-button-starred'
+          'aria-labelledby': 'basic-button-starred',
+        }}
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.primary,
+          },
         }}
       >
         <MenuItem>

@@ -60,7 +60,6 @@ function AppBar() {
     }
   }, [])
 
-
   return (
     <Box sx={{
       width: '100%',
