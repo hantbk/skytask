@@ -22,6 +22,8 @@ import CloseIcon from '@mui/icons-material/Close'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import { useMediaQuery } from '@mui/material'
 import MoreMenu from './MoreMenu'
+import { Link } from 'react-router-dom'
+
 
 function AppBar() {
   const [searchValue, setSearchValue] = useState('')
@@ -39,7 +41,7 @@ function AppBar() {
     // Check if the target is outside the search input
     if (!searchRef.current.contains(e.relatedTarget)) {
       setIsSearchOpen(false)
-      setSearchValue('')  // Optionally clear the search value
+      setSearchValue('') // Optionally clear the search value
     }
   }
 
@@ -75,27 +77,27 @@ function AppBar() {
         <AppsIcon sx={{ color: 'white' }} />
 
         {/* Logo and name container */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.3, md: 0.5 }, flexShrink: 0 }}>
-          <SvgIcon
-            component={TrelloIcon}
-            fontSize="small"
-            inheritViewBox
-            sx={{ color: 'white', fontSize: { xs: '1.2rem', md: '1.5rem' } }} // Adjust logo size for small screens
-          />
-          <Typography
-            variant="span"
-            sx={{
-              fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' }, // Adjust font size for responsiveness
-              fontWeight: 'bold',
-              color: 'white',
-              display: 'inline-block'
-            }}
-          >
-            TaskFlow
-          </Typography>
-        </Box>
-
-        {/* Conditionally render menu items */}
+        <Link to="/">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.3, md: 0.5 }, flexShrink: 0 }}>
+            <SvgIcon
+              component={TrelloIcon}
+              fontSize="small"
+              inheritViewBox
+              sx={{ color: 'white', fontSize: { xs: '1rem', md: '1.5rem' } }}
+            />
+            <Typography
+              variant="span"
+              sx={{
+                fontSize: { xs: '1rem', md: '1.2rem' },
+                fontWeight: 'bold',
+                color: 'white',
+                display: 'inline-block'
+              }}
+            >
+              TaskFlow
+            </Typography>
+          </Box>
+        </Link>
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
           <Workspaces />
           <Recent />
@@ -161,7 +163,7 @@ function AppBar() {
               )
             }}
             sx={{
-              minWidth: { xs: '100px', md: '120px' },  // Adjust for small screens
+              minWidth: { xs: '100px', md: '120px' }, // Adjust for small screens
               maxWidth: '170px',
               '& label': { color: 'white' },
               '& input': { color: 'white' },

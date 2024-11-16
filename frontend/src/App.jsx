@@ -8,6 +8,7 @@ import Welcome from './pages/Welcome/Welcome'
 import LoginForm from './pages/Auth/LoginForm'
 import RegisterForm from './pages/Auth/RegisterForm'
 import AccountVerification from '~/pages/Auth/AccountVerification'
+import Settings from '~/pages/Settings/Settings'
 
 // ProtectedRoute component for authenticated routes
 const ProtectedRoute = ({ user }) => {
@@ -31,7 +32,13 @@ function App() {
 
       {/* Protected Routes (Accessible only after login) */}
       <Route element={<ProtectedRoute user={currentUser} />}>
+
+        {/* Board Details */}
         <Route path='/boards/:boardId' element={<Board />} />
+
+        {/* Use Setting */}
+        <Route path='/settings/account' element={<Settings />} />
+        <Route path='/settings/security' element={<Settings />} />
       </Route>
 
       {/* Public Routes (Accessible only when logged out) */}
