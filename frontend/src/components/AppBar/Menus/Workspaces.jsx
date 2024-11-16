@@ -12,6 +12,7 @@ import ContentCopy from '@mui/icons-material/ContentCopy'
 import ContentPaste from '@mui/icons-material/ContentPaste'
 import Cloud from '@mui/icons-material/Cloud'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { useTheme } from '@mui/material/styles'
 
 function Workspaces() {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -23,10 +24,20 @@ function Workspaces() {
     setAnchorEl(null)
   }
 
+  const theme = useTheme()
+  const buttonBackgroundColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0'
+  const hoverBackgroundColor = theme.palette.mode === 'dark' ? '#1c2833' : '#0d47a1'
+
   return (
     <Box>
       <Button
-        sx={{ color: 'white' }}
+        sx={{
+          color: 'white',
+          backgroundColor: buttonBackgroundColor,
+          '&:hover': {
+            backgroundColor: hoverBackgroundColor
+          }
+        }}
         id="basic-button-workspaces"
         aria-controls={open ? 'basic-menu-workspaces' : undefined}
         aria-haspopup="true"
@@ -43,6 +54,12 @@ function Workspaces() {
         onClose={handleClose}
         MenuListProps={{
           'aria-labelledby': 'basic-button-workspaces'
+        }}
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.primary
+          }
         }}
       >
         <MenuItem>

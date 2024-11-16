@@ -8,6 +8,7 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Check from '@mui/icons-material/Check'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { useTheme } from '@mui/material/styles'
 
 function Recent() {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -19,16 +20,25 @@ function Recent() {
     setAnchorEl(null)
   }
 
+  const theme = useTheme()
+  const buttonBackgroundColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0'
+
   return (
     <Box>
       <Button
-        sx={{ color: 'white' }}
+        sx={{
+          color: 'white',
+          backgroundColor: buttonBackgroundColor,
+          '&:hover': {
+            backgroundColor: theme.palette.mode === 'dark' ? '#1c2833' : '#0d47a1'
+          }
+        }}
         id="basic-button-recent"
         aria-controls={open ? 'basic-menu-recent' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
-        endIcon={<ExpandMoreIcon />}
+        endIcon={ <ExpandMoreIcon />}
       >
         Recent
       </Button>

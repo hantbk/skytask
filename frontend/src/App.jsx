@@ -9,6 +9,7 @@ import LoginForm from './pages/Auth/LoginForm'
 import RegisterForm from './pages/Auth/RegisterForm'
 import AccountVerification from '~/pages/Auth/AccountVerification'
 import Settings from '~/pages/Settings/Settings'
+import Boards from '~/pages/Boards'
 
 // ProtectedRoute component for authenticated routes
 const ProtectedRoute = ({ user }) => {
@@ -35,6 +36,7 @@ function App() {
 
         {/* Board Details */}
         <Route path='/boards/:boardId' element={<Board />} />
+        <Route path='/boards' element={<Boards />} />
 
         {/* Use Setting */}
         <Route path='/settings/account' element={<Settings />} />

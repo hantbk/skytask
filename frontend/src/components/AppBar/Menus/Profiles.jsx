@@ -60,7 +60,7 @@ function Profiles() {
               width: 36,
               height: 36,
               borderRadius: '50%',
-              boxShadow: '0 0 8px rgba(0, 0, 0, 0.2)',
+              boxShadow: '0 0 8px rgba(0, 0, 0, 0.2)'
             }}
             alt={currentUser?.name}
             src={currentUser?.avatar}
@@ -74,7 +74,7 @@ function Profiles() {
         onClose={handleClose}
         onClick={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'basic-button-profiles',
+          'aria-labelledby': 'basic-button-profiles'
         }}
       >
         <Link to="/settings/account" style={{ color: 'inherit' }}>
@@ -101,9 +101,9 @@ function Profiles() {
             '&:hover': {
               color: 'warning.dark',
               '& .logout-icon': {
-                color: 'warning.dark',
-              },
-            },
+                color: 'warning.dark'
+              }
+            }
           }}
         >
           <ListItemIcon>
@@ -124,7 +124,7 @@ function Profiles() {
             borderRadius: theme.shape.borderRadius,
             padding: theme.spacing(2),
             boxShadow: theme.shadows[5],
-            backgroundColor: theme.palette.background.paper,  // Use theme's background
+            backgroundColor: theme.palette.background.paper
           }
         }}
       >

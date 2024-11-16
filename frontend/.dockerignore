@@ -1,6 +1,7 @@
-node_modules/
-.git
-coverage/
+node_modules
+npm-debug.log
+build
 .dockerignore
-Dockerfile
-.gitignore
+**/.git
+**/.DS_Store
+**/node_modules
