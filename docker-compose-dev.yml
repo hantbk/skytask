@@ -46,7 +46,6 @@ services:
     networks:
       - app_network
 
-# Network configuration for communication between services
 networks:
   app_network:
     driver: bridge

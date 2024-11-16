@@ -32,7 +32,7 @@ function Starred() {
           backgroundColor: buttonColor,
           '&:hover': {
             backgroundColor: theme.palette.mode === 'dark' ? '#1c2833' : '#0d47a1'
-          },
+          }
         }}
         id="basic-button-starred"
         aria-controls={open ? 'basic-menu-starred' : undefined}
@@ -49,13 +49,13 @@ function Starred() {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'basic-button-starred',
+          'aria-labelledby': 'basic-button-starred'
         }}
         sx={{
           '& .MuiPaper-root': {
             backgroundColor: theme.palette.background.paper,
-            color: theme.palette.text.primary,
-          },
+            color: theme.palette.text.primary
+          }
         }}
       >
         <MenuItem>

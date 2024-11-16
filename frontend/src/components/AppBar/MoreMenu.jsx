@@ -45,7 +45,7 @@ function MoreMenu() {
             padding: 0,
             backgroundColor: menuBackgroundColor,
             color: 'white'
-          },
+          }
         }}
       >
         <MenuItem>

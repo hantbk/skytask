@@ -8,7 +8,6 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Check from '@mui/icons-material/Check'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { ArrowForwardIos } from '@mui/icons-material'
 import { useTheme } from '@mui/material/styles'
 
 function Recent() {
