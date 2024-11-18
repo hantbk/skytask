@@ -58,7 +58,7 @@ function SidebarCreateBoardModal({ afterCreateNewBoard }) {
 
 
   const submitCreateNewBoard = (data) => {
-    const { title, description, type } = data
+    // const { title, description, type } = data
     createNewBoardAPI(data).then(() => {
       // Bước 01: Đóng modal
       handleCloseModal()
