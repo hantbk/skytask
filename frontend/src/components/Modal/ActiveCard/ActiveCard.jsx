@@ -37,7 +37,7 @@ import {
   clearCurrentActiveCard,
   updateCurrentActiveCard
 } from '~/redux/activeCard/activeCardSlice'
-// import { updateCardDetailsAPI } from '~/apis'
+import { updateCardDetailsAPI } from '~/apis'
 // import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
 // import { selectCurrentUser } from '~/redux/user/userSlice'
 // import { CARD_MEMBER_ACTIONS } from '~/utils/constants'
@@ -84,22 +84,21 @@ function ActiveCard() {
   }
 
   // Func dùng chung cho các hành động cập nhật dữ liệu của Card
-  // const callApiUpdateCard = async (updatedData) => {
-  //   const updatedCard = await updateCardDetailsAPI(activeCard?._id, updatedData)
+  const callApiUpdateCard = async (updatedData) => {
+    const updatedCard = await updateCardDetailsAPI(activeCard?._id, updatedData)
 
-  //   // B1: Cập nhật lại cái card đang active trong modal hiện tại
-  //   dispatch(updateCurrentActiveCard(updatedCard))
+    // B1: Cập nhật lại cái card đang active trong modal hiện tại
+    dispatch(updateCurrentActiveCard(updatedCard))
 
-  //   // B2: Cập nhật lại cái bản ghi card trong cái activeBoard (nested data)
-  //   dispatch(updateCardInBoard(updatedCard))
+    // B2: Cập nhật lại cái bản ghi card trong cái activeBoard (nested data)
+    dispatch(updateCardInBoard(updatedCard))
 
-  //   return updatedCard
-  // }
+    return updatedCard
+  }
 
   const onUpdateCardTitle = (newTitle) => {
-    console.log(newTitle.trim())
     // Gọi API...
-    // callApiUpdateCard({ title: newTitle.trim() })
+    callApiUpdateCard({ title: newTitle.trim() })
   }
 
   const onUploadCardCover = (event) => {
