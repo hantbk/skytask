@@ -11,6 +11,7 @@ import AvatarGroup from '@mui/material/AvatarGroup'
 import { Button, Tooltip } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
+import BoardUserGroup from './BoardUserGroup'
 
 const MENU_STYLES = {
   color: 'white',
@@ -93,47 +94,9 @@ function BoardBar({ board }) {
             '&:hover': { borderColor: 'white' }
           }}
         >Invite</Button>
-        <AvatarGroup
-          max={7}
-          sx={{
-            gap: '10px',
-            '& .MuiAvatar-root':{
-              width: 34,
-              height: 34,
-              fontSize: 16,
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              '&:first-of-type': { bgcolor: '#a4b0be' }
-            }
-          }}
-        >
-          <Tooltip>
-            <Avatar
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg" />
-          </Tooltip>
-          <Tooltip>
-            <Avatar
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg" />
-          </Tooltip>
-          <Tooltip>
-            <Avatar
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg" />
-          </Tooltip>
-          <Tooltip>
-            <Avatar
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg" />
-          </Tooltip>
-          <Tooltip>
-            <Avatar
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg" />
-          </Tooltip>
-        </AvatarGroup>
+
+        <BoardUserGroup />
+        {/* xu ly hien thi danh sach thanh vien */}
       </Box>
     </Box>
   )
