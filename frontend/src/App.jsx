@@ -29,7 +29,7 @@ function App() {
   return (
     <Routes>
       {/* Redirect root path to a default board */}
-      <Route path='/' element={<Navigate to="boards/672a55cbb042a7b34289efd0" replace={true} />} />
+      <Route path='/' element={<Navigate to="/boards" replace={true} />} />
 
       {/* Protected Routes (Accessible only after login) */}
       <Route element={<ProtectedRoute user={currentUser} />}>
