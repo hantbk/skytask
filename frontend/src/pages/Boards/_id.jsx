@@ -19,11 +19,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 import ActiveCard from '~/components/Modal/ActiveCard/ActiveCard'
+import { selectCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
 
 function Board() {
   const dispatch = useDispatch()
   // const [board, setBoard] = useState(null)
   const board = useSelector(selectCurrentActiveBoard)
+  const activeCard = useSelector(selectCurrentActiveCard)
 
   const { boardId } = useParams()
   // console.log(boardId)
@@ -109,8 +111,9 @@ function Board() {
   return (
     // https://stackoverflow.com/questions/64577132/how-to-get-rid-of-padding-in-material-ui-container-component
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
-      
-      <ActiveCard />
+      {activeCard &&
+      <ActiveCard />}
+      {/* <ActiveCard /> */}
 
       <AppBar />
       <BoardBar board={board} />
