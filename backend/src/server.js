@@ -39,11 +39,10 @@ const START_SERVER = () => {
     })
   } else {
     // Localhost development
-    app.listen(env.LOCAL_DEV_APP_PORT, env.LOCAL_DEV_APP_HOST, () => {
+    app.listen(env.LOCAL_DEV_APP_PORT, '0.0.0.0', () => {
       console.log(`Local: Server is running at http://${env.LOCAL_DEV_APP_HOST}:${env.LOCAL_DEV_APP_PORT}`)
     })
   }
-
 
   // Doing a cleanup action just before Node.js exits
   // https://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits

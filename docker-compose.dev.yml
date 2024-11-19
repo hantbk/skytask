@@ -1,33 +1,27 @@
-version: '3.8'
-
 services:
   frontend:
-    container_name: frontend
+    container_name: frontend_container
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
+    image: hantbk/taskflow-frontend:latest
+    depends_on:
+      - backend
     ports:
-      - "5173:5173"
+      - 80:80
     environment:
       NODE_ENV: development
       VITE_DEV_API_ROOT: http://${LOCAL_DEV_APP_HOST}:${LOCAL_DEV_APP_PORT}
-    networks:
-      - app_network
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules  # For node_modules caching inside the container
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
-    container_name: backend
+    image: hantbk/taskflow-backend:latest
+    container_name: backend_container
     restart: always
     ports:
-      - "8017:8017"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules  # For node_modules caching inside the container
+      - 8017:8017
     environment:
       - PORT=${PORT}
       - MONGODB_URI=${MONGODB_URI}
@@ -43,9 +37,3 @@ services:
       - REFRESH_TOKEN_SECRET_SIGNATURE=${REFRESH_TOKEN_SECRET_SIGNATURE}
       - ACCESS_TOKEN_LIFE=${ACCESS_TOKEN_LIFE}
       - REFRESH_TOKEN_LIFE=${REFRESH_TOKEN_LIFE}
-    networks:
-      - app_network
-
-networks:
-  app_network:
-    driver: bridge

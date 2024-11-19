@@ -2,7 +2,8 @@ import { env } from '~/config/environment'
 
 export const WHITELIST_DOMAINS = [
   'http://localhost:5173',
-  'https://taskflow-web.onrender.com'
+  'https://taskflow-web.onrender.com',
+  'http://localhost'
 ]
 
 export const BOARD_TYPES = {

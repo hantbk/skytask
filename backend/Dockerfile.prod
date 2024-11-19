@@ -7,4 +7,4 @@ COPY . .
 
 EXPOSE 8017
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "production"]

@@ -1,0 +1,31 @@
+services:
+  frontend:
+    container_name: frontend_container
+    image: hantbk/taskflow-frontend:latest
+    depends_on:
+      - backend
+    ports:
+      - 5173:80
+    environment:
+      NODE_ENV: production
+      VITE_PROD_API_ROOT: https://taskflow-gr0m.onrender.com
+
+  backend:
+    image: hantbk/taskflow-backend:latest
+    container_name: backend_container
+    restart: always
+    ports:
+      - 8017:8017
+    environment:
+      - PORT=${PORT}
+      - MONGODB_URI=${MONGODB_URI}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - WEBSITE_DOMAIN_DEVELOPMENT=${WEBSITE_DOMAIN_DEVELOPMENT}
+      - WEBSITE_DOMAIN_PRODUCTION=${WEBSITE_DOMAIN_PRODUCTION}
+      - BREVO_API_KEY=${BREVO_API_KEY}
+      - ADMIN_EMAIL_ADDRESS=${ADMIN_EMAIL_ADDRESS}
+      - ADMIN_EMAIL_NAME=${ADMIN_EMAIL_NAME}
+      - ACCESS_TOKEN_SECRET_SIGNATURE=${ACCESS_TOKEN_SECRET_SIGNATURE}
+      - REFRESH_TOKEN_SECRET_SIGNATURE=${REFRESH_TOKEN_SECRET_SIGNATURE}
+      - ACCESS_TOKEN_LIFE=${ACCESS_TOKEN_LIFE}
+      - REFRESH_TOKEN_LIFE=${REFRESH_TOKEN_LIFE}
