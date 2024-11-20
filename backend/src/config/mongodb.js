@@ -21,12 +21,12 @@ const mongoClientInstance = new MongoClient(env.MONGODB_URI, {
 })
 
 // Connect to MongoDB
-export const CONNECT_DB = async () => {
+export const CONNECT_DB = async (databaseName = env.DATABASE_NAME) => {
     // Call the connect method on the mongoClientInstance object to connect to MongoDB Atlas
     await mongoClientInstance.connect()
 
     // Connect successfully to MongoDB Atlas and get Database by name and store it in taskflowDatabaseInstance
-    taskflowDatabaseInstance = mongoClientInstance.db(env.DATABASE_NAME)
+    taskflowDatabaseInstance = mongoClientInstance.db(databaseName)
 }
 
 // This GET_DB (non-async) function is responsible for exporting the taskflowDatabaseInstance after successfully
@@ -37,6 +37,11 @@ export const GET_DB = () => {
         throw new Error('You must connect to the database first')
     }
     return taskflowDatabaseInstance
+}
+
+export const DELETE_DB = async (databaseName) => {
+    // Drop the database
+    await mongoClientInstance.db(databaseName).dropDatabase()
 }
 
 // Close the connection to MongoDB Atlas

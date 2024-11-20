@@ -9,9 +9,10 @@ import { CONNECT_DB, CLOSE_DB } from '~/config/mongodb'
 import { env } from '~/config/environment'
 import cookieParser from 'cookie-parser'
 
-const START_SERVER = () => {
-  const app = express()
+export const app = express()
+let server
 
+const START_SERVER = () => {
   // https://stackoverflow.com/a/53240717/8324172
   app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store')
@@ -39,7 +40,7 @@ const START_SERVER = () => {
     })
   } else {
     // Localhost development
-    app.listen(env.LOCAL_DEV_APP_PORT, '0.0.0.0', () => {
+    server = app.listen(env.LOCAL_DEV_APP_PORT, '0.0.0.0', () => {
       console.log(`Local: Server is running at http://${env.LOCAL_DEV_APP_HOST}:${env.LOCAL_DEV_APP_PORT}`)
     })
   }
@@ -51,6 +52,12 @@ const START_SERVER = () => {
     CLOSE_DB()
   })
 
+}
+
+export const STOP_SERVER = async () => {
+  if (server) {
+    await server.close()
+  }
 }
 
 (async () => {
