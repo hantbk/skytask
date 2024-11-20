@@ -1,4 +1,4 @@
-name: Render Deploy
+name: Continuous Delivery to Render for Backend and Frontend
 
 on:
   push:
