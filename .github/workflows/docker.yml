@@ -3,7 +3,7 @@ name: Build and Push Docker Images
 on:
   push:
     tags:
-      - 'v*'
+      - 'docker*'
 
 jobs:
   docker:
@@ -25,17 +25,23 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Step 4: Build and push Backend Docker image
+      # Step 4: Extract the tag name
+      - name: Extract Tag Name
+        id: extract_tag
+        run: |
+          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      # Step 5: Build and push Backend Docker image
       - name: Build and push Backend Docker image
         uses: docker/build-push-action@v6
         with:
-          context: ./backend 
-          file: ./backend/Dockerfile.prod 
+          context: ./backend
+          file: ./backend/Dockerfile.prod
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-backend:${GITHUB_REF#refs/tags/}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-backend:${{ env.TAG }}
 
-      # Step 5: Build and push Frontend Docker image
+      # Step 6: Build and push Frontend Docker image
       - name: Build and push Frontend Docker image
         uses: docker/build-push-action@v6
         with:
@@ -43,4 +49,4 @@ jobs:
           file: ./frontend/Dockerfile.prod
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-frontend:${GITHUB_REF#refs/tags/}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-frontend:${{ env.TAG }}
