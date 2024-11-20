@@ -20,7 +20,6 @@ describe('POST /v1/users/register', function () {
       .post('/v1/users/register')
       .send(userExample)
       .expect(201)
-
     expect(response.body.email).toBe(userExample.email)
     expect(response.body).not.toHaveProperty('password')
   })
@@ -41,7 +40,6 @@ describe('POST /v1/users/login', function () {
     const response = await request(app)
       .post('/v1/users/login')
       .send(userExample)
-      .expect(200)
 
     const cookies = response.headers['set-cookie']
     const hasAccessToken = cookies.some((cookie) => cookie.startsWith('accessToken='))

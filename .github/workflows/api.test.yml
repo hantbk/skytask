@@ -3,7 +3,7 @@ name: API Testing
 on:
   push:
     branches:
-      - feat/api-testing
+      - main
   pull_request:
     branches:
       - main
@@ -13,16 +13,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Setup Node.js and Yarn
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
       
-      - name: Install dependencies
-        run: cd backend && yarn
+      # Set up environment variables
+      - name: Set up environment variables
+        run: |
+          cd backend
+          echo "${{ secrets.ENV_FILE }}" > .env
 
-      - name: Run API tests
-        run: yarn test
+      - name: Run tests
+        working-directory: backend
+        run: |
+          yarn install
+          yarn test
