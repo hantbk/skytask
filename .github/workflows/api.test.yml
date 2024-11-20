@@ -29,6 +29,7 @@ jobs:
         run: |
           cd backend
           echo "${{ secrets.ENV_FILE }}" > .env
+          echo "BUILD_MODE=dev" >> .env
 
       - name: Run tests
         working-directory: backend
