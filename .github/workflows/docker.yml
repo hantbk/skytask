@@ -33,7 +33,7 @@ jobs:
           file: ./backend/Dockerfile.prod 
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: hantbk/taskflow-backend:${GITHUB_REF#refs/tags/}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-backend:${GITHUB_REF#refs/tags/}
 
       # Step 5: Build and push Frontend Docker image
       - name: Build and push Frontend Docker image
@@ -43,4 +43,4 @@ jobs:
           file: ./frontend/Dockerfile.prod
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: hantbk/taskflow-frontend:${GITHUB_REF#refs/tags/}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-frontend:${GITHUB_REF#refs/tags/}
