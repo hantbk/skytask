@@ -6,8 +6,6 @@ import LockIcon from '@mui/icons-material/Lock'
 import AddToDriveIcon from '@mui/icons-material/AddToDrive'
 import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
-import Avatar from '@mui/material/Avatar'
-import AvatarGroup from '@mui/material/AvatarGroup'
 import { Button, Tooltip } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
@@ -95,7 +93,7 @@ function BoardBar({ board }) {
           }}
         >Invite</Button>
 
-        <BoardUserGroup />
+        <BoardUserGroup boardUsers={board?.FE_allUsers}/>
         {/* xu ly hien thi danh sach thanh vien */}
       </Box>
     </Box>
