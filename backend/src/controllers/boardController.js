@@ -16,29 +16,29 @@ const createNew = async (req, res, next) => {
 }
 
 const getDetails = async (req, res, next) => {
-    try {
-        const userId = req.jwtDecoded._id
-        const boardId = req.params.id
+  try {
+    const userId = req.jwtDecoded._id
+    const boardId = req.params.id
 
-        // Routing data to service layer
-        const board = await boardService.getDetails(userId, boardId)
+    // Routing data to service layer
+    const board = await boardService.getDetails(userId, boardId)
 
-        // Return data to client
-        res.status(StatusCodes.OK).json(board)
-    } catch (error) {
-        next(error)
-    }
+    // Return data to client
+    res.status(StatusCodes.OK).json(board)
+  } catch (error) {
+    next(error)
+  }
 }
 
 const update = async (req, res, next) => {
-    try {
-        const boardId = req.params.id
-        const updatedBoard = await boardService.update(boardId, req.body)
+  try {
+    const boardId = req.params.id
+    const updatedBoard = await boardService.update(boardId, req.body)
 
-        res.status(StatusCodes.OK).json(updatedBoard)
-    } catch (error) {
-        next(error)
-    }
+    res.status(StatusCodes.OK).json(updatedBoard)
+  } catch (error) {
+      next(error)
+  }
 }
 
 const moveCardToDifferentColumn = async (req, res, next) => {

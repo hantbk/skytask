@@ -32,18 +32,18 @@ import CardUserGroup from './CardUserGroup'
 import CardDescriptionMdEditor from './CardDescriptionMdEditor'
 import CardActivitySection from './CardActivitySection'
 import { useDispatch, useSelector } from 'react-redux'
-import { 
+import {
+  clearAndHideCurrentActiveCard,
   selectCurrentActiveCard,
-  clearCurrentActiveCard,
-  updateCurrentActiveCard
+  updateCurrentActiveCard,
+  selectIsShowModalActiveCard
 } from '~/redux/activeCard/activeCardSlice'
-// import { updateCardDetailsAPI } from '~/apis'
-// import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
-// import { selectCurrentUser } from '~/redux/user/userSlice'
-// import { CARD_MEMBER_ACTIONS } from '~/utils/constants'
+import { updateCardDetailsAPI } from '~/apis'
+import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { selectCurrentUser } from '~/redux/user/userSlice'
+import { CARD_MEMBER_ACTIONS } from '~/utils/constants'
 
 import { styled } from '@mui/material/styles'
-
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -68,42 +68,38 @@ const SidebarItem = styled(Box)(({ theme }) => ({
  * Note: Modal là một low-component mà bọn MUI sử dụng bên trong những thứ như Dialog, Drawer, Menu, Popover. Ở đây dĩ nhiên chúng ta có thể sử dụng Dialog cũng không thành vấn đề gì, nhưng sẽ sử dụng Modal để dễ linh hoạt tùy biến giao diện từ con số 0 cho phù hợp với mọi nhu cầu nhé.
  */
 function ActiveCard() {
-  // const [isOpen, setIsOpen] = useState(true)
   const dispatch = useDispatch()
   const activeCard = useSelector(selectCurrentActiveCard)
-  // const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
-  // const currentUser = useSelector(selectCurrentUser)
+  const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
+  const currentUser = useSelector(selectCurrentUser)
   // Không dừng biến state để check đóng mở Modal nữa vì chúng ta sẽ check bên Boards/_id.jsx
   // const [isOpen, setIsOpen] = useState(true)
-  
   // const handleOpenModal = () => setIsOpen(true)
 
   const handleCloseModal = () => {
     // setIsOpen(false)
-    dispatch(clearCurrentActiveCard())
+    dispatch(clearAndHideCurrentActiveCard())
   }
 
   // Func dùng chung cho các hành động cập nhật dữ liệu của Card
-  // const callApiUpdateCard = async (updatedData) => {
-  //   const updatedCard = await updateCardDetailsAPI(activeCard?._id, updatedData)
+  const callApiUpdateCard = async (updatedData) => {
+    const updatedCard = await updateCardDetailsAPI(activeCard?._id, updatedData)
 
-  //   // B1: Cập nhật lại cái card đang active trong modal hiện tại
-  //   dispatch(updateCurrentActiveCard(updatedCard))
+    // B1: Cập nhật lại cái card đang active trong modal hiện tại
+    dispatch(updateCurrentActiveCard(updatedCard))
 
-  //   // B2: Cập nhật lại cái bản ghi card trong cái activeBoard (nested data)
-  //   dispatch(updateCardInBoard(updatedCard))
+    // B2: Cập nhật lại cái bản ghi card trong cái activeBoard (nested data)
+    dispatch(updateCardInBoard(updatedCard))
 
-  //   return updatedCard
-  // }
+    return updatedCard
+  }
 
   const onUpdateCardTitle = (newTitle) => {
-    console.log(newTitle.trim())
     // Gọi API...
-    // callApiUpdateCard({ title: newTitle.trim() })
+    callApiUpdateCard({ title: newTitle.trim() })
   }
 
   const onUploadCardCover = (event) => {
-    console.log(event.target?.files[0])
     const error = singleFileValidator(event.target?.files[0])
     if (error) {
       toast.error(error)
@@ -113,30 +109,30 @@ function ActiveCard() {
     reqData.append('cardCover', event.target?.files[0])
 
     // Gọi API...
-    // toast.promise(
-    //   callApiUpdateCard(reqData).finally(() => event.target.value = ''),
-    //   { pending: 'Updating...' }
-    // )
+    toast.promise(
+      callApiUpdateCard(reqData).finally(() => event.target.value = ''),
+      { pending: 'Updating...' }
+    )
   }
-  // const onUpdateCardDescription = (newDescription) => {
-  //   // Gọi API...
-  //   callApiUpdateCard({ description: newDescription })
-  // }
+  const onUpdateCardDescription = (newDescription) => {
+    // Gọi API...
+    callApiUpdateCard({ description: newDescription })
+  }
 
-  // const onAddCardComment = async (commentToAdd) => {
-  //   // Dùng async await ở đây để component con CardActivitySection chờ và nếu thành công thì mới clear thẻ input comment
-  //   await callApiUpdateCard({ commentToAdd })
-  // }
+  const onAddCardComment = async (commentToAdd) => {
+    // Dùng async await ở đây để component con CardActivitySection chờ và nếu thành công thì mới clear thẻ input comment
+    await callApiUpdateCard({ commentToAdd })
+  }
 
-  // const onUpdateCardMembers = (incomingMemberInfo) => {
-  //   // Gọi API...
-  //   callApiUpdateCard({ incomingMemberInfo })
-  // }
+  const onUpdateCardMembers = (incomingMemberInfo) => {
+    // Gọi API...
+    callApiUpdateCard({ incomingMemberInfo })
+  }
 
   return (
     <Modal
       disableScrollLock
-      open={true}
+      open={isShowModalActiveCard}
       onClose={handleCloseModal} // Sử dụng onClose trong trường hợp muốn đóng Modal bằng nút ESC hoặc click ra ngoài Modal
       sx={{ overflowY: 'auto' }}>
       <Box sx={{
@@ -154,12 +150,11 @@ function ActiveCard() {
       }}>
         <Box sx={{
           position: 'absolute',
-          top: '12px',
+          top: '8px',
           right: '10px',
           cursor: 'pointer'
         }}>
-          <CancelIcon color="error" sx={{ '&:hover': { color: 'error.light' } }} 
-          onClick={handleCloseModal} />
+          <CancelIcon color="error" sx={{ '&:hover': { color: 'error.light' } }} onClick={handleCloseModal} />
         </Box>
         {activeCard?.cover &&
           <Box sx={{ mb: 4 }}>
@@ -168,8 +163,7 @@ function ActiveCard() {
               src={activeCard?.cover}
               alt="card-cover"
             />
-          </Box>
-          }
+          </Box>}
 
         <Box sx={{ mb: 1, mt: -3, pr: 2.5, display: 'flex', alignItems: 'center', gap: 1 }}>
           <CreditCardIcon />
@@ -189,8 +183,8 @@ function ActiveCard() {
 
               {/* Feature 02: Xử lý các thành viên của Card */}
               <CardUserGroup
-                // cardMemberIds={activeCard?.memberIds}
-                // onUpdateCardMembers={onUpdateCardMembers}
+                cardMemberIds={activeCard?.memberIds}
+                onUpdateCardMembers={onUpdateCardMembers}
               />
             </Box>
 
@@ -202,8 +196,8 @@ function ActiveCard() {
 
               {/* Feature 03: Xử lý mô tả của Card */}
               <CardDescriptionMdEditor
-                // cardDescriptionProp={activeCard?.description}
-                // handleUpdateCardDescription={onUpdateCardDescription}
+                cardDescriptionProp={activeCard?.description}
+                handleUpdateCardDescription={onUpdateCardDescription}
               />
             </Box>
 
@@ -215,6 +209,8 @@ function ActiveCard() {
 
               {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
               <CardActivitySection
+                cardComments={activeCard?.comments}
+                onAddCardComment={onAddCardComment}
               />
             </Box>
           </Grid>
@@ -226,18 +222,18 @@ function ActiveCard() {
               {/* Feature 05: Xử lý hành động bản thân user tự join vào card */}
               {/* Nếu user hiện tại đang đăng nhập chưa thuộc mảng memberIds của card thì mới cho hiện nút Join ra */}
               {/* Khi Click vào Join thì nó sẽ luôn là hành động ADD */}
-              {/* {!activeCard?.memberIds?.includes(currentUser?._id) && */}
+              {!activeCard?.memberIds?.includes(currentUser?._id) &&
                 <SidebarItem
                   className="active"
-                  // onClick={() => onUpdateCardMembers({
-                  //   userId: currentUser?._id,
-                  //   action: CARD_MEMBER_ACTIONS.ADD
-                  // })}
+                  onClick={() => onUpdateCardMembers({
+                    userId: currentUser?._id,
+                    action: CARD_MEMBER_ACTIONS.ADD
+                  })}
                 >
                   <PersonOutlineOutlinedIcon fontSize="small" />
                   Join
                 </SidebarItem>
-              {/* } */}
+              }
 
               {/* Feature 06: Xử lý hành động cập nhật ảnh Cover của Card */}
               <SidebarItem className="active" component="label">

@@ -30,6 +30,7 @@ jobs:
           cd backend
           echo "${{ secrets.ENV_FILE }}" > .env
           echo "BUILD_MODE=dev" >> .env
+          echo "TEST_DATABASE_NAME= taskflow_test" >> .env
 
       - name: Run tests
         working-directory: backend
