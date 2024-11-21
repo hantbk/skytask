@@ -1,0 +1,65 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    tags:
+      - 'docker*'  # Trigger on tags starting with "docker"
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up QEMU for multi-platform builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # Step 3: Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step 4: Log in to Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Step 5: Extract the tag name and debug
+      - name: Extract Tag Name and Debug
+        id: extract_tag
+        run: |
+          echo "GITHUB_REF=${GITHUB_REF}"  # Print the full ref to check the tag format
+          echo "TAG=${GITHUB_REF#refs/tags/}"  # Extract the tag name
+          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV  # Set the tag for further steps
+
+      # Step 6: Debugging directory structure
+      - name: List directory contents
+        run: |
+          echo "Listing contents of the repository..."
+          ls -l ./backend
+          ls -l ./frontend
+
+      # Step 7: Build and push Backend Docker image
+      - name: Build and push Backend Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile.prod
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-backend:${{ env.TAG }}
+
+      # Step 8: Build and push Frontend Docker image
+      - name: Build and push Frontend Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile.prod
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-frontend:${{ env.TAG }}
