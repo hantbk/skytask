@@ -1,7 +1,7 @@
 import { GET_DB } from '~/config/mongodb'
 import { faker } from '@faker-js/faker'
 import bcryptjs from 'bcryptjs'
-import { boardService } from '~/services/boardService'
+import { slugify } from '~/utils/formatters'
 
 const userExample = {
   email: faker.internet.email(),
@@ -31,7 +31,18 @@ const boardExample = {
 const createBoardExample = async () => {
   const createdUser = await verifyUserExample()
 
-  const createdBoard = await boardService.createNew(createdUser._id, boardExample)
+  const result = await GET_DB().collection('boards').insertOne({
+    ...boardExample,
+    slug: slugify(boardExample.title),
+    orderColumnIds: [],
+    ownerIds: [createdUser._id],
+    memberIds: [],
+    createdAt: Date.now(),
+    updatedAt: null,
+    _destroy: false
+  })
+
+  const createdBoard = await GET_DB().collection('boards').findOne({ _id: result.insertedId })
 
   return { createdUser, createdBoard }
 }
@@ -43,7 +54,6 @@ const createColumnExample = async () => {
     boardId: createdBoard._id
   }
 
-  // Do not call columnService.createNew here because it is not completed
   const result = await GET_DB().collection('columns').insertOne(column)
 
   const createdColumn = await GET_DB().collection('columns').findOne({ _id: result.insertedId })
