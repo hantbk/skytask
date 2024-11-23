@@ -116,8 +116,8 @@ function ActiveCard() {
     callApiUpdateCard({ description: newDescription })
   }
 
+  // Dùng async await ở đây để component con CardActivitySection chờ và nếu thành công thì mới clear thẻ input comment
   const onAddCardComment = async (commentToAdd) => {
-    // Dùng async await ở đây để component con CardActivitySection chờ và nếu thành công thì mới clear thẻ input comment
     await callApiUpdateCard({ commentToAdd })
   }
 

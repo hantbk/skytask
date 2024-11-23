@@ -10,6 +10,7 @@ import { Button, Tooltip } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import BoardUserGroup from './BoardUserGroup'
+import InviteBoardUser from './InviteBoardUser'
 
 const MENU_STYLES = {
   color: 'white',
@@ -83,18 +84,11 @@ function BoardBar({ board }) {
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Button
-          variant='outlined'
-          startIcon= {<PersonAddIcon/>}
-          sx={{
-            color: 'white',
-            borderColor: 'white',
-            '&:hover': { borderColor: 'white' }
-          }}
-        >Invite</Button>
+        {/* xu ly hien thi form moi moi nguoi vao lam thanh vien cua Board*/}
+        <InviteBoardUser boardId={board._id} />
 
-        <BoardUserGroup boardUsers={board?.FE_allUsers}/>
         {/* xu ly hien thi danh sach thanh vien */}
+        <BoardUserGroup boardUsers={board?.FE_allUsers}/>
       </Box>
     </Box>
   )
