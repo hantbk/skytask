@@ -15,7 +15,7 @@ const createNewBoardInvitation = async (reqBody, inviterId) => {
     // Tìm luôn cái board ra để lấy data xử lý
     const board = await boardModel.findOneById(reqBody.boardId)
 
-    // Nếu không tồn tại 1 trong 3 thì cứ thẳng tay reject
+    // Nếu không tồn tại 1 trong 3 thì thẳng tay reject
     if (!invitee || !inviter || !board) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Inviter, Invitee or Board not found!')
     }
