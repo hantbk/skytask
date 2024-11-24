@@ -41,11 +41,8 @@ export const activeCardSlice = createSlice({
 // Action creators are generated for each case reducer function
 // Actions: Là nơi dành cho các components bên dưới gọi bằng dispatch() tới nó để cập nhật lại dữ liệu thông qua reducer (chạy đồng bộ)
 // Để ý ở trên thì không thấy properties actions đâu cả, bởi vì những cái actions này đơn giản là được thằng redux tạo tự động theo tên của reducer nhé.
-export const { 
-  showModalActiveCard,
-  clearAndHideCurrentActiveCard,
-  updateCurrentActiveCard
-} = activeCardSlice.actions
+export const { showModalActiveCard, clearAndHideCurrentActiveCard, updateCurrentActiveCard } = activeCardSlice.actions
+
 
 // Selectors: Là nơi dành cho các components bên dưới gọi bằng hook useSelector() để lấy dữ liệu từ trong kho redux store ra sử dụng
 export const selectCurrentActiveCard = (state) => {
