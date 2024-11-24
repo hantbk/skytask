@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
+import Tooltip from '@mui/material/Tooltip'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import PublicIcon from '@mui/icons-material/Public'
 import LockIcon from '@mui/icons-material/Lock'
