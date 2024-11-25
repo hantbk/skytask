@@ -26,6 +26,7 @@ const CreateModal = ({ isOpen, handleCloseModal, control, register, handleSubmit
     return (
         <Modal
             open={isOpen}
+            onClose={handleCloseModal}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
