@@ -6,9 +6,11 @@ import MenuItem from '@mui/material/MenuItem'
 import Divider from '@mui/material/Divider'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import Check from '@mui/icons-material/Check'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useTheme } from '@mui/material/styles'
+import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
+import Typography from '@mui/material/Typography'
+import ApartmentIcon from '@mui/icons-material/Apartment';
 
 function Recent() {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -52,30 +54,24 @@ function Recent() {
         }}
       >
         <MenuItem>
-          <ListItemText inset>Single</ListItemText>
+          <ListItemIcon>
+            <ViewKanbanIcon/>
+          </ListItemIcon>
+          <ListItemText>TaskFlow</ListItemText>
+          <Typography variant="body2" sx={{ color: 'text.secondary' , ml: 1}}>
+            HUST
+          </Typography>
         </MenuItem>
-        <MenuItem>
-          <ListItemText inset>1.15</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText inset>Double</ListItemText>
-        </MenuItem>
+        <Divider />
         <MenuItem>
           <ListItemIcon>
-            <Check />
+            <ApartmentIcon/>
           </ListItemIcon>
-          Custom: 1.2
+          <ListItemText>Kanban Templates</ListItemText>
         </MenuItem>
         <Divider />
         <MenuItem>
-          <ListItemText>Add space before paragraph</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText>Add space after paragraph</ListItemText>
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemText>Custom spacing...</ListItemText>
+          <ListItemText>More Templates...</ListItemText>
         </MenuItem>
       </Menu>
     </Box>

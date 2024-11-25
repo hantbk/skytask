@@ -22,7 +22,9 @@ import { useMediaQuery } from '@mui/material'
 import MoreMenu from './MoreMenu'
 import { Link } from 'react-router-dom'
 import Notifications from './Notifications/Notification'
-
+import { useForm } from 'react-hook-form'
+import { createNewBoardAPI } from '~/apis'
+import CreateModal from '~/components/AppBar/CreateModal'
 
 function AppBar() {
   const [searchValue, setSearchValue] = useState('')
@@ -58,6 +60,24 @@ function AppBar() {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  const { control, register, handleSubmit, reset, formState: { errors } } = useForm()
+  const [isOpen, setIsOpen] = useState(false)
+  const handleOpenModal = () => setIsOpen(true)
+  const handleCloseModal = () => {
+    setIsOpen(false)
+    // Reset lại toàn bộ form khi đóng Modal
+    reset()
+  }
+  const submitCreateNewBoard = (data) => {
+    // const { title, description, type } = data
+    createNewBoardAPI(data).then(() => {
+      // Bước 01: Đóng modal
+      handleCloseModal()
+      // Bước 02: Thông báo đến component cha để xử lý
+      afterCreateNewBoard()
+    })
+  }
 
   return (
     <Box sx={{
@@ -113,7 +133,11 @@ function AppBar() {
               '&:hover': { border: 'none' }
             }}
             variant='outlined'
-            startIcon={<LibraryAddIcon />}>Create</Button>
+            startIcon={<LibraryAddIcon />}
+            onClick={handleOpenModal}
+          >
+            Create
+          </Button>
         </Box>
 
         {/* Show MoreMenu when on small screens */}
@@ -189,9 +213,22 @@ function AppBar() {
         <Tooltip title="Help">
           <HelpOutlineOutlinedIcon sx={{ cursor: 'pointer', color: 'white' }} />
         </Tooltip>
-
         <Profiles />
       </Box>
+
+
+      {/* CreateModal component */}
+      <CreateModal
+        isOpen={isOpen}
+        handleCloseModal={handleCloseModal}
+        control={control}
+        register={register}
+        handleSubmit={handleSubmit}
+        reset={reset}
+        errors={errors}
+        submitCreateNewBoard={submitCreateNewBoard}
+      />
+
     </Box>
   )
 }
