@@ -11,8 +11,6 @@ import Starred from './Menus/Starred'
 import Templates from './Menus/Templates'
 import { Button } from '@mui/material'
 import TextField from '@mui/material/TextField'
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
-import Badge from '@mui/material/Badge'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import Profiles from './Menus/Profiles'
@@ -23,6 +21,7 @@ import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import { useMediaQuery } from '@mui/material'
 import MoreMenu from './MoreMenu'
 import { Link } from 'react-router-dom'
+import Notifications from './Notifications/Notification'
 
 
 function AppBar() {
@@ -181,15 +180,11 @@ function AppBar() {
           />
         )}
 
-        {/* ModeSelect component */}
+        {/* Dark - Light - System Mode */}
         <ModeSelect />
 
-        {/* Notification and Help Icons */}
-        <Tooltip title="Notification">
-          <Badge color="warning" variant="dot" sx={{ cursor: 'pointer' }}>
-            <NotificationsNoneIcon sx={{ cursor: 'pointer', color: 'white' }} />
-          </Badge>
-        </Tooltip>
+        {/* Xử lí hiển thị thông báo ở đây */}
+        <Notifications />
 
         <Tooltip title="Help">
           <HelpOutlineOutlinedIcon sx={{ cursor: 'pointer', color: 'white' }} />
