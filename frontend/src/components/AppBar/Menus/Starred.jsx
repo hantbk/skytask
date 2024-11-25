@@ -5,8 +5,6 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Divider from '@mui/material/Divider'
 import ListItemText from '@mui/material/ListItemText'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import Check from '@mui/icons-material/Check'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useTheme } from '@mui/material/styles'
 
@@ -58,31 +56,41 @@ function Starred() {
           }
         }}
       >
+        {/* Hình ảnh và chữ căn giữa */}
         <MenuItem>
-          <ListItemText inset>Single</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText inset>1.15</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText inset>Double</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Check />
-          </ListItemIcon>
-          Custom: 1.2
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemText>Add space before paragraph</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText>Add space after paragraph</ListItemText>
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemText>Custom spacing...</ListItemText>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              gap: 1,
+            }}
+          >
+            <img
+              src="https://trello.com/assets/cc47d0a8c646581ccd08.svg"
+              alt="Starred Boards"
+              style={{
+                width: 250
+              }}
+            />
+            <span
+              style={{
+                fontSize: '14px',
+                lineHeight: 1.5
+              }}
+            >
+              Star important boards to access them
+            </span>
+            <span
+              style={{
+                fontSize: '14px',
+                lineHeight: 1.5
+              }}
+            >
+               quickly and easily.
+            </span>
+          </Box>
         </MenuItem>
       </Menu>
     </Box>
