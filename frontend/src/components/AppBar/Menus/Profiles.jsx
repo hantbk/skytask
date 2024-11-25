@@ -79,7 +79,7 @@ function Profiles() {
       >
         <Link to="/settings/account" style={{ color: 'inherit' }}>
           <MenuItem sx={{ '&:hover': { color: 'success.light' } }}>
-            <Avatar sx={{ width: 28, height: 28, mr: 2 }} src={currentUser?.avatar} /> Profile
+            <Avatar sx={{ width: 28, height: 28, mr: 2 }} src={currentUser?.avatar} /> Account
           </MenuItem>
         </Link>
         <Divider />
@@ -89,12 +89,14 @@ function Profiles() {
           </ListItemIcon>
           Add another account
         </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
+        <Link to="/settings/account" style={{ color: 'inherit' }}>
+          <MenuItem>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            Settings
+          </MenuItem>
+        </Link>
         <MenuItem
           onClick={handleLogout}
           sx={{
