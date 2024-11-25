@@ -6,9 +6,13 @@ import MenuItem from '@mui/material/MenuItem'
 import Divider from '@mui/material/Divider'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import Check from '@mui/icons-material/Check'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useTheme } from '@mui/material/styles'
+import ApartmentIcon from '@mui/icons-material/Apartment'
+import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
+import ArticleIcon from '@mui/icons-material/Article';
+import AssistantIcon from '@mui/icons-material/Assistant';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 function Templates() {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -59,30 +63,41 @@ function Templates() {
         }}
       >
         <MenuItem>
-          <ListItemText inset>Single</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText inset>1.15</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText inset>Double</ListItemText>
+          <ListItemText>Top templates</ListItemText>
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
-            <Check />
+            <ArticleIcon />
           </ListItemIcon>
-          Custom: 1.2
+          <ListItemText>1-on-1 Meeting Agenda</ListItemText>
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <AssistantIcon />
+          </ListItemIcon>
+          <ListItemText>Agile Board Template | Trello</ListItemText>
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <ApartmentIcon />
+          </ListItemIcon>
+          <ListItemText>Company Overview</ListItemText>
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <AutoAwesomeIcon />
+          </ListItemIcon>
+          <ListItemText>Design Huddle</ListItemText>
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <LocalGroceryStoreIcon />
+          </ListItemIcon>
+          <ListItemText>Go To Market Strategy Template</ListItemText>
         </MenuItem>
         <Divider />
         <MenuItem>
-          <ListItemText>Add space before paragraph</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText>Add space after paragraph</ListItemText>
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemText>Custom spacing...</ListItemText>
+          <ListItemText>Explore templates</ListItemText>
         </MenuItem>
       </Menu>
     </Box>
