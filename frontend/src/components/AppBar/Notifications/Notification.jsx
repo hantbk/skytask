@@ -23,6 +23,7 @@ import {
 } from '~/redux/notifications/notificationsSlice'
 import { socketIoInstance } from '~/socketClient'
 import { selectCurrentUser } from '~/redux/user/userSlice'
+import { useNavigate } from 'react-router-dom'
 
 const BOARD_INVITATION_STATUS = {
   PENDING: 'PENDING',
@@ -42,6 +43,8 @@ function Notifications() {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  const navigate = useNavigate()
 
   const [newNotification, setNewNotification] = useState(false)
 

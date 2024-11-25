@@ -122,7 +122,6 @@ function ActiveCard() {
   }
 
   const onUpdateCardMembers = (incomingMemberInfo) => {
-    // Gọi API...
     callApiUpdateCard({ incomingMemberInfo })
   }
 
