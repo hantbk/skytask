@@ -13,6 +13,7 @@ import cookieParser from 'cookie-parser'
 // https://socket.io/get-started/chat/#integrating-socketio
 import http from 'http'
 import socketIo from 'socket.io'
+import { inviteUserToBoardSocket } from '~/sockets/inviteUserToBoardSocket'
 
 export const app = express()
 let server
@@ -46,17 +47,14 @@ const START_SERVER = () => {
 
   // Listen for incoming connections
   io.on('connection', (socket) => {
-    console.log('New client connected')
+    // console.log('New client connected')
 
-    // A special namespace "FE_USER_INVITED_TO_BOARD" for when a client sends a message
-    socket.on('FE_USER_INVITED_TO_BOARD', (invitation) => {
-      socket.broadcast.emit('BE_USER_INVITED_TO_BOARD', invitation)
-    })
+    inviteUserToBoardSocket(socket)
     
     // A special namespace "disconnect" for when a client disconnects
-    socket.on('disconnect', () => {
-      console.log('Client disconnected')
-    })
+    // socket.on('disconnect', () => {
+    //   console.log('Client disconnected')
+    // })
   })
 
   if (env.BUILD_MODE === 'production') {
