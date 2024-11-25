@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import ModeSelect from '~/components/ModeSelect/ModeSelect'
 import AppsIcon from '@mui/icons-material/Apps'
@@ -10,13 +10,10 @@ import Recent from './Menus/Recent'
 import Starred from './Menus/Starred'
 import Templates from './Menus/Templates'
 import { Button } from '@mui/material'
-import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import Profiles from './Menus/Profiles'
-import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
-import CloseIcon from '@mui/icons-material/Close'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import { useMediaQuery } from '@mui/material'
 import MoreMenu from './MoreMenu'
@@ -25,41 +22,19 @@ import Notifications from './Notifications/Notification'
 import { useForm } from 'react-hook-form'
 import { createNewBoardAPI } from '~/apis'
 import CreateModal from '~/components/AppBar/CreateModal'
+import { useNavigate } from 'react-router-dom'
+import AutoCompleteSearchBoard from './SearchBoards/AutoCompleteSearchBoard'
 
 function AppBar() {
-  const [searchValue, setSearchValue] = useState('')
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 
-  const searchRef = useRef(null)
+  const navigate = useNavigate()
 
   const toggleSearch = () => {
     setIsSearchOpen(true)
   }
-
-  const handleBlur = (e) => {
-    // Check if the target is outside the search input
-    if (!searchRef.current.contains(e.relatedTarget)) {
-      setIsSearchOpen(false)
-      setSearchValue('') // Optionally clear the search value
-    }
-  }
-
-  // Close search when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setIsSearchOpen(false)
-        setSearchValue('') // Optionally clear the search field when clicking outside
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
 
   const { control, register, handleSubmit, reset, formState: { errors } } = useForm()
   const [isOpen, setIsOpen] = useState(false)
@@ -69,13 +44,17 @@ function AppBar() {
     // Reset lại toàn bộ form khi đóng Modal
     reset()
   }
+
   const submitCreateNewBoard = (data) => {
     // const { title, description, type } = data
-    createNewBoardAPI(data).then(() => {
+    createNewBoardAPI(data).then((response) => {
       // Bước 01: Đóng modal
       handleCloseModal()
       // Bước 02: Thông báo đến component cha để xử lý
-      afterCreateNewBoard()
+      // afterCreateNewBoard()
+
+      // Navigate to the new board
+      navigate(`/boards/${response._id}`)
     })
   }
 
@@ -163,46 +142,8 @@ function AppBar() {
             sx={{ color: 'white', cursor: 'pointer' }}
             onClick={toggleSearch}
           />
-        ) : (
-          <TextField
-            id="outlined-search"
-            label="Search..."
-            type="text"
-            size="small"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            onBlur={handleBlur}
-            inputRef={searchRef}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'white' }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <CloseIcon
-                    fontSize="small"
-                    sx={{ color: searchValue ? 'white' : 'transparent' }}
-                    onClick={() => setSearchValue('')}
-                  />
-                </InputAdornment>
-              )
-            }}
-            sx={{
-              minWidth: { xs: '100px', md: '120px' }, // Adjust for small screens
-              maxWidth: '170px',
-              '& label': { color: 'white' },
-              '& input': { color: 'white' },
-              '& label.Mui-focused': { color: 'white' },
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': { borderColor: 'white' },
-                '&:hover fieldset': { borderColor: 'white' },
-                '&.Mui-focused fieldset': { borderColor: 'white' }
-              }
-            }}
-          />
-        )}
+        ) : <AutoCompleteSearchBoard setIsSearchOpen={setIsSearchOpen}/>
+        }
 
         {/* Dark - Light - System Mode */}
         <ModeSelect />
