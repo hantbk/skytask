@@ -9,6 +9,11 @@ import { CONNECT_DB, CLOSE_DB } from '~/config/mongodb'
 import { env } from '~/config/environment'
 import cookieParser from 'cookie-parser'
 
+// Xử lý socket real-time với gói socket.io
+// https://socket.io/get-started/chat/#integrating-socketio
+import http from 'http'
+import socketIo from 'socket.io'
+
 export const app = express()
 let server
 
@@ -33,14 +38,35 @@ const START_SERVER = () => {
   // Centralized error handling
   app.use(errorHandlingMiddleware)
 
+  // Socket.io
+  // https://socket.io/docs/v4/server-initialization/
+  const server1 = http.createServer(app)
+  //  Khởi tạo biến io với server và cors
+  const io = socketIo(server1, { cors: corsOptions })
+
+  // Listen for incoming connections
+  io.on('connection', (socket) => {
+    console.log('New client connected')
+
+    // A special namespace "FE_USER_INVITED_TO_BOARD" for when a client sends a message
+    socket.on('FE_USER_INVITED_TO_BOARD', (invitation) => {
+      socket.broadcast.emit('BE_USER_INVITED_TO_BOARD', invitation)
+    })
+    
+    // A special namespace "disconnect" for when a client disconnects
+    socket.on('disconnect', () => {
+      console.log('Client disconnected')
+    })
+  })
+
   if (env.BUILD_MODE === 'production') {
     // Production development
-    app.listen(process.env.PORT, () => {
+    server1.listen(process.env.PORT, () => {
       console.log(`Prod: Server is running at port: ${process.env.PORT}`)
     })
   } else {
     // Localhost development
-    server = app.listen(env.LOCAL_DEV_APP_PORT, '0.0.0.0', () => {
+    server = server1.listen(env.LOCAL_DEV_APP_PORT, '0.0.0.0', () => {
       console.log(`Local: Server is running at http://${env.LOCAL_DEV_APP_HOST}:${env.LOCAL_DEV_APP_PORT}`)
     })
   }

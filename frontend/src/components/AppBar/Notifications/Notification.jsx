@@ -18,9 +18,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchInvitationsAPI,
   selectCurrentNotifications,
-  updateBoardInvitationAPI
+  updateBoardInvitationAPI,
+  addNotification
 } from '~/redux/notifications/notificationsSlice'
-// import { socketIoInstance } from '~/socketClient'
+import { socketIoInstance } from '~/main'
+import { selectCurrentUser } from '~/redux/user/userSlice'
 
 const BOARD_INVITATION_STATUS = {
   PENDING: 'PENDING',
@@ -46,17 +48,43 @@ function Notifications() {
   // Lấy dữ liệu notifications từ redux store
   const notifications = useSelector(selectCurrentNotifications)
 
+  const currentUser = useSelector(selectCurrentUser)
+
   // Fetch danh sách các lời mời Invitations
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(fetchInvitationsAPI())
-  }, [dispatch])
+
+    // https://socket.io/how-to/use-with-react-hooks
+    const onReceiveNewInvitation = (invitation) => {
+      // Nếu thằng user đang đăng nhập hiện tại mà chúng ta lưu trong redux chính là thằng invitee trong bản ghi invitation
+      if (invitation.inviteeId === currentUser._id) {
+        // Bước 1: Thêm bản ghi invitation mới vào trong redux
+        dispatch(addNotification(invitation))
+        // Bước 2: Cập nhật trạng thái đang có thông báo đến
+        setNewNotification(true)
+      }
+    }
+
+    // Lắng nghe một cái sự kiện real-time có tên là BE_USER_INVITED_TO_BOARD (từ phía BE gửi về)
+    socketIoInstance.on('BE_USER_INVITED_TO_BOARD', onReceiveNewInvitation)
+
+    // Clean Up event để ngăn chặn việc bị đăng ký lặp lại event:
+    // https://socket.io/how-to/use-with-react#cleanup
+    return () => {
+      socketIoInstance.off('BE_USER_INVITED_TO_BOARD', onReceiveNewInvitation)
+    }
+
+  }, [currentUser._id, dispatch])
 
   // Cập nhật trạng thái - status của một lời mời join board
   const updateBoardInvitation = (status, invitationId) => {
     dispatch(updateBoardInvitationAPI({ status, invitationId }))
-      .then(res => console.log(res)
-      )
+      .then(res => {
+        if (res.payload.boardInvitation.status === BOARD_INVITATION_STATUS.ACCEPTED) {
+          navigate(`/boards/${res.payload.boardInvitation.boardId}`)
+        }
+      })
   }
 
   return (
