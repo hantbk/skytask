@@ -21,7 +21,7 @@ import {
   updateBoardInvitationAPI,
   addNotification
 } from '~/redux/notifications/notificationsSlice'
-import { socketIoInstance } from '~/main'
+import { socketIoInstance } from '~/socketClient'
 import { selectCurrentUser } from '~/redux/user/userSlice'
 
 const BOARD_INVITATION_STATUS = {

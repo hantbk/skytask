@@ -25,11 +25,6 @@ import { injectStore } from '~/utils/authorizeAxios'
 injectStore(store)
 const persistor = persistStore(store)
 
-// https://socket.io/how-to/use-with-react
-import { io } from 'socket.io-client'
-import { API_ROOT } from '~/utils/constants'
-export const socketIoInstance = io(API_ROOT)
-
 // ToastContainer wrapper component
 // eslint-disable-next-line react-refresh/only-export-components
 function ThemedToastContainer() {
