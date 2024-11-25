@@ -6,11 +6,8 @@ import MenuItem from '@mui/material/MenuItem'
 import Divider from '@mui/material/Divider'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import Typography from '@mui/material/Typography'
-import ContentCut from '@mui/icons-material/ContentCut'
-import ContentCopy from '@mui/icons-material/ContentCopy'
-import ContentPaste from '@mui/icons-material/ContentPaste'
-import Cloud from '@mui/icons-material/Cloud'
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useTheme } from '@mui/material/styles'
 
@@ -63,38 +60,23 @@ function Workspaces() {
         }}
       >
         <MenuItem>
-          <ListItemIcon>
-            <ContentCut fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Cut</ListItemText>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            ⌘X
-          </Typography>
+          <ListItemText>Current Workspace</ListItemText>
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
-            <ContentCopy fontSize="small" />
+            <WorkspacePremiumIcon/>
           </ListItemIcon>
-          <ListItemText>Copy</ListItemText>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            ⌘C
-          </Typography>
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <ContentPaste fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Paste</ListItemText>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            ⌘V
-          </Typography>
+          <ListItemText>HUST</ListItemText>
         </MenuItem>
         <Divider />
         <MenuItem>
+          <ListItemText>Your Workspaces</ListItemText>
+        </MenuItem>
+        <MenuItem>
           <ListItemIcon>
-            <Cloud fontSize="small" />
+            <CorporateFareIcon />
           </ListItemIcon>
-          <ListItemText>Web Clipboard</ListItemText>
+          <ListItemText>HUST</ListItemText>
         </MenuItem>
       </Menu>
     </Box>
