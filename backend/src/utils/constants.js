@@ -3,7 +3,8 @@ import { env } from '~/config/environment'
 export const WHITELIST_DOMAINS = [
   'http://localhost:5173',
   'https://taskflow-web.onrender.com',
-  'http://localhost'
+  'http://localhost',
+  'https://hant20210298.id.vn'
 ]
 
 export const BOARD_TYPES = {
