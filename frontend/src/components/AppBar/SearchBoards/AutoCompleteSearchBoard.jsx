@@ -6,7 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import { fetchBoardsAPI } from '~/apis'
-// import { useDebounceFn } from '~/customHooks/useDebounceFn'
+import { useDebounceFn } from '~/customHooks/useDebounceFn'
 
 /**
  * Hướng dẫn & ví dụ cái Autocomplele của MUI ở đây:
@@ -52,6 +52,7 @@ function AutoCompleteSearchBoard({ setIsSearchOpen }) {
 
     // Dùng createSearchParams của react-router-dom để tạo một cái searchPath chuẩn với q[title] để gọi lên API
     const searchPath = `?${createSearchParams({ 'q[title]': searchValue })}`
+    // console.log(searchPath)
 
     // Gọi API...
     setLoading(true)
@@ -63,7 +64,8 @@ function AutoCompleteSearchBoard({ setIsSearchOpen }) {
         setLoading(false)
       })
   }
-  // const debounceSearchBoard = useDebounceFn(handleInputSearchChange, 2000)
+
+  const debounceSearchBoard = useDebounceFn(handleInputSearchChange, 1000)
   // Khi chúng ta select chọn một cái board cụ thể thì sẽ điều hướng tới board đó luôn
   const handleSelectedBoard = (event, selectedBoard) => {
     // Phải kiểm tra nếu tồn tại một cái board cụ thể được select thì mới gọi điều hướng - navigate
@@ -96,7 +98,7 @@ function AutoCompleteSearchBoard({ setIsSearchOpen }) {
       loading={loading}
 
       // onInputChange sẽ chạy khi gõ nội dung vào thẻ input, cần làm debounce để tránh việc bị spam gọi API
-      // onInputChange={debounceSearchBoard}
+      onInputChange={debounceSearchBoard}
 
       // onChange của cả cái Autocomplete sẽ chạy khi chúng ta select một cái kết quả (ở đây là board)
       onChange={handleSelectedBoard}
