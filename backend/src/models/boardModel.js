@@ -183,8 +183,15 @@ const getBoards = async (userId, page, itemsPerPage, queryFilters) => {
 
     // Xử lý query filter cho từng trường hợp search board, ví dụ search theo title
     if (queryFilters) {
-      console.log(Object.keys(queryFilters))
+      Object.keys(queryFilters).forEach(key => {
+        // Có phân biệt chữ hoa chữ thường
+        // queryConditions.push({ [key]: { $regex: queryFilters[key] } })
+
+        // Không phân biệt chữ hao chứ thường
+        queryConditions.push({ [key]: { $regex: new RegExp(queryFilters[key], 'i') } })
+      })
     }
+    // console.log('queryCondition: ', queryConditions)
 
     const query = await GET_DB().collection(BOARD_COLLECTION_NAME).aggregate(
       [
