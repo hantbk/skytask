@@ -9,12 +9,13 @@ const Router = express.Router()
 Router.route('/')
   .post(authMiddleware.isAuthorized, cardValidation.createNew, cardController.createNew)
 
-  Router.route('/:id')
+Router.route('/:id')
   .put(
     authMiddleware.isAuthorized,
     multerUploadMiddleware.upload.single('cardCover'),
     cardValidation.update,
     cardController.update
   )
+  .delete(authMiddleware.isAuthorized, cardValidation.deleteItem, cardController.deleteItem)
 
 export const cardRoute = Router
