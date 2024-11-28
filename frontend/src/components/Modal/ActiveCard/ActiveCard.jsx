@@ -19,11 +19,10 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import ArrowForwardOutlinedIcon from '@mui/icons-material/ArrowForwardOutlined'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined'
-import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined'
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined'
 import SubjectRoundedIcon from '@mui/icons-material/SubjectRounded'
 import DvrOutlinedIcon from '@mui/icons-material/DvrOutlined'
-
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import ToggleFocusInput from '~/components/Form/ToggleFocusInput'
 import VisuallyHiddenInput from '~/components/Form/VisuallyHiddenInput'
 import { singleFileValidator } from '~/utils/validators'
@@ -38,10 +37,14 @@ import {
   updateCurrentActiveCard,
   selectIsShowModalActiveCard
 } from '~/redux/activeCard/activeCardSlice'
-import { updateCardDetailsAPI } from '~/apis'
-import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { updateCardDetailsAPI, deleteCardDetailsAPI } from '~/apis'
+import {
+  updateCardInBoard,
+  deleteCardInBoard
+} from '~/redux/activeBoard/activeBoardSlice'
 import { selectCurrentUser } from '~/redux/user/userSlice'
 import { CARD_MEMBER_ACTIONS } from '~/utils/constants'
+import { useConfirm } from 'material-ui-confirm'
 
 import { styled } from '@mui/material/styles'
 const SidebarItem = styled(Box)(({ theme }) => ({
@@ -56,7 +59,8 @@ const SidebarItem = styled(Box)(({ theme }) => ({
   padding: '10px',
   borderRadius: '4px',
   '&:hover': {
-    backgroundColor: theme.palette.mode === 'dark' ? '#33485D' : theme.palette.grey[300],
+    backgroundColor:
+      theme.palette.mode === 'dark' ? '#33485D' : theme.palette.grey[300],
     '&.active': {
       color: theme.palette.mode === 'dark' ? '#000000de' : '#0c66e4',
       backgroundColor: theme.palette.mode === 'dark' ? '#90caf9' : '#e9f2ff'
@@ -78,9 +82,35 @@ function ActiveCard() {
     dispatch(clearAndHideCurrentActiveCard())
   }
 
+  const confirmDeleteCard = useConfirm()
+  const handleDeleteCard = () => {
+    confirmDeleteCard({
+      title: 'Delete Card?',
+      description:
+        'This action will permanently delete your Card! Are you sure?',
+      confirmationText: 'Confirm',
+      cancellationText: 'Cancel'
+    })
+      .then(() => {
+        const cardId = activeCard?._id
+        dispatch(deleteCardInBoard(activeCard))
+
+        dispatch(clearAndHideCurrentActiveCard())
+
+        // Gọi API xử lí deleteCardDetailsAPIphía backend
+        deleteCardDetailsAPI(cardId).then(() => {
+          toast.success('Card deleted successfully!')
+        })
+      })
+      .catch(() => {})
+  }
+
   // Func dùng chung cho các hành động cập nhật dữ liệu của Card
   const callApiUpdateCard = async (updatedData) => {
-    const updatedCard = await updateCardDetailsAPI(activeCard?._id, updatedData)
+    const updatedCard = await updateCardDetailsAPI(
+      activeCard?._id,
+      updatedData
+    )
 
     // B1: Cập nhật lại cái card đang active trong modal hiện tại
     dispatch(updateCurrentActiveCard(updatedCard))
@@ -107,7 +137,7 @@ function ActiveCard() {
 
     // Gọi API...
     toast.promise(
-      callApiUpdateCard(reqData).finally(() => event.target.value = ''),
+      callApiUpdateCard(reqData).finally(() => (event.target.value = '')),
       { pending: 'Updating...' }
     )
   }
@@ -130,52 +160,82 @@ function ActiveCard() {
       disableScrollLock
       open={isShowModalActiveCard}
       onClose={handleCloseModal} // Sử dụng onClose trong trường hợp muốn đóng Modal bằng nút ESC hoặc click ra ngoài Modal
-      sx={{ overflowY: 'auto' }}>
-      <Box sx={{
-        position: 'relative',
-        width: 900,
-        maxWidth: 900,
-        bgcolor: 'white',
-        boxShadow: 24,
-        borderRadius: '8px',
-        border: 'none',
-        outline: 0,
-        padding: '40px 20px 20px',
-        margin: '50px auto',
-        backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#fff'
-      }}>
-        <Box sx={{
-          position: 'absolute',
-          top: '8px',
-          right: '10px',
-          cursor: 'pointer'
-        }}>
-          <CancelIcon color="error" sx={{ '&:hover': { color: 'error.light' } }} onClick={handleCloseModal} />
+      sx={{ overflowY: 'auto' }}
+    >
+      <Box
+        sx={{
+          position: 'relative',
+          width: 900,
+          maxWidth: 900,
+          bgcolor: 'white',
+          boxShadow: 24,
+          borderRadius: '8px',
+          border: 'none',
+          outline: 0,
+          padding: '40px 20px 20px',
+          margin: '50px auto',
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark' ? '#1A2027' : '#fff'
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '8px',
+            right: '10px',
+            cursor: 'pointer'
+          }}
+        >
+          <CancelIcon
+            color="error"
+            sx={{ '&:hover': { color: 'error.light' } }}
+            onClick={handleCloseModal}
+          />
         </Box>
-        {activeCard?.cover &&
+        {activeCard?.cover && (
           <Box sx={{ mb: 4 }}>
             <img
-              style={{ width: '100%', height: '320px', borderRadius: '6px', objectFit: 'cover' }}
+              style={{
+                width: '100%',
+                height: '320px',
+                borderRadius: '6px',
+                objectFit: 'cover'
+              }}
               src={activeCard?.cover}
               alt="card-cover"
             />
-          </Box>}
+          </Box>
+        )}
 
-        <Box sx={{ mb: 1, mt: -3, pr: 2.5, display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box
+          sx={{
+            mb: 1,
+            mt: -3,
+            pr: 2.5,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1
+          }}
+        >
           <CreditCardIcon />
 
           {/* Feature 01: Xử lý tiêu đề của Card */}
           <ToggleFocusInput
-            inputFontSize='22px'
+            inputFontSize="22px"
             value={activeCard?.title}
-            onChangedValue={onUpdateCardTitle} />
+            onChangedValue={onUpdateCardTitle}
+          />
         </Box>
 
         <Grid container spacing={2} sx={{ mb: 3 }}>
           {/* Left side */}
           <Grid xs={12} sm={9}>
             <Box sx={{ mb: 3 }}>
-              <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Members</Typography>
+              <Typography
+                sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}
+              >
+                Members
+              </Typography>
 
               {/* Feature 02: Xử lý các thành viên của Card */}
               <CardUserGroup
@@ -187,7 +247,12 @@ function ActiveCard() {
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <SubjectRoundedIcon />
-                <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>Description</Typography>
+                <Typography
+                  variant="span"
+                  sx={{ fontWeight: '600', fontSize: '20px' }}
+                >
+                  Description
+                </Typography>
               </Box>
 
               {/* Feature 03: Xử lý mô tả của Card */}
@@ -200,7 +265,12 @@ function ActiveCard() {
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <DvrOutlinedIcon />
-                <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>Activity</Typography>
+                <Typography
+                  variant="span"
+                  sx={{ fontWeight: '600', fontSize: '20px' }}
+                >
+                  Activity
+                </Typography>
               </Box>
 
               {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
@@ -213,23 +283,29 @@ function ActiveCard() {
 
           {/* Right side */}
           <Grid xs={12} sm={3}>
-            <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Add To Card</Typography>
+            <Typography
+              sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}
+            >
+              Add To Card
+            </Typography>
             <Stack direction="column" spacing={1}>
               {/* Feature 05: Xử lý hành động bản thân user tự join vào card */}
               {/* Nếu user hiện tại đang đăng nhập chưa thuộc mảng memberIds của card thì mới cho hiện nút Join ra */}
               {/* Khi Click vào Join thì nó sẽ luôn là hành động ADD */}
-              {!activeCard?.memberIds?.includes(currentUser?._id) &&
+              {!activeCard?.memberIds?.includes(currentUser?._id) && (
                 <SidebarItem
                   className="active"
-                  onClick={() => onUpdateCardMembers({
-                    userId: currentUser?._id,
-                    action: CARD_MEMBER_ACTIONS.ADD
-                  })}
+                  onClick={() =>
+                    onUpdateCardMembers({
+                      userId: currentUser?._id,
+                      action: CARD_MEMBER_ACTIONS.ADD
+                    })
+                  }
                 >
                   <PersonOutlineOutlinedIcon fontSize="small" />
                   Join
                 </SidebarItem>
-              }
+              )}
 
               {/* Feature 06: Xử lý hành động cập nhật ảnh Cover của Card */}
               <SidebarItem className="active" component="label">
@@ -238,31 +314,91 @@ function ActiveCard() {
                 <VisuallyHiddenInput type="file" onChange={onUploadCardCover} />
               </SidebarItem>
 
-              <SidebarItem><AttachFileOutlinedIcon fontSize="small" />Attachment</SidebarItem>
-              <SidebarItem><LocalOfferOutlinedIcon fontSize="small" />Labels</SidebarItem>
-              <SidebarItem><TaskAltOutlinedIcon fontSize="small" />Checklist</SidebarItem>
-              <SidebarItem><WatchLaterOutlinedIcon fontSize="small" />Dates</SidebarItem>
-              <SidebarItem><AutoFixHighOutlinedIcon fontSize="small" />Custom Fields</SidebarItem>
+              <SidebarItem>
+                <AttachFileOutlinedIcon fontSize="small" />
+                Attachment
+              </SidebarItem>
+              <SidebarItem>
+                <LocalOfferOutlinedIcon fontSize="small" />
+                Labels
+              </SidebarItem>
+              <SidebarItem>
+                <TaskAltOutlinedIcon fontSize="small" />
+                Checklist
+              </SidebarItem>
+              <SidebarItem>
+                <WatchLaterOutlinedIcon fontSize="small" />
+                Dates
+              </SidebarItem>
+              <SidebarItem>
+                <AutoFixHighOutlinedIcon fontSize="small" />
+                Custom Fields
+              </SidebarItem>
             </Stack>
 
             <Divider sx={{ my: 2 }} />
 
-            <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Power-Ups</Typography>
+            <Typography
+              sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}
+            >
+              Power-Ups
+            </Typography>
             <Stack direction="column" spacing={1}>
-              <SidebarItem><AspectRatioOutlinedIcon fontSize="small" />Card Size</SidebarItem>
-              <SidebarItem><AddToDriveOutlinedIcon fontSize="small" />Google Drive</SidebarItem>
-              <SidebarItem><AddOutlinedIcon fontSize="small" />Add Power-Ups</SidebarItem>
+              <SidebarItem>
+                <AspectRatioOutlinedIcon fontSize="small" />
+                Card Size
+              </SidebarItem>
+              <SidebarItem>
+                <AddToDriveOutlinedIcon fontSize="small" />
+                Google Drive
+              </SidebarItem>
+              <SidebarItem>
+                <AddOutlinedIcon fontSize="small" />
+                Add Power-Ups
+              </SidebarItem>
             </Stack>
 
             <Divider sx={{ my: 2 }} />
 
-            <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Actions</Typography>
+            <Typography
+              sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}
+            >
+              Actions
+            </Typography>
             <Stack direction="column" spacing={1}>
-              <SidebarItem><ArrowForwardOutlinedIcon fontSize="small" />Move</SidebarItem>
-              <SidebarItem><ContentCopyOutlinedIcon fontSize="small" />Copy</SidebarItem>
-              <SidebarItem><AutoAwesomeOutlinedIcon fontSize="small" />Make Template</SidebarItem>
-              <SidebarItem><ArchiveOutlinedIcon fontSize="small" />Archive</SidebarItem>
-              <SidebarItem><ShareOutlinedIcon fontSize="small" />Share</SidebarItem>
+              <SidebarItem>
+                <ArrowForwardOutlinedIcon fontSize="small" />
+                Move
+              </SidebarItem>
+              <SidebarItem>
+                <ContentCopyOutlinedIcon fontSize="small" />
+                Copy
+              </SidebarItem>
+              <SidebarItem>
+                <AutoAwesomeOutlinedIcon fontSize="small" />
+                Make Template
+              </SidebarItem>
+              <SidebarItem
+                onClick={() => handleDeleteCard()}
+                sx={{
+                  '&:hover': {
+                    color: 'warning.dark',
+                    '& .delete-forever-icon': {
+                      color: 'warning.dark'
+                    }
+                  }
+                }}
+              >
+                <DeleteForeverIcon
+                  className="delete-forever-icon"
+                  fontSize="small"
+                />
+                Delete
+              </SidebarItem>
+              <SidebarItem>
+                <ShareOutlinedIcon fontSize="small" />
+                Share
+              </SidebarItem>
             </Stack>
           </Grid>
         </Grid>

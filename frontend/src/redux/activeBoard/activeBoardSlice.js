@@ -53,6 +53,19 @@ export const activeBoardSlice = createSlice({
           })
         }
       }
+    },
+
+    deleteCardInBoard: (state, action) => {
+      const deleteCard = action.payload
+
+      // Tìm dần từ board > column > card
+      const column = state.currentActiveBoard.columns.find(column => column._id === deleteCard.columnId)
+      if (column) {
+        const cardIndex = column.cards.findIndex(card => card._id === deleteCard._id)
+        if (cardIndex > -1) {
+          column.cards.splice(cardIndex, 1)
+        }
+      }
     }
   },
   // ExtraReducers: Nơi xử lý dữ liệu bất đồng bộ
@@ -85,7 +98,7 @@ export const activeBoardSlice = createSlice({
 })
 
 // Action: Là nơi dành cho các components bên dưới gọi bằng dispatch() tới nó để cập nhập lại dữ liệu thông qua reducer (chyaj đông bộ)
-export const { updateCurrentActiveBoard, updateCardInBoard } = activeBoardSlice.actions
+export const { updateCurrentActiveBoard, updateCardInBoard, deleteCardInBoard } = activeBoardSlice.actions
 
 // Selectors: Là nơi dành cho các components bên dưới gọi bằng hook useSelector() để lấy dữ liệu từ trong kho redux store ra sử dụng
 export const selectCurrentActiveBoard = (state) => {

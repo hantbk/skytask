@@ -1,6 +1,8 @@
 import { cardModel } from '~/models/cardModel'
 import { columnModel } from '~/models/columnModel'
 import { CloudinaryProvider } from '~/providers/CloudinaryProvider'
+import ApiError from '~/utils/ApiError'
+import { StatusCodes } from 'http-status-codes'
 
 const createNew = async (reqBody) => {
   try {
@@ -54,7 +56,23 @@ const update = async (cardId, reqBody, cardCoverFile, userInfo) => {
   } catch (error) { throw error }
 }
 
+const deleteItem = async (cardId) => {
+  try {
+    const targetCard = await cardModel.findOneById(cardId)
+    if (!targetCard) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Card not found!')
+    }
+
+    await cardModel.deleteItem(cardId)
+
+    await columnModel.pullCardOrderIds(targetCard)
+
+    return true
+  } catch (error) { throw error }
+}
+
 export const cardService = {
   createNew,
-  update
+  update,
+  deleteItem
 }

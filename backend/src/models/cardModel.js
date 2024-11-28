@@ -140,6 +140,18 @@ const updateMembers = async (cardId, incomingMemberInfo) => {
   } catch (error) { throw new Error(error) }
 }
 
+const deleteItem = async (cardId) => {
+  try {
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).deleteOne({
+      _id: new ObjectId(String(cardId))
+    })
+
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
 export const cardModel = {
   CARD_COLLECTION_NAME,
   CARD_COLLECTION_SCHEMA,
@@ -148,5 +160,6 @@ export const cardModel = {
   update,
   deleteManyByColumnId,
   unshiftNewComment,
-  updateMembers
+  updateMembers,
+  deleteItem
 }
