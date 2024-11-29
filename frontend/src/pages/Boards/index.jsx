@@ -21,10 +21,11 @@ import { Link, useLocation } from 'react-router-dom'
 import randomColor from 'randomcolor'
 import SidebarCreateBoardModal from './create'
 
-import { fetchBoardsAPI } from '~/apis/index'
+import { fetchBoardsAPI, deleteBoardAPI } from '~/apis/index'
 import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
 import { styled } from '@mui/material/styles'
-// Styles của mấy cái Sidebar item menu
+import ConfirmDeleteModal from '~/components/Modal/ActiveBoard/ConfirmDeleteModal'
+
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -43,13 +44,38 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 }))
 
 function Boards() {
-  // Số lượng bản ghi boards hiển thị tối đa trên 1 page tùy dự án (thường sẽ là 12 cái)
   const [boards, setBoards] = useState(null)
-  // Tổng toàn bộ số lượng bản ghi boards có trong Database mà phía BE trả về để FE dùng tính toán phân trang
   const [totalBoards, setTotalBoards] = useState(null)
 
   // Xử lý phân trang từ url với MUI: https://mui.com/material-ui/react-pagination/#router-integration
   const location = useLocation()
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBoard, setSelectedBoard] = useState(null);
+
+  const handleDeleteClick = (board) => {
+    setSelectedBoard(board);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedBoard) {
+      try {
+        await deleteBoardAPI(selectedBoard._id);
+        setIsModalOpen(false);
+        setSelectedBoard(null);
+        fetchBoardsAPI(location.search).then(updateStateData);
+      } catch (error) {
+        console.error('Error deleting board:', error);
+      }
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedBoard(null);
+  };
+
   /**
    * Parse chuỗi string search trong location về đối tượng URLSearchParams trong JavaScript
    * https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/URLSearchParams
@@ -109,7 +135,7 @@ function Boards() {
             </Stack>
             <Divider sx={{ my: 1 }} />
             <Stack direction="column" spacing={1}>
-              <SidebarCreateBoardModal afterCreateNewBoard={afterCreateNewBoard}/>
+              <SidebarCreateBoardModal afterCreateNewBoard={afterCreateNewBoard} />
             </Stack>
           </Grid>
 
@@ -127,7 +153,7 @@ function Boards() {
                 {boards.map(b =>
                   <Grid xs={2} sm={3} md={4} key={b._id}>
                     <Card sx={{ width: '250px' }}>
-                      {/* Ý tưởng mở rộng về sau làm ảnh Cover cho board nhé */}
+                      {/* Optional: Board Cover */}
                       {/* <CardMedia component="img" height="100" image="https://picsum.photos/100" /> */}
                       <Box sx={{ height: '50px', backgroundColor: randomColor() }}></Box>
 
@@ -153,6 +179,22 @@ function Boards() {
                             '&:hover': { color: 'primary.light' }
                           }}>
                           Go to board <ArrowRightIcon fontSize="small" />
+                        </Box>
+                        <Box sx={{ mt: 2, textAlign: 'right' }}>
+                          <button
+                            style={{
+                              padding: '6px 12px',
+                              border: 'none',
+                              backgroundColor: '#f44336',
+                              color: '#fff',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              fontSize: '0.875rem',
+                            }}
+                            onClick={() => handleDeleteClick(b)}
+                          >
+                            Delete Board
+                          </button>
                         </Box>
                       </CardContent>
                     </Card>
@@ -187,6 +229,14 @@ function Boards() {
           </Grid>
         </Grid>
       </Box>
+
+      {/* Confirm Delete Modal */}
+      <ConfirmDeleteModal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmDelete}
+      />
+
     </Container>
   )
 }

@@ -74,10 +74,12 @@ const getDetails = async (userId, boardId) => {
     const queryConditions = [
       { _id: new ObjectId(boardId) },
       { _destroy: false },
-      { $or: [
-        { ownerIds: { $all: [new ObjectId(userId)] } },
-        { memberIds: { $all: [new ObjectId(userId)] } }
-      ] }
+      {
+        $or: [
+          { ownerIds: { $all: [new ObjectId(userId)] } },
+          { memberIds: { $all: [new ObjectId(userId)] } }
+        ]
+      }
     ]
 
     const result = await GET_DB().collection(BOARD_COLLECTION_NAME).aggregate([
@@ -175,10 +177,12 @@ const getBoards = async (userId, page, itemsPerPage, queryFilters) => {
       // Điều kiện 01: Board chưa bị xóa
       { _destroy: false },
       // Điều kiện 02: // Điều kiện 02: cái thằng userId đang thực hiện request này nó phải thuộc vào một trong 2 cái mảng ownerIds hoặc memberIds, sử dụng toán tử $all của mongodb
-      { $or: [
-        { ownerIds: { $all: [new ObjectId(userId)] } },
-        { memberIds: { $all: [new ObjectId(userId)] } }
-      ] }
+      {
+        $or: [
+          { ownerIds: { $all: [new ObjectId(userId)] } },
+          { memberIds: { $all: [new ObjectId(userId)] } }
+        ]
+      }
     ]
 
     // Xử lý query filter cho từng trường hợp search board, ví dụ search theo title
@@ -198,15 +202,17 @@ const getBoards = async (userId, page, itemsPerPage, queryFilters) => {
         { $match: { $and: queryConditions } },
         { $sort: { title: 1 } },
         // $facet để xử lý nhiều luồng trong một query
-        { $facet: {
-          // Luồng 01: Query boards
-          'queryBoards': [
-            { $skip: pagingSkipValue(page, itemsPerPage) }, // Bỏ qua số lượng bản ghi của nhứng page trước đó
-            { $limit: itemsPerPage } // Giới hạn tối đa số lượng bản ghi tả về trên một page
-          ],
-          // Luồng 02: Query đếm tổng tất cả số lượng bản ghi board trong DB và trả về vào biến countedAllBoards
-          'queryTotalBoards': [{ $count: 'countedAllBoards' }]
-        } }
+        {
+          $facet: {
+            // Luồng 01: Query boards
+            'queryBoards': [
+              { $skip: pagingSkipValue(page, itemsPerPage) }, // Bỏ qua số lượng bản ghi của nhứng page trước đó
+              { $limit: itemsPerPage } // Giới hạn tối đa số lượng bản ghi tả về trên một page
+            ],
+            // Luồng 02: Query đếm tổng tất cả số lượng bản ghi board trong DB và trả về vào biến countedAllBoards
+            'queryTotalBoards': [{ $count: 'countedAllBoards' }]
+          }
+        }
       ],
       // Khai báo thêm thuộc tính collation locale 'en' để fix vụ chữ B hoa và a thường ở trên
       { collation: { locale: 'en' } }
@@ -234,6 +240,28 @@ const pushMemberIds = async (boardId, userId) => {
   } catch (error) { throw new Error(error) }
 }
 
+const deleteBoard = async (userId, boardId) => {
+  try {
+    const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+      {
+        _id: new ObjectId(boardId),
+        ownerIds: { $all: [new ObjectId(userId)] },
+        _destroy: false
+      },
+      { 
+        $set: { _destroy: true, updatedAt: Date.now() }
+      },
+      { returnDocument: 'after' }
+    )
+
+    return result
+  } catch (error) {
+    console.error('Error in deleteBoard:', error.message)
+    throw new Error(error.message)
+  }
+}
+
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -244,5 +272,6 @@ export const boardModel = {
   update,
   pullColumnOrderIds,
   getBoards,
-  pushMemberIds
+  pushMemberIds,
+  deleteBoard
 }

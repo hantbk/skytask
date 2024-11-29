@@ -109,10 +109,28 @@ const getBoards = async (userId, page, itemsPerPage, queryFilters) => {
   } catch (error) { throw error }
 }
 
+const deleteBoard = async (userId, boardId) => {
+  try {
+    // Check if the board exists before attempting to delete it
+    const board = await boardModel.getDetails(userId, boardId)
+    if (!board) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+    }
+
+    // Delete the board
+    const deletionResult = await boardModel.deleteBoard(userId, boardId)
+    // Return a success message or relevant data
+    return { message: 'Board successfully deleted', deletionResult }
+  } catch (error) {
+    throw error
+  }
+}
+
 export const boardService = {
   createNew,
   getDetails,
   update,
   moveCardToDifferentColumn,
-  getBoards
+  getBoards,
+  deleteBoard
 }
