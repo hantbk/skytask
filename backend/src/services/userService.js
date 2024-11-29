@@ -35,7 +35,7 @@ const createNew = async (reqBody) => {
     const getNewUser = await userModel.findOneById(createdUser.insertedId)
 
     // Gửi email cho người xác thực tài khoản
-    const verificationLink = `${WEBSITE_DOMAIN}/account/verification?email=${getNewUser.email}&token=${getNewUser.verifyToken}`
+    const verificationLink = `${WEBSITE_DOMAIN}/account-verification?email=${getNewUser.email}&token=${getNewUser.verifyToken}`
     const customSubject = '[Verify email] Complete your Taskflow account setup'
     const logoUrl = 'https://raw.githubusercontent.com/hantbk/taskflow/refs/heads/main/frontend/src/assets/taskflow-logo.png'
     const htmlContent = `
