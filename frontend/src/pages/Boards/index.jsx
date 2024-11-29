@@ -21,7 +21,7 @@ import { Link, useLocation } from 'react-router-dom'
 import randomColor from 'randomcolor'
 import SidebarCreateBoardModal from './create'
 
-import { fetchBoardsAPI } from '~/apis/index'
+import { fetchBoardsAPI, deleteBoardAPI } from '~/apis/index'
 import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
 import { styled } from '@mui/material/styles'
 // Styles của mấy cái Sidebar item menu
@@ -87,6 +87,22 @@ function Boards() {
     return <PageLoadingSpinner caption="Loading Boards..." />
   }
 
+  const handleDeleteBoard = async (boardId) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this board?');
+    if (!confirmDelete) return;
+
+    try {
+      // Call API to delete the board
+      await deleteBoardAPI(boardId);
+      // Update the boards state by filtering out the deleted board
+      setBoards(boards.filter(board => board._id !== boardId));
+      setTotalBoards(totalBoards - 1);
+    } catch (error) {
+      console.error('Error deleting board:', error);
+      alert('Failed to delete the board. Please try again.');
+    }
+  };
+
   return (
     <Container disableGutters maxWidth={false}>
       <AppBar />
@@ -109,7 +125,7 @@ function Boards() {
             </Stack>
             <Divider sx={{ my: 1 }} />
             <Stack direction="column" spacing={1}>
-              <SidebarCreateBoardModal afterCreateNewBoard={afterCreateNewBoard}/>
+              <SidebarCreateBoardModal afterCreateNewBoard={afterCreateNewBoard} />
             </Stack>
           </Grid>
 
@@ -127,7 +143,7 @@ function Boards() {
                 {boards.map(b =>
                   <Grid xs={2} sm={3} md={4} key={b._id}>
                     <Card sx={{ width: '250px' }}>
-                      {/* Ý tưởng mở rộng về sau làm ảnh Cover cho board nhé */}
+                      {/* Optional: Board Cover */}
                       {/* <CardMedia component="img" height="100" image="https://picsum.photos/100" /> */}
                       <Box sx={{ height: '50px', backgroundColor: randomColor() }}></Box>
 
@@ -154,12 +170,29 @@ function Boards() {
                           }}>
                           Go to board <ArrowRightIcon fontSize="small" />
                         </Box>
+                        <Box sx={{ mt: 2, textAlign: 'right' }}>
+                          <button
+                            style={{
+                              padding: '6px 12px',
+                              border: 'none',
+                              backgroundColor: '#f44336',
+                              color: '#fff',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              fontSize: '0.875rem',
+                            }}
+                            onClick={() => handleDeleteBoard(b._id)}
+                          >
+                            Delete Board
+                          </button>
+                        </Box>
                       </CardContent>
                     </Card>
                   </Grid>
                 )}
               </Grid>
             }
+
 
             {/* Trường hợp gọi API và có totalBoards trong Database trả về thì render khu vực phân trang  */}
             {(totalBoards > 0) &&

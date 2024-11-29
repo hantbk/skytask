@@ -84,6 +84,12 @@ export const createNewBoardAPI = async (data) => {
   return response.data
 }
 
+export const deleteBoardAPI = async (boardId) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/boards/${boardId}`)
+  toast.success('Board deleted successfully!')
+  return response.data
+}
+
 export const inviteUserToBoardAPI = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/invitations/board`, data)
   toast.success('User invited to board successfully!')
