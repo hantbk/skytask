@@ -4,7 +4,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    image: hantbk/taskflow-frontend:latest
     depends_on:
       - backend
     ports:
@@ -17,7 +16,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
-    image: hantbk/taskflow-backend:latest
     container_name: backend_container
     restart: always
     ports:

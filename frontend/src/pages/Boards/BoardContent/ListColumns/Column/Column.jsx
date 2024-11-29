@@ -194,18 +194,14 @@ function Column({ column }) {
                 <ListItemIcon><AddIcon className="add-icon" fontSize="small" /></ListItemIcon>
                 <ListItemText>Add a card</ListItemText>
               </MenuItem>
-              <MenuItem>
-                <ListItemIcon><ContentCut fontSize="small" /></ListItemIcon>
-                <ListItemText>Cut</ListItemText>
-              </MenuItem>
-              <MenuItem>
+              {/* <MenuItem>
                 <ListItemIcon><ContentCopy fontSize="small" /></ListItemIcon>
-                <ListItemText>Copy</ListItemText>
+                <ListItemText>Copy list</ListItemText>
               </MenuItem>
               <MenuItem>
                 <ListItemIcon><ContentPaste fontSize="small" /></ListItemIcon>
-                <ListItemText>Paste</ListItemText>
-              </MenuItem>
+                <ListItemText>Move list</ListItemText>
+              </MenuItem> */}
               <Divider />
               <MenuItem
                 onClick={handleDeleteColumn}
@@ -220,10 +216,6 @@ function Column({ column }) {
               >
                 <ListItemIcon><DeleteForeverIcon className="delete-forever-icon" fontSize="small" /></ListItemIcon>
                 <ListItemText>Delete this column</ListItemText>
-              </MenuItem>
-              <MenuItem>
-                <ListItemIcon><Cloud fontSize="small" /></ListItemIcon>
-                <ListItemText>Archive this column</ListItemText>
               </MenuItem>
             </Menu>
           </Box>
