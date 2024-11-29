@@ -24,7 +24,8 @@ import SidebarCreateBoardModal from './create'
 import { fetchBoardsAPI, deleteBoardAPI } from '~/apis/index'
 import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
 import { styled } from '@mui/material/styles'
-// Styles của mấy cái Sidebar item menu
+import ConfirmDeleteModal from '~/components/Modal/ActiveBoard/ConfirmDeleteModal'
+
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -43,13 +44,38 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 }))
 
 function Boards() {
-  // Số lượng bản ghi boards hiển thị tối đa trên 1 page tùy dự án (thường sẽ là 12 cái)
   const [boards, setBoards] = useState(null)
-  // Tổng toàn bộ số lượng bản ghi boards có trong Database mà phía BE trả về để FE dùng tính toán phân trang
   const [totalBoards, setTotalBoards] = useState(null)
 
   // Xử lý phân trang từ url với MUI: https://mui.com/material-ui/react-pagination/#router-integration
   const location = useLocation()
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBoard, setSelectedBoard] = useState(null);
+
+  const handleDeleteClick = (board) => {
+    setSelectedBoard(board);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedBoard) {
+      try {
+        await deleteBoardAPI(selectedBoard._id);
+        setIsModalOpen(false);
+        setSelectedBoard(null);
+        fetchBoardsAPI(location.search).then(updateStateData);
+      } catch (error) {
+        console.error('Error deleting board:', error);
+      }
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedBoard(null);
+  };
+
   /**
    * Parse chuỗi string search trong location về đối tượng URLSearchParams trong JavaScript
    * https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/URLSearchParams
@@ -86,22 +112,6 @@ function Boards() {
   if (!boards) {
     return <PageLoadingSpinner caption="Loading Boards..." />
   }
-
-  const handleDeleteBoard = async (boardId) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this board?');
-    if (!confirmDelete) return;
-
-    try {
-      // Call API to delete the board
-      await deleteBoardAPI(boardId);
-      // Update the boards state by filtering out the deleted board
-      setBoards(boards.filter(board => board._id !== boardId));
-      setTotalBoards(totalBoards - 1);
-    } catch (error) {
-      console.error('Error deleting board:', error);
-      alert('Failed to delete the board. Please try again.');
-    }
-  };
 
   return (
     <Container disableGutters maxWidth={false}>
@@ -181,7 +191,7 @@ function Boards() {
                               cursor: 'pointer',
                               fontSize: '0.875rem',
                             }}
-                            onClick={() => handleDeleteBoard(b._id)}
+                            onClick={() => handleDeleteClick(b)}
                           >
                             Delete Board
                           </button>
@@ -192,7 +202,6 @@ function Boards() {
                 )}
               </Grid>
             }
-
 
             {/* Trường hợp gọi API và có totalBoards trong Database trả về thì render khu vực phân trang  */}
             {(totalBoards > 0) &&
@@ -220,6 +229,14 @@ function Boards() {
           </Grid>
         </Grid>
       </Box>
+
+      {/* Confirm Delete Modal */}
+      <ConfirmDeleteModal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmDelete}
+      />
+
     </Container>
   )
 }
