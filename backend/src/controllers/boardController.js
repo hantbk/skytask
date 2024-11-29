@@ -70,9 +70,6 @@ const deleteBoard = async (req, res, next) => {
     const userId = req.jwtDecoded._id
     const boardId = req.params.id
 
-    console.log('userId in controller: ', userId)
-    console.log('boardId in controller: ', boardId)
-
     // Routing data to service layer
     const result = await boardService.deleteBoard(userId, boardId)
 

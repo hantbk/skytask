@@ -254,8 +254,6 @@ const deleteBoard = async (userId, boardId) => {
       { returnDocument: 'after' }
     )
 
-    console.log('result in deleteBoard:', result)
-
     return result
   } catch (error) {
     console.error('Error in deleteBoard:', error.message)

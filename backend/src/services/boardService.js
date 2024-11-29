@@ -113,16 +113,12 @@ const deleteBoard = async (userId, boardId) => {
   try {
     // Check if the board exists before attempting to delete it
     const board = await boardModel.getDetails(userId, boardId)
-    console.log("board in service", board)
     if (!board) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
     }
 
     // Delete the board
     const deletionResult = await boardModel.deleteBoard(userId, boardId)
-
-    console.log("deletionResult in service", deletionResult)
-
     // Return a success message or relevant data
     return { message: 'Board successfully deleted', deletionResult }
   } catch (error) {
