@@ -45,17 +45,34 @@ function AppBar() {
     reset()
   }
 
-  const submitCreateNewBoard = (data) => {
-    // const { title, description, type } = data
-    createNewBoardAPI(data).then((response) => {
-      // Bước 01: Đóng modal
-      handleCloseModal()
-      // Bước 02: Thông báo đến component cha để xử lý
-      // afterCreateNewBoard()
+  const [backgroundImageFile, setBackgroundImageFile] = useState(null)
+
+  const submitCreateNewBoard = async (data) => {
+    const { title, description, type } = data;
+
+    // Create a new FormData object to send data including file
+    let reqData = new FormData();
+    reqData.append('title', title);  // Appending title to FormData
+    reqData.append('description', description);  // Appending description
+    reqData.append('type', type);  // Appending type (Public/Private)
+
+    // If there is a background image file, append it to FormData
+    if (backgroundImageFile) {
+      reqData.append('boardCover', backgroundImageFile);
+    }
+
+    // Assuming createNewBoardAPI is a function that handles the POST request
+    await createNewBoardAPI(reqData).then((response) => {
+      // Close the modal
+      handleCloseModal();
 
       // Navigate to the new board
-      navigate(`/boards/${response._id}`)
-    })
+      navigate(`/boards/${response._id}`);
+
+    }).catch((error) => {
+      // Handle error (optional)
+      console.error("Error creating new board:", error);
+    });
   }
 
   return (
@@ -157,7 +174,6 @@ function AppBar() {
         <Profiles />
       </Box>
 
-
       {/* CreateModal component */}
       <CreateModal
         isOpen={isOpen}
@@ -168,6 +184,7 @@ function AppBar() {
         reset={reset}
         errors={errors}
         submitCreateNewBoard={submitCreateNewBoard}
+        setBackgroundImageFile={setBackgroundImageFile}
       />
 
     </Box>

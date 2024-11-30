@@ -22,7 +22,7 @@ export const fetchBoardDetailsAPI = createAsyncThunk(
 )
 
 
-//Khởi tạo một cía Slice trong kho lưu trữ - Redux Store
+//Khởi tạo một Slice trong kho lưu trữ - Redux Store
 export const activeBoardSlice = createSlice({
   name: 'activeBoard',
   initialState,
