@@ -47,7 +47,7 @@ function SidebarCreateBoardModal({ afterCreateNewBoard }) {
   const [backgroundImageFile, setBackgroundImageFile] = useState(null)
 
 
-  const submitCreateNewBoard = (data) => {
+  const submitCreateNewBoard = async (data) => {
     const { title, description, type } = data;
 
     // Create a new FormData object to send data including file
@@ -62,7 +62,7 @@ function SidebarCreateBoardModal({ afterCreateNewBoard }) {
     }
 
     // Assuming createNewBoardAPI is a function that handles the POST request
-    createNewBoardAPI(reqData).then(() => {
+    await createNewBoardAPI(reqData).then(() => {
       // Close the modal
       handleCloseModal();
       // Notify parent component to refresh or handle after creation

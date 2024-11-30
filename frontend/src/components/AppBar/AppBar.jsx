@@ -93,7 +93,7 @@ function AppBar() {
                 fontSize: { xs: '1rem', md: '1.2rem' },
                 fontWeight: 'bold',
                 color: 'white',
-                display: 'inline-block'
+                display: { xs: 'none', sm: 'inline-block' },
               }}
             >
               TaskFlow
@@ -142,7 +142,7 @@ function AppBar() {
             sx={{ color: 'white', cursor: 'pointer' }}
             onClick={toggleSearch}
           />
-        ) : <AutoCompleteSearchBoard setIsSearchOpen={setIsSearchOpen}/>
+        ) : <AutoCompleteSearchBoard setIsSearchOpen={setIsSearchOpen} />
         }
 
         {/* Dark - Light - System Mode */}

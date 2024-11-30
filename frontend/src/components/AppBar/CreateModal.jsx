@@ -24,6 +24,13 @@ const BOARD_TYPES = {
     PRIVATE: 'private'
 };
 
+const predefinedBackgrounds = [
+    { id: 1, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732968229/board-covers/ozfspo1bpuw2l5ojo3tq.jpg' },
+    { id: 2, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732968519/board-covers/pxzom1gy3aotlohxe2wv.jpg' },
+    { id: 3, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732969312/board-covers/uweu3wapqxynjmepoxxe.jpg' },
+    { id: 4, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732969555/board-covers/mjjjeogmwmgs4yw3fk6s.jpg' },
+];
+
 const CreateModal = ({
     isOpen,
     handleCloseModal,
@@ -36,6 +43,7 @@ const CreateModal = ({
     setBackgroundImageFile
 }) => {
     const [backgroundPreview, setBackgroundPreview] = useState(null);
+    const [selectedBackground, setSelectedBackground] = useState(null);
 
     const handleFileChange = (e) => {
         const file = e.target?.files[0];
@@ -63,6 +71,26 @@ const CreateModal = ({
         // Reset the background preview and file when modal is closed
         setBackgroundPreview(null);
         setBackgroundImageFile(null);
+        setSelectedBackground(null);
+
+        // Close the modal
+        handleCloseModal();
+    };
+
+    const handleSelectBackground = (url) => {
+        setSelectedBackground(url);
+        setBackgroundPreview(url); // Set the preview to the selected background
+        setBackgroundImageFile(null); // Clear the file input
+    };
+
+    const handleFormSubmit = async (data) => {
+        // Call the original submit function
+        await submitCreateNewBoard(data);
+
+        // Reset background states after submit
+        setBackgroundPreview(null);
+        setBackgroundImageFile(null);
+        setSelectedBackground(null);
 
         // Close the modal
         handleCloseModal();
@@ -71,7 +99,7 @@ const CreateModal = ({
     return (
         <Modal
             open={isOpen}
-            onClose={handleCloseModalInternal}  // Reset the states here
+            onClose={handleCloseModalInternal}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
@@ -104,7 +132,7 @@ const CreateModal = ({
                     <Typography variant="h6" component="h2"> Create a new board</Typography>
                 </Box>
                 <Box id="modal-modal-description" sx={{ my: 2 }}>
-                    <form onSubmit={handleSubmit(submitCreateNewBoard)}>
+                    <form onSubmit={handleSubmit(handleFormSubmit)}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             {/* Title Input */}
                             <Box>
@@ -155,7 +183,27 @@ const CreateModal = ({
                                 <FieldErrorAlert errors={errors} fieldName={'description'} />
                             </Box>
 
-                            {/* Background Image Upload */}
+                            {/* Predefined Background Images */}
+                            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}>
+                                {predefinedBackgrounds.map((bg) => (
+                                    <Box
+                                        key={bg.id}
+                                        sx={{
+                                            height: '150px',
+                                            backgroundImage: `url(${bg.url})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            borderRadius: '8px',
+                                            boxShadow: 2,
+                                            cursor: 'pointer',
+                                            border: selectedBackground === bg.url ? '2px solid blue' : 'none'
+                                        }}
+                                        onClick={() => handleSelectBackground(bg.url)}
+                                    />
+                                ))}
+                            </Box>
+
+                            {/* Background Image Upload Button */}
                             <Box>
                                 <Button
                                     variant="outlined"
@@ -174,7 +222,7 @@ const CreateModal = ({
                                     <Box
                                         sx={{
                                             mt: 2,
-                                            height: '300px',
+                                            height: '250px',
                                             backgroundImage: `url(${backgroundPreview})`,
                                             backgroundSize: 'cover',
                                             backgroundPosition: 'center',
