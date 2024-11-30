@@ -46,7 +46,6 @@ function SidebarCreateBoardModal({ afterCreateNewBoard }) {
 
   const [backgroundImageFile, setBackgroundImageFile] = useState(null)
 
-
   const submitCreateNewBoard = async (data) => {
     const { title, description, type } = data;
 
