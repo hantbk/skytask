@@ -58,12 +58,13 @@ const CreateModal = ({
         // Set the image preview
         const reader = new FileReader();
         reader.onloadend = () => {
-            setBackgroundPreview(reader.result); // Set the file as preview
+            setBackgroundPreview(reader.result);
+            setBackgroundImageFile(file);
+            setSelectedBackground(null);
         };
+
         if (file) {
             reader.readAsDataURL(file);
-            // Pass the file back to the parent component
-            setBackgroundImageFile(file);
         }
     };
 
@@ -77,11 +78,23 @@ const CreateModal = ({
         handleCloseModal();
     };
 
-    const handleSelectBackground = (url) => {
-        setSelectedBackground(url);
-        setBackgroundPreview(url); // Set the preview to the selected background
-        setBackgroundImageFile(null); // Clear the file input
+    const handleSelectBackground = async (url) => {
+        try {
+            // Fetch the file from the URL
+            const response = await fetch(url);
+            const blob = await response.blob(); // Convert the response to a Blob
+            const file = new File([blob], `background_${Date.now()}.jpg`, { type: blob.type });
+
+            // Update the state
+            setSelectedBackground(url); // Set the selected background
+            setBackgroundPreview(url); // Set the preview
+            setBackgroundImageFile(file); // Set the file
+        } catch (error) {
+            console.error("Error fetching the background image:", error);
+            toast.error("Failed to load the selected background image. Please try again.");
+        }
     };
+
 
     const handleFormSubmit = async (data) => {
         // Call the original submit function

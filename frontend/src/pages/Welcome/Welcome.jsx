@@ -17,8 +17,10 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '~/redux/user/userSlice';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import GithubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import IconButton from '@mui/material/IconButton';
+import RoomIcon from '@mui/icons-material/Room';
 
 function Header({ isDarkMode, theme }) {
   return (
@@ -95,7 +97,7 @@ function FeatureCard({ title, description, color, img }) {
           position: 'relative',
         }}
       >
-        <CardContent sx={{ paddingBottom: '60px' }}>
+        <CardContent sx={{ paddingBottom: '60px', height: '200px' }}>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
             {title}
           </Typography>
@@ -291,39 +293,62 @@ function Welcome() {
       <Box
         component="footer"
         sx={{
-          backgroundColor: isDarkMode ? '#1c1c1c' : '#ffffff',
-          color: isDarkMode ? '#ffffff' : '#1c1c1c',
-          paddingY: 6,
-          borderTop: isDarkMode ? '4px solid #ffffff' : '4px solid #1c1c1c',
+          backgroundColor: isDarkMode ? '#1c1c1c' : '#f9f9f9', // Softer light mode background
+          color: isDarkMode ? '#e0e0e0' : '#333333', // Neutral colors for readability
+          paddingY: { xs: 4, sm: 6 }, // Responsive vertical padding
+          borderTop: isDarkMode ? '4px solid #333333' : '4px solid #cccccc', // Subtle border
+          boxShadow: '0 -4px 8px rgba(0, 0, 0, 0.1)', // Slight shadow for depth
+          fontFamily: '"Roboto", sans-serif', // Modern font style
         }}
       >
         <Container>
           <Grid container spacing={4}>
             {/* Find Us Section */}
             <Grid item xs={12} sm={4}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
-                Find Us
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              <Box display="flex" alignItems="center" marginBottom={2}>
+                <RoomIcon sx={{ marginRight: 1, color: isDarkMode ? '#f0a500' : '#f57c00' }} /> {/* Icon with accent color */}
+                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1.2 }}>
+                  Find Us
+                </Typography>
+              </Box>
+              <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6 }}>
                 Hanoi University of Science and Technology, 1 Dai Co Viet, Hai Ba Trung, Hanoi
               </Typography>
+              <Box
+                sx={{
+                  border: isDarkMode ? '2px solid #444444' : '2px solid #cccccc',
+                  borderRadius: 3,
+                  overflow: 'hidden',
+                  marginTop: 2,
+                }}
+              >
+                <iframe
+                  title="Find Us Map"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.7238566158186!2d105.84649617580878!3d21.00534019263252!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135abbf5f6457c5%3A0xf1087d77443f3079!2sHanoi%20University%20of%20Science%20and%20Technology!5e0!3m2!1sen!2s!4v1698774012345!5m2!1sen!2s"
+                  width="100%"
+                  height="200"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                ></iframe>
+              </Box>
             </Grid>
 
             {/* Contact Us Section */}
             <Grid item xs={12} sm={4}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1.2 }}>
                 Contact Us
               </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6 }}>
                 <strong>Phone:</strong> +84 1234567890
               </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6 }}>
                 <strong>Email:</strong>{' '}
                 <a
                   href="mailto:info@hust.edu.vn"
                   style={{
-                    color: isDarkMode ? '#ffffff' : '#1c1c1c',
-                    textDecoration: 'underline',
+                    color: isDarkMode ? '#f0a500' : '#f57c00',
+                    textDecoration: 'none',
                   }}
                 >
                   info@hust.edu.vn
@@ -331,9 +356,9 @@ function Welcome() {
               </Typography>
             </Grid>
 
-            {/* Follow Us Section with Background Color */}
+            {/* Follow Us Section */}
             <Grid item xs={12} sm={4}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1.2 }}>
                 Follow Us
               </Typography>
               <Box
@@ -341,16 +366,14 @@ function Welcome() {
                   display: 'flex',
                   justifyContent: 'flex-start',
                   gap: 2,
-                  backgroundColor: isDarkMode ? '#1c1c1c' : '#ffffff',
                   padding: '10px 0',
-                  borderRadius: 2,
                 }}
               >
                 <IconButton
                   href="https://facebook.com"
                   target="_blank"
                   sx={{
-                    color: isDarkMode ? '#ffffff' : '#1c1c1c',
+                    color: isDarkMode ? '#e0e0e0' : '#333333',
                     '&:hover': { color: '#3b5998' },
                   }}
                 >
@@ -360,7 +383,7 @@ function Welcome() {
                   href="https://twitter.com"
                   target="_blank"
                   sx={{
-                    color: isDarkMode ? '#ffffff' : '#1c1c1c',
+                    color: isDarkMode ? '#e0e0e0' : '#333333',
                     '&:hover': { color: '#1DA1F2' },
                   }}
                 >
@@ -370,23 +393,38 @@ function Welcome() {
                   href="https://linkedin.com"
                   target="_blank"
                   sx={{
-                    color: isDarkMode ? '#ffffff' : '#1c1c1c',
+                    color: isDarkMode ? '#e0e0e0' : '#333333',
                     '&:hover': { color: '#0A66C2' },
                   }}
                 >
                   <LinkedInIcon />
                 </IconButton>
+                <IconButton
+                  href="https://github.com/hantbk/taskflow"
+                  target="_blank"
+                  sx={{
+                    color: isDarkMode ? '#e0e0e0' : '#333333',
+                    '&:hover': { color: '#0A66C2' },
+                  }}
+                >
+                  <GithubIcon />
+                </IconButton>
               </Box>
-              <Typography variant="body2" sx={{ opacity: 0.8, marginTop: 2, color: isDarkMode ? '#ffffff' : '#1c1c1c' }}>
-                &copy; 2024 Hanoi University of Science and Technology
+              <Typography
+                variant="body2"
+                sx={{
+                  opacity: 0.8,
+                  marginTop: 2,
+                  color: isDarkMode ? '#e0e0e0' : '#666666',
+                  fontSize: '0.9rem',
+                }}
+              >
+                &copy; 2024 TaskFlow. All rights reserved.
               </Typography>
             </Grid>
-
           </Grid>
         </Container>
       </Box>
-
-
     </Box>
   );
 }
