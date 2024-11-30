@@ -18,7 +18,6 @@ import CardMedia from '@mui/material/CardMedia'
 import Pagination from '@mui/material/Pagination'
 import PaginationItem from '@mui/material/PaginationItem'
 import { Link, useLocation } from 'react-router-dom'
-import randomColor from 'randomcolor'
 import SidebarCreateBoardModal from './create'
 
 import { fetchBoardsAPI, deleteBoardAPI } from '~/apis/index'
@@ -153,9 +152,8 @@ function Boards() {
                 {boards.map(b =>
                   <Grid xs={2} sm={3} md={4} key={b._id}>
                     <Card sx={{ width: '250px' }}>
-                      {/* Optional: Board Cover */}
-                      {/* <CardMedia component="img" height="100" image="https://picsum.photos/100" /> */}
-                      <Box sx={{ height: '50px', backgroundColor: randomColor() }}></Box>
+                      {/* Board Cover */}
+                      <CardMedia component="img" height="100" image={b?.backgroundImageUrl} alt="Board Cover" />
 
                       <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
                         <Typography gutterBottom variant="h6" component="div">
