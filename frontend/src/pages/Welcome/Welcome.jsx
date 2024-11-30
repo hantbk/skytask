@@ -12,10 +12,13 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { ReactComponent as TrelloIcon } from '~/assets/trello.svg';
 import { ReactComponent as HomeIllustration } from '~/assets/homepage/home-illustration.svg';
-import { ReactComponent as IconSup } from '~/assets/homepage/icon-supervisor.svg';
 import { Link, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '~/redux/user/userSlice';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import IconButton from '@mui/material/IconButton';
 
 function Header({ isDarkMode, theme }) {
   return (
@@ -129,25 +132,25 @@ function Welcome() {
       title: 'Supervisor',
       description: 'Monitors activity to identify project roadblocks.',
       color: 'cyan',
-      img: 'https://kellychi22.github.io/frontend-mentor-solutions/10-four-card-feature-section/images/icon-supervisor.svg',
+      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-supervisor.svg',
     },
     {
       title: 'IT Leaders',
       description: 'Secure all leave and accommodation data in one platform, cloud-based.',
       color: 'red',
-      img: 'https://kellychi22.github.io/frontend-mentor-solutions/10-four-card-feature-section/images/icon-team-builder.svg',
+      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-team-builder.svg',
     },
     {
       title: 'Administrators',
       description: 'Automate the handling of daily leave of absence and accommodation tasks.',
       color: 'orange',
-      img: 'https://kellychi22.github.io/frontend-mentor-solutions/10-four-card-feature-section/images/icon-karma.svg',
+      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-karma.svg',
     },
     {
       title: 'HR Leaders',
       description: 'Bring leave of absence and accommodation 100% in-house to own the end-to-end employee experience.',
       color: 'blue',
-      img: 'https://kellychi22.github.io/frontend-mentor-solutions/10-four-card-feature-section/images/icon-calculator.svg',
+      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-calculator.svg',
     },
   ];
 
@@ -269,7 +272,7 @@ function Welcome() {
       </Box>
       <Box
         sx={{
-          backgroundColor: '#f5f5f5',
+          backgroundImage: `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.paper})`,
           fontFamily: 'Poppins, sans-serif',
           color: '#1c1c1c',
           padding: '24px 0',
@@ -288,35 +291,101 @@ function Welcome() {
       <Box
         component="footer"
         sx={{
-          backgroundColor: '#1c1c1c',
-          color: '#ffffff',
-          paddingY: 4,
+          backgroundColor: isDarkMode ? '#1c1c1c' : '#ffffff',
+          color: isDarkMode ? '#ffffff' : '#1c1c1c',
+          paddingY: 6,
+          borderTop: isDarkMode ? '4px solid #ffffff' : '4px solid #1c1c1c',
         }}
       >
         <Container>
           <Grid container spacing={4}>
+            {/* Find Us Section */}
             <Grid item xs={12} sm={4}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
                 Find Us
               </Typography>
-              <Typography variant="body2">
+              <Typography variant="body2" sx={{ opacity: 0.8 }}>
                 Hanoi University of Science and Technology, 1 Dai Co Viet, Hai Ba Trung, Hanoi
               </Typography>
             </Grid>
+
+            {/* Contact Us Section */}
             <Grid item xs={12} sm={4}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
                 Contact Us
               </Typography>
-              <Typography variant="body2">Phone: +84 1234567890</Typography>
-              <Typography variant="body2">Email: [info@hust.edu.vn](mailto:info@hust.edu.vn)</Typography>
+              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                <strong>Phone:</strong> +84 1234567890
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                <strong>Email:</strong>{' '}
+                <a
+                  href="mailto:info@hust.edu.vn"
+                  style={{
+                    color: isDarkMode ? '#ffffff' : '#1c1c1c',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  info@hust.edu.vn
+                </a>
+              </Typography>
             </Grid>
+
+            {/* Follow Us Section with Background Color */}
             <Grid item xs={12} sm={4}>
-              <Typography variant="h6" gutterBottom></Typography>
-              <Typography variant="body2">Copyright 2022 Hanoi University of Science and Technology</Typography>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
+                Follow Us
+              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  gap: 2,
+                  backgroundColor: isDarkMode ? '#1c1c1c' : '#ffffff',
+                  padding: '10px 0',
+                  borderRadius: 2,
+                }}
+              >
+                <IconButton
+                  href="https://facebook.com"
+                  target="_blank"
+                  sx={{
+                    color: isDarkMode ? '#ffffff' : '#1c1c1c',
+                    '&:hover': { color: '#3b5998' },
+                  }}
+                >
+                  <FacebookIcon />
+                </IconButton>
+                <IconButton
+                  href="https://twitter.com"
+                  target="_blank"
+                  sx={{
+                    color: isDarkMode ? '#ffffff' : '#1c1c1c',
+                    '&:hover': { color: '#1DA1F2' },
+                  }}
+                >
+                  <TwitterIcon />
+                </IconButton>
+                <IconButton
+                  href="https://linkedin.com"
+                  target="_blank"
+                  sx={{
+                    color: isDarkMode ? '#ffffff' : '#1c1c1c',
+                    '&:hover': { color: '#0A66C2' },
+                  }}
+                >
+                  <LinkedInIcon />
+                </IconButton>
+              </Box>
+              <Typography variant="body2" sx={{ opacity: 0.8, marginTop: 2, color: isDarkMode ? '#ffffff' : '#1c1c1c' }}>
+                &copy; 2024 Hanoi University of Science and Technology
+              </Typography>
             </Grid>
+
           </Grid>
         </Container>
       </Box>
+
 
     </Box>
   );
