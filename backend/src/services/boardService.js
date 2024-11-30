@@ -11,6 +11,7 @@ import { CloudinaryProvider } from '~/providers/CloudinaryProvider'
 const createNew = async (userId, reqBody, backgroundImage) => {
   try {
     
+    let backgroundUrl = null
     if (backgroundImage) {
       backgroundUrl = await await CloudinaryProvider.streamUpload(backgroundImage.buffer, 'board-covers')
     }
