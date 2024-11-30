@@ -25,8 +25,8 @@ function Templates() {
   }
 
   const theme = useTheme()
-  const buttonBackgroundColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0'
-  const hoverBackgroundColor = theme.palette.mode === 'dark' ? '#1c2833' : '#0d47a1'
+  const buttonBackgroundColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1A3636'
+  const hoverBackgroundColor = theme.palette.mode === 'dark' ? '#1c2833' : '#697565'
 
   return (
     <Box>

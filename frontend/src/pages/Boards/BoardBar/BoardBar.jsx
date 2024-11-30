@@ -10,6 +10,7 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import BoardUserGroup from './BoardUserGroup'
 import InviteBoardUser from './InviteBoardUser'
+import WallpaperIcon from '@mui/icons-material/Wallpaper';
 
 const MENU_STYLES = {
   color: 'white',
@@ -37,7 +38,7 @@ function BoardBar({ board }) {
       gap: 2,
       paddingX: 2,
       overflowX: 'auto',
-      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2')
+      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#40534C')
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <Tooltip title={board?.description}>
@@ -78,7 +79,13 @@ function BoardBar({ board }) {
           icon={<FilterListIcon/>}
           label="Filters"
           clickable
+        />
 
+        <Chip
+          sx={MENU_STYLES}
+          icon={<WallpaperIcon/>}
+          label="Change Background"
+          clickable
         />
       </Box>
 
