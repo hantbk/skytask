@@ -6,12 +6,20 @@ import { cloneDeep } from 'lodash'
 import { columnModel } from '~/models/columnModel'
 import { cardModel } from '~/models/cardModel'
 import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
+import { CloudinaryProvider } from '~/providers/CloudinaryProvider'
 
-const createNew = async (userId, reqBody) => {
+const createNew = async (userId, reqBody, backgroundImage) => {
   try {
+    
+    let backgroundUrl = null
+    if (backgroundImage) {
+      backgroundUrl = await await CloudinaryProvider.streamUpload(backgroundImage.buffer, 'board-covers')
+    }
+
     const newBoard = {
       ...reqBody,
-      slug: slugify(reqBody.title)
+      slug: slugify(reqBody.title),
+      backgroundImageUrl: backgroundUrl ? backgroundUrl.secure_url : null
     }
 
     // Gọi tới Model để xử lý lưu bản ghi newBoard vào Database
@@ -52,8 +60,14 @@ const getDetails = async (userId, boardId) => {
   }
 }
 
-const update = async (boardId, reqBody) => {
+const update = async (boardId, reqBody, backgroundImage) => {
   try {
+
+    if(backgroundImage) {
+      const backgroundUrl = await CloudinaryProvider.streamUpload(backgroundImage.buffer, 'board-covers')
+      reqBody.backgroundImageUrl = backgroundUrl.secure_url
+    }
+
     const updateData = {
       ...reqBody,
       updatedAt: Date.now()

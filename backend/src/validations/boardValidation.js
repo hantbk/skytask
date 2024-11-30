@@ -14,6 +14,7 @@ const createNew = async (req, res, next) => {
       'string.trim': 'Title must not have leading or trailing whitespace'
     }),
     description: Joi.string().required().min(3).max(255).trim().strict(),
+    backgroundImageUrl: Joi.string().uri().allow("", null).optional(),
     type: Joi.string().required().valid(BOARD_TYPES.PUBLIC, BOARD_TYPES.PRIVATE)
   })
 
@@ -29,6 +30,7 @@ const update = async (req, res, next) => {
   const correctCondition = Joi.object({
     title: Joi.string().min(3).max(50).trim().strict(),
     description: Joi.string().min(3).max(255).trim().strict(),
+    backgroundImageUrl: Joi.string().uri().allow("", null).optional(),
     type: Joi.string().valid(BOARD_TYPES.PUBLIC, BOARD_TYPES.PRIVATE),
     columnOrderIds: Joi.array().items(
       Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)

@@ -4,9 +4,10 @@ import { boardService } from '~/services/boardService'
 const createNew = async (req, res, next) => {
   try {
     const userId = req.jwtDecoded._id
+    const backgroundImage = req.file
 
     // Routing data to service layer
-    const createdBoard = await boardService.createNew(userId, req.body)
+    const createdBoard = await boardService.createNew(userId, req.body, backgroundImage)
 
     // Return data to client
     res.status(StatusCodes.CREATED).json(createdBoard)
@@ -33,7 +34,8 @@ const getDetails = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const boardId = req.params.id
-    const updatedBoard = await boardService.update(boardId, req.body)
+    const backgroundImage = req.file
+    const updatedBoard = await boardService.update(boardId, req.body, backgroundImage)
 
     res.status(StatusCodes.OK).json(updatedBoard)
   } catch (error) {

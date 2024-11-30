@@ -1,20 +1,7 @@
 import { useState } from 'react'
 import Box from '@mui/material/Box'
-import Modal from '@mui/material/Modal'
-import Typography from '@mui/material/Typography'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
-import CancelIcon from '@mui/icons-material/Cancel'
-import { useForm, Controller } from 'react-hook-form'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import { FIELD_REQUIRED_MESSAGE } from '~/utils/validators'
-import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
-import AbcIcon from '@mui/icons-material/Abc'
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
-import Button from '@mui/material/Button'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import { useForm } from 'react-hook-form'
 import { createNewBoardAPI } from '~/apis'
 import CreateModal from '~/components/AppBar/CreateModal'
 
@@ -57,16 +44,35 @@ function SidebarCreateBoardModal({ afterCreateNewBoard }) {
     reset()
   }
 
+  const [backgroundImageFile, setBackgroundImageFile] = useState(null)
+
 
   const submitCreateNewBoard = (data) => {
-    // const { title, description, type } = data
-    createNewBoardAPI(data).then(() => {
-      // Bước 01: Đóng modal
-      handleCloseModal()
-      // Bước 02: Thông báo đến component cha để xử lý
-      afterCreateNewBoard()
-    })
+    const { title, description, type } = data;
+
+    // Create a new FormData object to send data including file
+    let reqData = new FormData();
+    reqData.append('title', title);  // Appending title to FormData
+    reqData.append('description', description);  // Appending description
+    reqData.append('type', type);  // Appending type (Public/Private)
+
+    // If there is a background image file, append it to FormData
+    if (backgroundImageFile) {
+      reqData.append('boardCover', backgroundImageFile);
+    }
+
+    // Assuming createNewBoardAPI is a function that handles the POST request
+    createNewBoardAPI(reqData).then(() => {
+      // Close the modal
+      handleCloseModal();
+      // Notify parent component to refresh or handle after creation
+      afterCreateNewBoard();
+    }).catch((error) => {
+      // Handle error (optional)
+      console.error("Error creating new board:", error);
+    });
   }
+
 
   // <>...</> nhắc lại cho bạn anof chưa biết hoặc quên nhé: nó là React Fragment, dùng để bọc các phần tử lại mà không cần chỉ định DOM Node cụ thể nào cả.
   return (
@@ -85,6 +91,7 @@ function SidebarCreateBoardModal({ afterCreateNewBoard }) {
         reset={reset}
         errors={errors}
         submitCreateNewBoard={submitCreateNewBoard}
+        setBackgroundImageFile={setBackgroundImageFile}
       />
     </>
   )

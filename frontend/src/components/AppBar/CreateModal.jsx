@@ -1,32 +1,77 @@
-import React from 'react'
-import Box from '@mui/material/Box'
-import Modal from '@mui/material/Modal'
-import Typography from '@mui/material/Typography'
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
-import CancelIcon from '@mui/icons-material/Cancel'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import AbcIcon from '@mui/icons-material/Abc'
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
-import Button from '@mui/material/Button'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import { Controller } from 'react-hook-form'
-import { FIELD_REQUIRED_MESSAGE } from '~/utils/validators'
-import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
+import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import CancelIcon from '@mui/icons-material/Cancel';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import AbcIcon from '@mui/icons-material/Abc';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import Button from '@mui/material/Button';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { Controller } from 'react-hook-form';
+import { FIELD_REQUIRED_MESSAGE } from '~/utils/validators';
+import FieldErrorAlert from '~/components/Form/FieldErrorAlert';
+import { toast } from 'react-toastify';
+import { singleFileValidator } from '~/utils/validators';  // Assuming this function exists for file validation
 
 // Define BOARD_TYPES constant
 const BOARD_TYPES = {
     PUBLIC: 'public',
     PRIVATE: 'private'
-}
+};
 
-const CreateModal = ({ isOpen, handleCloseModal, control, register, handleSubmit, reset, errors, submitCreateNewBoard }) => {
+const CreateModal = ({
+    isOpen,
+    handleCloseModal,
+    control,
+    register,
+    handleSubmit,
+    reset,
+    errors,
+    submitCreateNewBoard,
+    setBackgroundImageFile
+}) => {
+    const [backgroundPreview, setBackgroundPreview] = useState(null);
+
+    const handleFileChange = (e) => {
+        const file = e.target?.files[0];
+
+        // Validate file
+        const error = singleFileValidator(file);
+        if (error) {
+            toast.error(error);
+            return;
+        }
+
+        // Set the image preview
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setBackgroundPreview(reader.result); // Set the file as preview
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+            // Pass the file back to the parent component
+            setBackgroundImageFile(file);
+        }
+    };
+
+    const handleCloseModalInternal = () => {
+        // Reset the background preview and file when modal is closed
+        setBackgroundPreview(null);
+        setBackgroundImageFile(null);
+
+        // Close the modal
+        handleCloseModal();
+    };
+
     return (
         <Modal
             open={isOpen}
-            onClose={handleCloseModal}
+            onClose={handleCloseModalInternal}  // Reset the states here
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
@@ -51,7 +96,8 @@ const CreateModal = ({ isOpen, handleCloseModal, control, register, handleSubmit
                     <CancelIcon
                         color="error"
                         sx={{ '&:hover': { color: 'error.light' } }}
-                        onClick={handleCloseModal} />
+                        onClick={handleCloseModalInternal}  // Call the internal close handler
+                    />
                 </Box>
                 <Box id="modal-modal-title" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <LibraryAddIcon />
@@ -60,6 +106,7 @@ const CreateModal = ({ isOpen, handleCloseModal, control, register, handleSubmit
                 <Box id="modal-modal-description" sx={{ my: 2 }}>
                     <form onSubmit={handleSubmit(submitCreateNewBoard)}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            {/* Title Input */}
                             <Box>
                                 <TextField
                                     fullWidth
@@ -83,6 +130,7 @@ const CreateModal = ({ isOpen, handleCloseModal, control, register, handleSubmit
                                 <FieldErrorAlert errors={errors} fieldName={'title'} />
                             </Box>
 
+                            {/* Description Input */}
                             <Box>
                                 <TextField
                                     fullWidth
@@ -107,6 +155,37 @@ const CreateModal = ({ isOpen, handleCloseModal, control, register, handleSubmit
                                 <FieldErrorAlert errors={errors} fieldName={'description'} />
                             </Box>
 
+                            {/* Background Image Upload */}
+                            <Box>
+                                <Button
+                                    variant="outlined"
+                                    component="label"
+                                    startIcon={<LibraryAddIcon />}
+                                >
+                                    Choose Background
+                                    <input
+                                        type="file"
+                                        hidden
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                    />
+                                </Button>
+                                {backgroundPreview && (
+                                    <Box
+                                        sx={{
+                                            mt: 2,
+                                            height: '300px',
+                                            backgroundImage: `url(${backgroundPreview})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            borderRadius: '8px',
+                                            boxShadow: 2
+                                        }}
+                                    />
+                                )}
+                            </Box>
+
+                            {/* Type Selection */}
                             <Controller
                                 name="type"
                                 defaultValue={BOARD_TYPES.PUBLIC}
@@ -149,7 +228,7 @@ const CreateModal = ({ isOpen, handleCloseModal, control, register, handleSubmit
                 </Box>
             </Box>
         </Modal>
-    )
-}
+    );
+};
 
-export default CreateModal
+export default CreateModal;
