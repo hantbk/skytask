@@ -116,15 +116,9 @@ function Board() {
       <BoardBar board={board} />
       <BoardContent
         board={board}
-
-
-        // createNewCard={createNewCard}
-        // deleteColumnDetails={deleteColumnDetails}
-
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCardToDifferentColumn={moveCardToDifferentColumn}
-
       />
     </Container>
   )

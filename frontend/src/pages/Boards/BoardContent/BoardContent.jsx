@@ -36,6 +36,8 @@ function BoardContent({
 
   const touchSensor = useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 500 } })
 
+  const defaultBoardCover = 'https://res.cloudinary.com/taskflow/image/upload/v1732970155/board-covers/ebxp2xjvltcwbv7nilab.jpg';
+
   // const sensors = useSensors(pointerSensor)
   const sensors = useSensors(mouseSensor, touchSensor)
 
@@ -304,7 +306,7 @@ function BoardContent({
     let overId = getFirstCollision(pointerIntersections, 'id')
     // console.log('overId: ', overId)
     if (overId) {
-    // Trường hợp kéo column thì dùng thuật toán closestCorners là chuẩn nhất
+      // Trường hợp kéo column thì dùng thuật toán closestCorners là chuẩn nhất
 
       const checkColumn = orderedColumns.find(column => column._id === overId)
       if (checkColumn) {
@@ -329,32 +331,40 @@ function BoardContent({
   return (
     <DndContext
       sensors={sensors}
-
       collisionDetection={collisionDetectionStrategy}
-      //Thuật toán phát hiện va chạm
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <Box sx={{
-        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
-        width: '100%',
-        height: (theme) => theme.trello.boardContentHeight,
-        display: 'flex',
-        overflowX: 'auto',
-        overflowY: 'hidden',
-        p: '10px 0'
-      }}>
-        <ListColumns
-          columns={orderedColumns}
-        />
+      <Box
+        sx={{
+          backgroundImage: board.backgroundImageUrl
+            ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${board.backgroundImageUrl})`
+            : `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${defaultBoardCover})`,
+          backdropFilter: 'blur(100px)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          width: '100%',
+          height: (theme) => theme.trello.boardContentHeight,
+          display: 'flex',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          p: '10px 0',
+        }}
+      >
+        <ListColumns columns={orderedColumns} />
         <DragOverlay dropAnimation={customDropAnimation}>
           {!activeDragItemType && null}
-          {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData} />}
-          {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) && <Card card={activeDragItemData} />}
+          {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
+            <Column column={activeDragItemData} />
+          )}
+          {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD && (
+            <Card card={activeDragItemData} />
+          )}
         </DragOverlay>
       </Box>
     </DndContext>
+
   )
 }
 

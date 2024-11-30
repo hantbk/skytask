@@ -3,8 +3,6 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import Divider from '@mui/material/Divider'
-import ListItemText from '@mui/material/ListItemText'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useTheme } from '@mui/material/styles'
 
@@ -20,7 +18,7 @@ function Starred() {
 
   // Sử dụng theme từ môi trường
   const theme = useTheme()
-  const buttonColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0'
+  const buttonColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1A3636'
 
   return (
     <Box>
@@ -29,7 +27,7 @@ function Starred() {
           color: 'white',
           backgroundColor: buttonColor,
           '&:hover': {
-            backgroundColor: theme.palette.mode === 'dark' ? '#1c2833' : '#0d47a1'
+            backgroundColor: theme.palette.mode === 'dark' ? '#1c2833' : '#697565'
           }
         }}
         id="basic-button-starred"

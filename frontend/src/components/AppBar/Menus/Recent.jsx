@@ -23,7 +23,7 @@ function Recent() {
   }
 
   const theme = useTheme()
-  const buttonBackgroundColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0'
+  const buttonBackgroundColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1A3636'
 
   return (
     <Box>
@@ -32,7 +32,7 @@ function Recent() {
           color: 'white',
           backgroundColor: buttonBackgroundColor,
           '&:hover': {
-            backgroundColor: theme.palette.mode === 'dark' ? '#1c2833' : '#0d47a1'
+            backgroundColor: theme.palette.mode === 'dark' ? '#1c2833' : '#697565'
           }
         }}
         id="basic-button-recent"
@@ -40,7 +40,7 @@ function Recent() {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
-        endIcon={ <ExpandMoreIcon />}
+        endIcon={<ExpandMoreIcon />}
       >
         Recent
       </Button>
@@ -55,17 +55,17 @@ function Recent() {
       >
         <MenuItem>
           <ListItemIcon>
-            <ViewKanbanIcon/>
+            <ViewKanbanIcon />
           </ListItemIcon>
           <ListItemText>TaskFlow</ListItemText>
-          <Typography variant="body2" sx={{ color: 'text.secondary' , ml: 1}}>
+          <Typography variant="body2" sx={{ color: 'text.secondary', ml: 1 }}>
             HUST
           </Typography>
         </MenuItem>
         <Divider />
         <MenuItem>
           <ListItemIcon>
-            <ApartmentIcon/>
+            <ApartmentIcon />
           </ListItemIcon>
           <ListItemText>Kanban Templates</ListItemText>
         </MenuItem>

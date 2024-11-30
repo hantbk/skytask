@@ -52,6 +52,8 @@ function Boards() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(null);
 
+  const defaultBoardCover = 'https://res.cloudinary.com/taskflow/image/upload/v1732970155/board-covers/ebxp2xjvltcwbv7nilab.jpg';
+
   const handleDeleteClick = (board) => {
     setSelectedBoard(board);
     setIsModalOpen(true);
@@ -153,7 +155,7 @@ function Boards() {
                   <Grid xs={2} sm={3} md={4} key={b._id}>
                     <Card sx={{ width: '250px' }}>
                       {/* Board Cover */}
-                      <CardMedia component="img" height="100" image={b?.backgroundImageUrl} alt="Board Cover" />
+                      <CardMedia component="img" height="100" image={b?.backgroundImageUrl || defaultBoardCover} alt="Board Cover" />
 
                       <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
                         <Typography gutterBottom variant="h6" component="div">

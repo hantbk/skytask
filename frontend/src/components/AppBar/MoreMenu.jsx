@@ -19,7 +19,7 @@ function MoreMenu() {
   }
 
   const theme = useTheme()
-  const menuBackgroundColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0'
+  const menuBackgroundColor = theme.palette.mode === 'dark' ? '#2c3e50' : '#1A3636'
 
   return (
     <Box>
