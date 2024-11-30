@@ -64,7 +64,7 @@ function ChangeBackgroundModal({ isOpen, handleCloseModal, board }) {
         await updateBoardDetailsAPI(board._id, formData)
             .then((res) => {
                 toast.success('Background updated successfully.');
-                window.location.href = window.location.href;
+                window.location.reload();
             }).then(() => {
                 handleCloseModal();
             })
@@ -171,10 +171,10 @@ function ChangeBackgroundModal({ isOpen, handleCloseModal, board }) {
                                 src={imagePreview}
                                 alt="Preview"
                                 style={{
-                                    width: '100%',   
-                                    height: '100%',  
+                                    width: '100%',
+                                    height: '100%',
                                     borderRadius: '8px',
-                                    objectFit: 'contain', 
+                                    objectFit: 'contain',
                                 }}
                             />
                         </Box>
