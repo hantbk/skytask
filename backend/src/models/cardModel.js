@@ -162,7 +162,7 @@ const createChecklist = async (cardId, checklistData) => {
     const cardIdObj = cardId instanceof ObjectId ? cardId : new ObjectId(cardId);
 
     const newChecklist = {
-      checklistId: new ObjectId(), // Generate a new ObjectId for the checklist
+      _id: new ObjectId(), // Generate a new ObjectId for the checklist
       title: checklistData.title,
       items: checklistData.items || []
     };
@@ -186,7 +186,7 @@ const deleteChecklist = async (cardId, checklistId) => {
 
     const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
       { _id: cardIdObj },
-      { $pull: { checklists: { checklistId: checklistIdObj } } },
+      { $pull: { checklists: { _id: checklistIdObj } } },
       { returnDocument: 'after' }
     );
 
@@ -202,19 +202,111 @@ const addChecklistItem = async (cardId, checklistId, checklistItem) => {
     const cardIdObj = cardId instanceof ObjectId ? cardId : new ObjectId(cardId);
     const checklistIdObj = checklistId instanceof ObjectId ? checklistId : new ObjectId(checklistId);
 
+    const checklistItemWithId = {
+      _id: checklistItem.id,
+      text: checklistItem.text,
+      completed: checklistItem.completed,
+      createdAt: checklistItem.createdAt,
+      createdBy: checklistItem.createdBy
+    };
+
     const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
-      { _id: cardIdObj, 'checklists.checklistId': checklistIdObj },
-      { $push: { 'checklists.$.items': checklistItem } },
+      { _id: cardIdObj, 'checklists._id': checklistIdObj },
+      { $push: { 'checklists.$.items': checklistItemWithId } },
       { returnDocument: 'after' }
     );
 
-    return result;
+    return result
   } catch (error) {
     throw error;
   }
 };
 
 
+const setChecklistItemCompleted = async (cardId, checklistId, checklistItemId, completed) => {
+  try {
+    const cardIdObj = new ObjectId(cardId);
+    const checklistIdObj = new ObjectId(checklistId);
+    const checklistItemIdObj = new ObjectId(checklistItemId);
+
+    // Perform the update on the specific checklist item in the card
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      {
+        _id: cardIdObj,
+        'checklists._id': checklistIdObj
+      },
+      {
+        $set: {
+          'checklists.$.items.$[item].completed': completed
+        }
+      },
+      {
+        arrayFilters: [{ 'item._id': checklistItemIdObj }],
+        returnDocument: 'after'
+      }
+    );
+
+    return result
+  } catch (error) {
+    throw error;
+  }
+};
+
+const setChecklistItemText = async (cardId, checklistId, checklistItemId, newText) => {
+  try {
+    const cardIdObj = new ObjectId(cardId);
+    const checklistIdObj = new ObjectId(checklistId);
+    const checklistItemIdObj = new ObjectId(checklistItemId);
+
+    // Perform the update on the specific checklist item in the card
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      {
+        _id: cardIdObj,
+        'checklists._id': checklistIdObj
+      },
+      {
+        $set: {
+          'checklists.$.items.$[item].text': newText
+        }
+      },
+      {
+        arrayFilters: [{ 'item._id': checklistItemIdObj }],
+        returnDocument: 'after'
+      }
+    );
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+const deleteChecklistItem = async (cardId, checklistId, checklistItemId) => {
+  try {
+    const cardIdObj = new ObjectId(cardId);
+    const checklistIdObj = new ObjectId(checklistId);
+    const checklistItemIdObj = new ObjectId(checklistItemId);
+
+    // Perform the update on the specific checklist item in the card
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      {
+        _id: cardIdObj,
+        'checklists._id': checklistIdObj
+      },
+      {
+        $pull: {
+          'checklists.$.items': { _id: checklistItemIdObj }
+        }
+      },
+      {
+        returnDocument: 'after'
+      }
+    )
+    return result
+  }
+  catch (error) {
+    throw error;
+  }
+}
 
 export const cardModel = {
   CARD_COLLECTION_NAME,
@@ -228,5 +320,8 @@ export const cardModel = {
   deleteItem,
   createChecklist,
   deleteChecklist,
-  addChecklistItem
+  addChecklistItem,
+  setChecklistItemCompleted,
+  setChecklistItemText,
+  deleteChecklistItem
 }

@@ -170,6 +170,102 @@ const deleteChecklist = async (user, cardId, checklistId) => {
   }
 };
 
+const setChecklistItemCompleted = async (user, cardId, checklistId, checklistItemId, completed) => {
+  try {
+    // Convert the IDs to ObjectId instances
+    const cardIdObj = new ObjectId(cardId);
+    const checklistIdObj = new ObjectId(checklistId);
+    const checklistItemIdObj = new ObjectId(checklistItemId);
+
+    // Get the card to ensure it's valid and retrieve related data (e.g., columnId, boardId)
+    const card = await cardModel.findOneById(cardIdObj);
+    if (!card) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Card not found!');
+    }
+
+    // Check user permissions to modify the checklist item
+    const columnIdObj = new ObjectId(card.columnId);
+    const boardIdObj = new ObjectId(card.boardId);
+
+    const isOwnerValid = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+    if (!isOwnerValid) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to modify this checklist item!');
+    }
+
+    // Call the model method to update the checklist item completion status
+    const updatedCard = await cardModel.setChecklistItemCompleted(
+      cardIdObj,
+      checklistIdObj,
+      checklistItemIdObj,
+      completed
+    );
+
+    return updatedCard;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const setChecklistItemText = async (user, cardId, checklistId, checklistItemId, text) => {
+  try {
+    // Convert the IDs to ObjectId instances
+    const cardIdObj = new ObjectId(cardId);
+    const checklistIdObj = new ObjectId(checklistId);
+    const checklistItemIdObj = new ObjectId(checklistItemId);
+
+    // Get the card to ensure it's valid and retrieve related data (e.g., columnId, boardId)
+    const card = await cardModel.findOneById(cardIdObj);
+    if (!card) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Card not found!');
+    }
+
+    // Check user permissions to modify the checklist item
+    const columnIdObj = new ObjectId(card.columnId);
+    const boardIdObj = new ObjectId(card.boardId);
+
+    const isOwnerValid = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+    if (!isOwnerValid) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to modify this checklist item!');
+    }
+    // Call the model method to update the checklist item text
+    const updatedCard = await cardModel.setChecklistItemText(cardIdObj, checklistIdObj, checklistItemIdObj, text);
+    return updatedCard;
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
+const deleteChecklistItem = async (user, cardId, checklistId, checklistItemId) => {
+  try {
+    // Convert the IDs to ObjectId instances
+    const cardIdObj = new ObjectId(cardId);
+    const checklistIdObj = new ObjectId(checklistId);
+    const checklistItemIdObj = new ObjectId(checklistItemId);
+
+    // Get the card to ensure it's valid and retrieve related data (e.g., columnId, boardId)
+    const card = await cardModel.findOneById(cardIdObj);
+    if (!card) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Card not found!');
+    }
+
+    // Check user permissions to modify the checklist item
+    const columnIdObj = new ObjectId(card.columnId);
+    const boardIdObj = new ObjectId(card.boardId);
+
+    const isOwnerValid = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+    if (!isOwnerValid) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to modify this checklist item!');
+    }
+
+    // Call the model method to delete the checklist item
+    const updatedCard = await cardModel.deleteChecklistItem(cardIdObj, checklistIdObj, checklistItemIdObj);
+    return updatedCard;
+
+  } catch (error) {
+    throw error
+  }
+}
 
 export const cardService = {
   createNew,
@@ -177,5 +273,8 @@ export const cardService = {
   deleteItem,
   createChecklist,
   deleteChecklist,
-  addChecklistItem
+  addChecklistItem,
+  setChecklistItemCompleted,
+  setChecklistItemText,
+  deleteChecklistItem
 }
