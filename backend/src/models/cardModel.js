@@ -38,7 +38,12 @@ const CARD_COLLECTION_SCHEMA = Joi.object({
 
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
   updatedAt: Joi.date().timestamp('javascript').default(null),
-  _destroy: Joi.boolean().default(false)
+  _destroy: Joi.boolean().default(false),
+
+  // Dữ liệu của label
+  selectedLabels: Joi.array().items({
+    _id: Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
+  }).default([])
 })
 
 const INVALID_UPDATE_FIELDS = ['_id', 'createdAt']
@@ -83,6 +88,15 @@ const update = async (cardId, updateData) => {
     })
 
     if (updateData.columnId) updateData.columnId = new ObjectId(String(updateData.columnId))
+
+    if (updateData.labels) {
+      updateData.labels = updateData.labels.map(label => {
+        return {
+          ...label,
+          _id: new ObjectId(String(label._id))
+        }
+      })
+    }
 
     const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
       { _id: new ObjectId(String(cardId)) },
