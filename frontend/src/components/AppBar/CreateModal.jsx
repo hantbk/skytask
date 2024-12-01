@@ -25,10 +25,10 @@ const BOARD_TYPES = {
 };
 
 const predefinedBackgrounds = [
-    { id: 1, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732968229/board-covers/ozfspo1bpuw2l5ojo3tq.jpg' },
-    { id: 2, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732968519/board-covers/pxzom1gy3aotlohxe2wv.jpg' },
-    { id: 3, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732969312/board-covers/uweu3wapqxynjmepoxxe.jpg' },
-    { id: 4, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732969555/board-covers/mjjjeogmwmgs4yw3fk6s.jpg' },
+    { id: 1, url: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/background/demo1.jpg' },
+    { id: 2, url: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/background/demo2.jpg' },
+    { id: 3, url: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/background/demo3.jpg' },
+    { id: 4, url: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/background/demo4.jpg' },
 ];
 
 const CreateModal = ({
