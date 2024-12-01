@@ -3,6 +3,7 @@ import { Modal, Box, Typography, Button, IconButton, CircularProgress, Grid } fr
 import { Close as CloseIcon } from '@mui/icons-material';
 import { updateBoardDetailsAPI, fetchBoardsAPI } from '~/apis'; // Ensure API is imported
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const modalStyle = {
     position: 'absolute',
@@ -17,16 +18,17 @@ const modalStyle = {
 };
 
 const predefinedBackgrounds = [
-    { id: 1, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732968229/board-covers/ozfspo1bpuw2l5ojo3tq.jpg' },
-    { id: 2, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732968519/board-covers/pxzom1gy3aotlohxe2wv.jpg' },
-    { id: 3, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732969312/board-covers/uweu3wapqxynjmepoxxe.jpg' },
-    { id: 4, url: 'https://res.cloudinary.com/taskflow/image/upload/v1732969555/board-covers/mjjjeogmwmgs4yw3fk6s.jpg' },
+    { id: 1, url: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/background/demo1.jpg' },
+    { id: 2, url: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/background/demo2.jpg' },
+    { id: 3, url: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/background/demo3.jpg' },
+    { id: 4, url: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/background/demo4.jpg' },
 ];
 
 function ChangeBackgroundModal({ isOpen, handleCloseModal, board }) {
     const [backgroundImageFile, setBackgroundImageFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(null);
+    const navigate = useNavigate();
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -64,7 +66,8 @@ function ChangeBackgroundModal({ isOpen, handleCloseModal, board }) {
         await updateBoardDetailsAPI(board._id, formData)
             .then((res) => {
                 toast.success('Background updated successfully.');
-                window.location.reload();
+                // window.location.reload();
+                navigate(0);
             }).then(() => {
                 handleCloseModal();
             })

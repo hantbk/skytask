@@ -52,7 +52,7 @@ function Boards() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(null);
 
-  const defaultBoardCover = 'https://res.cloudinary.com/taskflow/image/upload/v1732970155/board-covers/ebxp2xjvltcwbv7nilab.jpg';
+  const defaultBoardCover = 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/background/default.jpg';
 
   const handleDeleteClick = (board) => {
     setSelectedBoard(board);
