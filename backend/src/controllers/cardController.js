@@ -2,12 +2,12 @@ import { StatusCodes } from 'http-status-codes'
 import { cardService } from '~/services/cardService'
 
 const createNew = async (req, res, next) => {
-    try {
-        const createdCard = await cardService.createNew(req.body)
-        res.status(StatusCodes.CREATED).json(createdCard)
-    } catch (error) {
-        next(error)
-    }
+	try {
+		const createdCard = await cardService.createNew(req.body)
+		res.status(StatusCodes.CREATED).json(createdCard)
+	} catch (error) {
+		next(error)
+	}
 }
 
 const update = async (req, res, next) => {
@@ -34,7 +34,7 @@ const createChecklist = async (req, res, next) => {
 	try {
 		// Get params
 		const user = req.jwtDecoded
-		const cardId  = req.params
+		const cardId = req.params
 		const title = req.body.title
 
 		// Create checklist
@@ -43,9 +43,96 @@ const createChecklist = async (req, res, next) => {
 	} catch (error) { next(error) }
 }
 
+const addChecklistItem = async (req, res, next) => {
+	try {
+		// Get params
+		const user = req.jwtDecoded
+		const cardId = req.params.id
+		const checklistId = req.params.checklistId
+
+		// Create checklist item
+		const updatedCard = await cardService.addChecklistItem(user, cardId, checklistId, req.body.text)
+		res.status(StatusCodes.CREATED).json(updatedCard)
+	} catch (error) { next(error) }
+}
+
+const deleteChecklist = async (req, res, next) => {
+	try {
+		// Get params
+		const user = req.jwtDecoded
+		const cardId = req.params.id
+		const checklistId = req.params.checklistId
+
+		// Delete checklist
+		const updatedCard = await cardService.deleteChecklist(user, cardId, checklistId)
+		res.status(StatusCodes.OK).json(updatedCard)
+	} catch (error) { next(error) }
+}
+
+const setChecklistItemCompleted = async (req, res, next) => {
+	try {
+	  // Get params and request body
+	  const user = req.jwtDecoded 
+	  const cardId = req.params.id 
+	  const checklistId = req.params.checklistId 
+	  const checklistItemId = req.params.checklistItemId 
+	  const completed = req.body.completed 
+  
+	  // Gọi service để cập nhật trạng thái 'completed' cho checklist item
+	  const updatedCard = await cardService.setChecklistItemCompleted(user, cardId, checklistId, checklistItemId, completed)
+	  
+	  // Trả về card đã cập nhật với trạng thái mới
+	  res.status(StatusCodes.OK).json(updatedCard)
+	} catch (error) {
+	  // Xử lý lỗi
+	  next(error)
+	}
+  }
+
+const setChecklistItemText = async (req, res, next) => {
+	try {
+		// Get params and request body
+		const user = req.jwtDecoded
+		const cardId = req.params.id
+		const checklistId = req.params.checklistId
+		const checklistItemId = req.params.checklistItemId
+		const text = req.body.text
+
+		// Gọi service để cập nhật trạng thái 'completed' cho checklist item
+		const updatedCard = await cardService.setChecklistItemText(user, cardId, checklistId, checklistItemId, text)
+
+		// Trả về card đã cập nhật với trạng thái mới
+		res.status(StatusCodes.OK).json(updatedCard)
+	} catch (error) {
+		next(error)
+	}
+}
+
+const deleteChecklistItem = async (req, res, next) => {
+	try {
+		// Get params and request body
+		const user = req.jwtDecoded
+		const cardId = req.params.id
+		const checklistId = req.params.checklistId
+		const checklistItemId = req.params.checklistItemId
+
+		// Gọi service để xóa checklist item
+		const deletedCard = await cardService.deleteChecklistItem(user, cardId, checklistId, checklistItemId)
+		// Trả về card đã xóa
+		res.status(StatusCodes.OK).json(deletedCard)
+	} catch (error) {
+		next(error)
+	}
+}
+
 export const cardController = {
 	createNew,
 	update,
 	deleteItem,
-	createChecklist
+	createChecklist,
+	deleteChecklist,
+	addChecklistItem,
+	setChecklistItemCompleted,
+	setChecklistItemText,
+	deleteChecklistItem
 }

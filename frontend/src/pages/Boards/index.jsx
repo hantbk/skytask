@@ -119,8 +119,8 @@ function Boards() {
       <AppBar />
       <Box sx={{ paddingX: 2, my: 4 }}>
         <Grid container spacing={2}>
-          <Grid xs={12} sm={3}>
-            <Stack direction="column" spacing={1}>
+          <Grid xs={6} sm={2}>
+            <Stack direction="column" spacing={0.5}>
               <SidebarItem className="active">
                 <SpaceDashboardIcon fontSize="small" />
                 Boards
@@ -135,10 +135,11 @@ function Boards() {
               </SidebarItem>
             </Stack>
             <Divider sx={{ my: 1 }} />
-            <Stack direction="column" spacing={1}>
+            <Stack direction="column" spacing={0.5}>
               <SidebarCreateBoardModal afterCreateNewBoard={afterCreateNewBoard} />
             </Stack>
           </Grid>
+
 
           <Grid xs={12} sm={9}>
             <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 3 }}>Your boards:</Typography>
