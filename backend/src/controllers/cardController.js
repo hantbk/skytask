@@ -30,8 +30,22 @@ const deleteItem = async (req, res, next) => {
 	} catch (error) { next(error) }
 }
 
+const createChecklist = async (req, res, next) => {
+	try {
+		// Get params
+		const user = req.jwtDecoded
+		const cardId  = req.params
+		const title = req.body.title
+
+		// Create checklist
+		const updatedCard = await cardService.createChecklist(user, cardId, title)
+		res.status(StatusCodes.CREATED).json(updatedCard)
+	} catch (error) { next(error) }
+}
+
 export const cardController = {
 	createNew,
 	update,
-	deleteItem
+	deleteItem,
+	createChecklist
 }

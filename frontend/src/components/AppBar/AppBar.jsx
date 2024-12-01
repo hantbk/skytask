@@ -27,6 +27,7 @@ import AutoCompleteSearchBoard from './SearchBoards/AutoCompleteSearchBoard'
 
 function AppBar() {
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('md'))
+  const isSmallScreen1 = useMediaQuery('(max-width: 1050px)');
 
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 
@@ -110,7 +111,7 @@ function AppBar() {
                 fontSize: { xs: '1rem', md: '1.2rem' },
                 fontWeight: 'bold',
                 color: 'white',
-                display: { xs: 'none', sm: 'inline-block' },
+                display: isSmallScreen1 ? 'none' : { xs: 'none', sm: 'inline-block' },
               }}
             >
               TaskFlow
