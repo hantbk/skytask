@@ -4,6 +4,8 @@ import { Close as CloseIcon } from '@mui/icons-material';
 import { updateBoardDetailsAPI, fetchBoardsAPI } from '~/apis'; // Ensure API is imported
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';  // Import useDispatch to dispatch actions
+import { fetchBoardDetailsAPI } from '~/redux/activeBoard/activeBoardSlice';  // Import action to fetch board details
 
 const modalStyle = {
     position: 'absolute',
@@ -29,6 +31,7 @@ function ChangeBackgroundModal({ isOpen, handleCloseModal, board }) {
     const [loading, setLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -67,8 +70,9 @@ function ChangeBackgroundModal({ isOpen, handleCloseModal, board }) {
             .then((res) => {
                 toast.success('Background updated successfully.');
                 // window.location.reload();
-                navigate(0);
+                // navigate(0);
             }).then(() => {
+                dispatch(fetchBoardDetailsAPI(board._id));
                 handleCloseModal();
             })
             .catch((error) => {
