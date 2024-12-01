@@ -17,5 +17,8 @@ Router.route('/:id')
     cardController.update
   )
   .delete(authMiddleware.isAuthorized, cardValidation.deleteItem, cardController.deleteItem)
+  
+Router.route('/:id/create-checklist')
+  .post(authMiddleware.isAuthorized, cardValidation.createChecklist, cardController.createChecklist)
 
 export const cardRoute = Router

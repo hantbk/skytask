@@ -1,8 +1,11 @@
 import { cardModel } from '~/models/cardModel'
 import { columnModel } from '~/models/columnModel'
-import { CloudinaryProvider } from '~/providers/CloudinaryProvider'
+import { boardModel } from '~/models/boardModel'
 import ApiError from '~/utils/ApiError'
+import { CloudinaryProvider } from '~/providers/CloudinaryProvider'
 import { StatusCodes } from 'http-status-codes'
+import { validateCardOwners } from '~/utils/helperMethods'
+import { ObjectId } from 'mongodb'
 
 const createNew = async (reqBody) => {
   try {
@@ -71,8 +74,39 @@ const deleteItem = async (cardId) => {
   } catch (error) { throw error }
 }
 
+
+const createChecklist = async (user, cardId, title) => {
+  try {
+    const newChecklist = { title, items: [] };
+
+    // Convert the cardId to an ObjectId
+    const cardIdObj = new ObjectId(cardId);
+    // Fetch the card, column, and board
+    const card = await cardModel.findOneById(cardIdObj);
+    const columnIdObj = new ObjectId(card.columnId);
+    const column = await columnModel.findOneById(columnIdObj);
+    const boardIdObj = new ObjectId(card.boardId);
+    const board = await boardModel.findOneById(boardIdObj);
+
+    const validateOwner = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+
+    if (!validateOwner) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to create checklist!');
+    }
+
+    // Add the checklist to the card
+    const updatedCard = await cardModel.createChecklist(cardId, newChecklist);
+
+    return updatedCard;
+  } catch (error) {
+    throw error; 
+  }
+}
+
+
 export const cardService = {
   createNew,
   update,
-  deleteItem
+  deleteItem,
+  createChecklist
 }

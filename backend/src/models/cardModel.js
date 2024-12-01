@@ -27,6 +27,15 @@ const CARD_COLLECTION_SCHEMA = Joi.object({
     commentedAt: Joi.date().timestamp()
   }).default([]),
 
+  // Adding checklists field
+  checklists: Joi.array().items({
+    title: Joi.string().required(),
+    items: Joi.array().items({
+      text: Joi.string().required(),
+      completed: Joi.boolean().default(false)
+    }).default([]),
+  }).default([]),
+
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
   updatedAt: Joi.date().timestamp('javascript').default(null),
   _destroy: Joi.boolean().default(false)
@@ -41,7 +50,6 @@ const validateBeforeCreate = async (data) => {
 const createNew = async (data) => {
   try {
     const validData = await validateBeforeCreate(data)
-    // Transform data before insert to database to ObjectId
     const newCardToAdd = {
       ...validData,
       boardId: new ObjectId(String(validData.boardId)),
@@ -74,7 +82,6 @@ const update = async (cardId, updateData) => {
       }
     })
 
-    // Đối với dữ liệu liên quan đến ObjectId, biến đổi ở đây
     if (updateData.columnId) updateData.columnId = new ObjectId(String(updateData.columnId))
 
     const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
@@ -119,21 +126,19 @@ const unshiftNewComment = async (cardId, commentData) => {
 
 const updateMembers = async (cardId, incomingMemberInfo) => {
   try {
-    // Tạo ra một biến updateCondition ban đầu là rỗng
     let updateCondition = {}
+
     if (incomingMemberInfo.action === CARD_MEMBER_ACTIONS.ADD) {
-      // console.log('Trường hợp Add, dùng $push: ', incomingMemberInfo)
       updateCondition = { $push: { memberIds: new ObjectId(String(incomingMemberInfo.userId)) } }
     }
 
     if (incomingMemberInfo.action === CARD_MEMBER_ACTIONS.REMOVE) {
-      // console.log('Trường hợp Remove, dùng $pull: ', incomingMemberInfo)
       updateCondition = { $pull: { memberIds: new ObjectId(String(incomingMemberInfo.userId)) } }
     }
 
     const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
       { _id: new ObjectId(String(cardId)) },
-      updateCondition, // truyền cái updateCondition ở đây
+      updateCondition,
       { returnDocument: 'after' }
     )
     return result
@@ -152,6 +157,29 @@ const deleteItem = async (cardId) => {
   }
 }
 
+const createChecklist = async (cardId, checklistData) => {
+  try {
+    const cardIdObj = cardId instanceof ObjectId ? cardId : new ObjectId(cardId);
+
+    const newChecklist = {
+      title: checklistData.title,
+      items: checklistData.items || []
+    };
+
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: cardIdObj }, 
+      { $push: { checklists: newChecklist } }, 
+      { returnDocument: 'after' } 
+    );
+
+    // Return the result
+    return result;
+  } catch (error) {
+    throw error
+  }
+};
+
+
 export const cardModel = {
   CARD_COLLECTION_NAME,
   CARD_COLLECTION_SCHEMA,
@@ -161,5 +189,6 @@ export const cardModel = {
   deleteManyByColumnId,
   unshiftNewComment,
   updateMembers,
-  deleteItem
+  deleteItem,
+  createChecklist
 }
