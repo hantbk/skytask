@@ -148,6 +148,7 @@ function AppBar() {
                 '&:hover': { border: 'none' }
               }}
               variant='outlined'
+              onClick={handleOpenModal}
               startIcon={<LibraryAddIcon />}></Button>
           </Box>
         )}

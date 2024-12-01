@@ -84,9 +84,9 @@ const createChecklist = async (user, cardId, title) => {
     // Fetch the card, column, and board
     const card = await cardModel.findOneById(cardIdObj);
     const columnIdObj = new ObjectId(card.columnId);
-    const column = await columnModel.findOneById(columnIdObj);
+    await columnModel.findOneById(columnIdObj);
     const boardIdObj = new ObjectId(card.boardId);
-    const board = await boardModel.findOneById(boardIdObj);
+    await boardModel.findOneById(boardIdObj);
 
     const validateOwner = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
 
@@ -99,14 +99,83 @@ const createChecklist = async (user, cardId, title) => {
 
     return updatedCard;
   } catch (error) {
-    throw error; 
+    throw error;
   }
 }
+
+const addChecklistItem = async (user, cardId, checklistId, text) => {
+  try {
+    // Chuyển đổi cardId và checklistId sang ObjectId
+    const cardIdObj = new ObjectId(cardId);
+    const checklistIdObj = new ObjectId(checklistId);
+
+    // Lấy thông tin card, column, và board liên quan
+    const card = await cardModel.findOneById(cardIdObj);
+    const columnIdObj = new ObjectId(card.columnId);
+    await columnModel.findOneById(columnIdObj);
+    const boardIdObj = new ObjectId(card.boardId);
+    await boardModel.findOneById(boardIdObj);
+
+    // Kiểm tra quyền sở hữu
+    const validateOwner = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+
+    if (!validateOwner) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to add checklist item!');
+    }
+
+    // Tạo đối tượng checklist item mới
+    const newChecklistItem = {
+      id: new ObjectId(),
+      text,
+      completed: false,
+      createdAt: Date.now(),
+      createdBy: user._id
+    };
+
+    // Thêm checklist item vào checklist cụ thể trong card
+    const updatedCard = await cardModel.addChecklistItem(cardIdObj, checklistIdObj, newChecklistItem);
+
+    return updatedCard;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteChecklist = async (user, cardId, checklistId) => {
+  try {
+    // Chuyển đổi cardId và checklistId sang ObjectId
+    const cardIdObj = new ObjectId(cardId);
+    const checklistIdObj = new ObjectId(checklistId);
+
+    // Lấy thông tin card, column, và board liên quan
+    const card = await cardModel.findOneById(cardIdObj);
+    const columnIdObj = new ObjectId(card.columnId);
+    await columnModel.findOneById(columnIdObj);
+    const boardIdObj = new ObjectId(card.boardId);
+    await boardModel.findOneById(boardIdObj);
+
+    // Kiểm tra quyền sở hữu
+    const validateOwner = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+
+    if (!validateOwner) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to delete checklist item!');
+    }
+
+    // Xóa checklist khỏi card
+    const updatedCard = await cardModel.deleteChecklist(cardIdObj, checklistIdObj);
+    return updatedCard;
+
+  } catch (error) {
+    throw error;
+  }
+};
 
 
 export const cardService = {
   createNew,
   update,
   deleteItem,
-  createChecklist
+  createChecklist,
+  deleteChecklist,
+  addChecklistItem
 }

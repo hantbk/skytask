@@ -162,22 +162,58 @@ const createChecklist = async (cardId, checklistData) => {
     const cardIdObj = cardId instanceof ObjectId ? cardId : new ObjectId(cardId);
 
     const newChecklist = {
+      checklistId: new ObjectId(), // Generate a new ObjectId for the checklist
       title: checklistData.title,
       items: checklistData.items || []
     };
 
     const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
-      { _id: cardIdObj }, 
-      { $push: { checklists: newChecklist } }, 
-      { returnDocument: 'after' } 
+      { _id: cardIdObj },
+      { $push: { checklists: newChecklist } },
+      { returnDocument: 'after' }
     );
 
-    // Return the result
     return result;
   } catch (error) {
-    throw error
+    throw error;
   }
 };
+
+const deleteChecklist = async (cardId, checklistId) => {
+  try {
+    const cardIdObj = cardId instanceof ObjectId ? cardId : new ObjectId(cardId);
+    const checklistIdObj = checklistId instanceof ObjectId ? checklistId : new ObjectId(checklistId);
+
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: cardIdObj },
+      { $pull: { checklists: { checklistId: checklistIdObj } } },
+      { returnDocument: 'after' }
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+const addChecklistItem = async (cardId, checklistId, checklistItem) => {
+  try {
+    const cardIdObj = cardId instanceof ObjectId ? cardId : new ObjectId(cardId);
+    const checklistIdObj = checklistId instanceof ObjectId ? checklistId : new ObjectId(checklistId);
+
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: cardIdObj, 'checklists.checklistId': checklistIdObj },
+      { $push: { 'checklists.$.items': checklistItem } },
+      { returnDocument: 'after' }
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 
 export const cardModel = {
@@ -190,5 +226,7 @@ export const cardModel = {
   unshiftNewComment,
   updateMembers,
   deleteItem,
-  createChecklist
+  createChecklist,
+  deleteChecklist,
+  addChecklistItem
 }

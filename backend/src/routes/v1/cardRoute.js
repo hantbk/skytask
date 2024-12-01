@@ -21,4 +21,9 @@ Router.route('/:id')
 Router.route('/:id/create-checklist')
   .post(authMiddleware.isAuthorized, cardValidation.createChecklist, cardController.createChecklist)
 
+Router.route('/:id/:checklistId')
+  .post(authMiddleware.isAuthorized, cardValidation.addChecklistItem, cardController.addChecklistItem)
+  .delete(authMiddleware.isAuthorized, cardController.deleteChecklist)
+
+
 export const cardRoute = Router
