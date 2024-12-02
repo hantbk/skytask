@@ -21,8 +21,10 @@ Router.route('/:id')
 Router.route('/:id/create-checklist')
   .post(authMiddleware.isAuthorized, cardValidation.createChecklist, cardController.createChecklist)
 
-Router.route('/:id/:checklistId')
+Router.route('/:id/:checklistId/add-checklist-item')
   .post(authMiddleware.isAuthorized, cardValidation.addChecklistItem, cardController.addChecklistItem)
+
+Router.route('/:id/:checklistId/delete-checklist')
   .delete(authMiddleware.isAuthorized, cardController.deleteChecklist)
 
 Router.route('/:id/:checklistId/:checklistItemId/completed')
@@ -33,5 +35,8 @@ Router.route('/:id/:checklistId/:checklistItemId/text')
 
 Router.route('/:id/:checklistId/:checklistItemId')
   .delete(authMiddleware.isAuthorized, cardController.deleteChecklistItem)
+
+Router.route('/:id/attachment')
+  .post(authMiddleware.isAuthorized, cardValidation.addAttachment, cardController.addAttachment)
 
 export const cardRoute = Router

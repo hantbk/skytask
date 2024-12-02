@@ -36,6 +36,12 @@ const CARD_COLLECTION_SCHEMA = Joi.object({
     }).default([]),
   }).default([]),
 
+  attachments: Joi.array().items({
+    link: Joi.string().uri().required(),
+    name: Joi.string().default(null),
+    date: Joi.date().default(Date.now)
+  }).default([]),
+
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
   updatedAt: Joi.date().timestamp('javascript').default(null),
   _destroy: Joi.boolean().default(false),
@@ -320,6 +326,88 @@ const deleteChecklistItem = async (cardId, checklistId, checklistItemId) => {
   }
 }
 
+const addAttachment = async (cardId, attachment) => {
+  try {
+    const cardIdObj = new ObjectId(cardId);
+
+    const newAttachment = {
+      link: attachment.link,
+      name: attachment.name || null,
+      date: new Date()
+    };
+
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: cardIdObj },
+      { $push: { attachments: newAttachment } },
+      { returnDocument: 'after' }
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateAttachmentName = async (cardId, attachmentId, newName) => {
+  try {
+    const cardIdObj = new ObjectId(cardId);
+    const attachmentIdObj = new ObjectId(attachmentId);
+
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      {
+        _id: cardIdObj,
+        'attachments._id': attachmentIdObj
+      },
+      {
+        $set: { 'attachments.$.name': newName }
+      },
+      { returnDocument: 'after' }
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateAttachmentLink = async (cardId, attachmentId, newLink) => {
+  try {
+    const cardIdObj = new ObjectId(cardId);
+    const attachmentIdObj = new ObjectId(attachmentId);
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      {
+        _id: cardIdObj,
+        'attachments._id': attachmentIdObj
+      },
+      {
+        $set: { 'attachments.$.link': newLink }
+      },
+      { returnDocument: 'after' }
+    );
+    return result;
+  }
+  catch (error) {
+    throw error;
+  }
+};
+
+const removeAttachment = async (cardId, attachmentId) => {
+  try {
+    const cardIdObj = new ObjectId(cardId);
+    const attachmentIdObj = new ObjectId(attachmentId);
+
+    const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: cardIdObj },
+      { $pull: { attachments: { _id: attachmentIdObj } } },
+      { returnDocument: 'after' }
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const cardModel = {
   CARD_COLLECTION_NAME,
   CARD_COLLECTION_SCHEMA,
@@ -335,5 +423,9 @@ export const cardModel = {
   addChecklistItem,
   setChecklistItemCompleted,
   setChecklistItemText,
-  deleteChecklistItem
+  deleteChecklistItem,
+  addAttachment,
+  updateAttachmentName,
+  removeAttachment,
+  updateAttachmentLink
 }

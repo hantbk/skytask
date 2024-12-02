@@ -79,12 +79,12 @@ export const createChecklistAPI = async (cardId, newChecklistData) => {
 }
 
 export const addChecklistItemAPI = async (cardId, checklistId, newChecklistItemData) => {
-  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards/${cardId}/${checklistId}`, newChecklistItemData)
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards/${cardId}/${checklistId}/add-checklist-item`, newChecklistItemData)
   return response.data
 }
 
 export const deleteChecklistAPI = async (cardId, checklistId) => {
-  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/cards/${cardId}/${checklistId}`)
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/cards/${cardId}/${checklistId}/delete-checklist`)
   return response.data
 }
 
