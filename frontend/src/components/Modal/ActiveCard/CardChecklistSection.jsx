@@ -30,7 +30,13 @@ const ChecklistItem = ({ item, handleUpdateText, handleUpdate, handleDelete }) =
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <Checkbox checked={item.completed} onChange={handleUpdate} />
-            <Typography variant="body2" sx={{ flex: 1 }}>
+            <Typography
+                variant="body2"
+                sx={{
+                    flex: 1,
+                    textDecoration: item.completed ? 'line-through' : 'none',
+                }}
+            >
                 {isEditing ? (
                     <TextField
                         value={newText}
@@ -216,7 +222,7 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
                     {/* Display checklist title with ChecklistIcon */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                         <ChecklistIcon />
-                        <Typography variant="h6" sx={{ flex: 1, fontWeight: 'bold' }}>
+                        <Typography variant="h6" sx={{ flex: 1, fontWeight: 'bold', marginLeft: 1 }}>
                             {checklist.title}
                         </Typography>
                         <Button
