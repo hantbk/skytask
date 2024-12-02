@@ -46,9 +46,10 @@ import {
 import { selectCurrentUser } from '~/redux/user/userSlice'
 import { CARD_MEMBER_ACTIONS } from '~/utils/constants'
 import { useConfirm } from 'material-ui-confirm'
-import LabelModal from './LabelModal'
+import LabelPopover from './LabelPopover'
 import { styled } from '@mui/material/styles'
 import { Popover } from '@mui/material'
+import CardLabelSection from './CardLabelSection'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -246,6 +247,17 @@ function ActiveCard() {
                 <Typography
                   sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}
                 >
+                  Labels
+                </Typography>
+                <CardLabelSection
+                  popoverId={popoverId}
+                  handleTogglePopover={handleTogglePopover}
+                />
+              </Box>
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}
+                >
                 Members
                 </Typography>
 
@@ -424,7 +436,7 @@ function ActiveCard() {
           onClose={handleTogglePopover}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         >
-          <LabelModal />
+          <LabelPopover />
         </Popover>
       </>
     </Modal>

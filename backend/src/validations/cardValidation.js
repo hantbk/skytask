@@ -22,9 +22,7 @@ const update = async (req, res, next) => {
   const correctCondition = Joi.object({
     title: Joi.string().min(3).max(50).trim().strict(),
     description: Joi.string().optional(),
-    labels: Joi.array().items({
-      _id: Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE).optional()
-    }).optional()
+    labels: Joi.array().items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE).optional()).optional()
   })
 
 
