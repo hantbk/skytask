@@ -14,6 +14,7 @@ import cookieParser from 'cookie-parser'
 import http from 'http'
 import socketIo from 'socket.io'
 import { inviteUserToBoardSocket } from '~/sockets/inviteUserToBoardSocket'
+const path = require('path')
 
 export const app = express()
 let server
@@ -36,6 +37,12 @@ const START_SERVER = () => {
   // Use APIs V1
   app.use('/v1', APIs_V1)
 
+  app.use(express.static(path.join(__dirname, 'public')))
+
+  app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
+
   // Centralized error handling
   app.use(errorHandlingMiddleware)
 
@@ -50,7 +57,7 @@ const START_SERVER = () => {
     // console.log('New client connected')
 
     inviteUserToBoardSocket(socket)
-    
+
     // A special namespace "disconnect" for when a client disconnects
     // socket.on('disconnect', () => {
     //   console.log('Client disconnected')
