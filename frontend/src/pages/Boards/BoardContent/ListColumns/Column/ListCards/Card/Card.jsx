@@ -7,6 +7,7 @@ import CardMedia from '@mui/material/CardMedia'
 import GroupIcon from '@mui/icons-material/Group'
 import CommentIcon from '@mui/icons-material/Comment'
 import AttachmentIcon from '@mui/icons-material/Attachment'
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import Stack from '@mui/material/Stack'
 import Chip from '@mui/material/Chip'
 import { useSortable } from '@dnd-kit/sortable'
@@ -18,6 +19,7 @@ import { selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 function Card({ card }) {
   const dispatch = useDispatch()
   const activeBoard = useSelector(selectCurrentActiveBoard)
+
   const selectedLabels = card.selectedLabels || []
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
@@ -32,8 +34,16 @@ function Card({ card }) {
   }
 
   const shouldShowCardActions = () => {
-    return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
-  }
+    const hasChecklistsWithItems = card?.checklists?.some((checklist) => checklist.items?.length > 0);
+
+    return (
+      !!card?.memberIds?.length ||
+      !!card?.comments?.length ||
+      !!card?.attachments?.length ||
+      hasChecklistsWithItems
+    );
+  };
+
 
   const setActiveCard = () => {
     dispatch(updateCurrentActiveCard(card))
@@ -69,7 +79,7 @@ function Card({ card }) {
           }}
         >
           {activeBoard.labels
-            .filter((label) => selectedLabels.includes(label._id) )
+            .filter((label) => selectedLabels.includes(label._id))
             .map((label, index) => (
               <Chip
                 key={index}
@@ -91,11 +101,28 @@ function Card({ card }) {
         <Typography>{card?.title}</Typography>
       </CardContent>
       {shouldShowCardActions() &&
-      <CardActions sx={{ p: '0 4px 8px 4px' }}>
-        {!!card?.memberIds?.length && <Button size="small" startIcon={<GroupIcon />}>{card?.memberIds?.length}</Button>}
-        {!!card?.comments?.length && <Button size="small" startIcon={<CommentIcon />}>{card?.comments?.length}</Button>}
-        {!!card?.attachments?.length && <Button size="small" startIcon={<AttachmentIcon />}>{card?.attachments?.length}</Button>}
-      </CardActions>
+        <CardActions sx={{ p: '0 4px 8px 4px' }}>
+          {!!card?.memberIds?.length && <Button size="small" startIcon={<GroupIcon />}>{card?.memberIds?.length}</Button>}
+          {!!card?.comments?.length && <Button size="small" startIcon={<CommentIcon />}>{card?.comments?.length}</Button>}
+          {!!card?.attachments?.length && <Button size="small" startIcon={<AttachmentIcon />}>{card?.attachments?.length}</Button>}
+          {!!card?.checklists?.length && (
+            <Button size="small" startIcon={<CheckBoxIcon />}>
+              {(() => {
+                const totalItems = card.checklists.reduce(
+                  (total, checklist) => total + checklist.items.length,
+                  0
+                );
+                const completedItems = card.checklists.reduce(
+                  (completed, checklist) =>
+                    completed +
+                    checklist.items.filter((item) => item.completed).length,
+                  0
+                );
+                return `${completedItems}/${totalItems}`;
+              })()}
+            </Button>
+          )}
+        </CardActions>
       }
 
     </MuiCard>
