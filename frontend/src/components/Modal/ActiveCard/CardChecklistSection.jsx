@@ -137,7 +137,7 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
             const response = await deleteChecklistAPI(cardId, checklistId);
             if (response) {
                 const updatedChecklists = cardChecklistProp.filter((checklist) => checklist._id !== checklistId);
-                handleUpdateCardChecklist(updatedChecklists);
+                handleUpdateCardChecklist(response);
                 toast.success('Checklist deleted successfully');
             }
         } catch (error) {
