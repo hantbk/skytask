@@ -48,7 +48,7 @@ function App() {
         <Route path='/welcome' element={<Welcome />} />
         <Route path='/login' element={<LoginForm />} />
         <Route path='/register' element={<RegisterForm />} />
-        <Route path='/account-verification' element={<AccountVerification />} />
+        <Route path='/account/verification' element={<AccountVerification />} />
       </Route>
 
       {/* 404 Not Found */}

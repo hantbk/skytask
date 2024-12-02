@@ -42,7 +42,6 @@ export const activeBoardSlice = createSlice({
       // Update nested data
       // https://redux-toolkit.js.org/usage/immer-reducers#updating-nested-data
       const incommingCard = action.payload
-
       // Tìm dần từ board > column > card
       const column = state.currentActiveBoard.columns.find(column => column._id === incommingCard.columnId)
       if (column) {
