@@ -86,8 +86,6 @@ const addAttachment = async (req, res, next) => {
     name: Joi.string().optional().trim().strict()
   })
 
-  console.log('req.body', req.body)
-
   try {
     await correctCondition.validateAsync(req.body)
     next()

@@ -331,6 +331,7 @@ const addAttachment = async (cardId, attachment) => {
     const cardIdObj = new ObjectId(cardId);
 
     const newAttachment = {
+      _id: new ObjectId(),
       link: attachment.link,
       name: attachment.name || null,
       date: new Date()

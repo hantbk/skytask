@@ -56,7 +56,7 @@ export const deleteColumnDetailsAPI = async (columnId) => {
   return response.data
 }
 
-/** Card API */ 
+/** Card API */
 export const createNewCardAPI = async (newCardData) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards`, newCardData)
   return response.data
@@ -99,7 +99,7 @@ export const setChecklistItemTextAPI = async (cardId, checklistId, checklistItem
 }
 
 export const deleteChecklistItemAPI = async (cardId, checklistId, checklistItemId) => {
-  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/cards/${cardId}/${checklistId}/${checklistItemId}`)
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/cards/${cardId}/${checklistId}/${checklistItemId}/delete-checklist-item`)
   return response.data
 }
 
