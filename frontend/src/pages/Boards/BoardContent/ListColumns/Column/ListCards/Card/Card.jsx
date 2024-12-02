@@ -7,14 +7,18 @@ import CardMedia from '@mui/material/CardMedia'
 import GroupIcon from '@mui/icons-material/Group'
 import CommentIcon from '@mui/icons-material/Comment'
 import AttachmentIcon from '@mui/icons-material/Attachment'
+import Stack from '@mui/material/Stack'
+import Chip from '@mui/material/Chip'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateCurrentActiveCard, showModalActiveCard } from '~/redux/activeCard/activeCardSlice'
+import { selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 
 function Card({ card }) {
   const dispatch = useDispatch()
-
+  const activeBoard = useSelector(selectCurrentActiveBoard)
+  const selectedLabels = card.selectedLabels || []
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
     data: { ...card }
@@ -53,6 +57,37 @@ function Card({ card }) {
       }
 
       <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
+        <Stack
+          direction="row"
+          sx={{
+            maxWidth: '100%',
+            flexWrap: 'wrap',
+            overflow: 'hidden',
+            rowGap: '8px',
+            gap: '4px',
+            mb: 1
+          }}
+        >
+          {activeBoard.labels
+            .filter((label) => selectedLabels.includes(label._id) )
+            .map((label, index) => (
+              <Chip
+                key={index}
+                label={label.text}
+                sx={{
+                  backgroundColor: label.color,
+                  color: '#fff',
+                  fontWeight: '500',
+                  borderRadius: 1,
+                  fontSize: '12px',
+                  height: '20px',
+                  textAlign: 'left',
+                }}
+              />
+            ))
+          }
+
+        </Stack>
         <Typography>{card?.title}</Typography>
       </CardContent>
       {shouldShowCardActions() &&

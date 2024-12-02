@@ -14,7 +14,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   title: Joi.string().required().min(3).max(50).trim().strict(),
   slug: Joi.string().required().min(3).trim().strict(),
   description: Joi.string().required().min(3).max(255).trim().strict(),
-  backgroundImageUrl: Joi.string().uri().allow("", null).optional(),
+  backgroundImageUrl: Joi.string().uri().allow('', null).optional(),
 
   type: Joi.string().required().valid(BOARD_TYPES.PUBLIC, BOARD_TYPES.PRIVATE),
 
@@ -31,6 +31,12 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   memberIds: Joi.array().items(
     Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
   ).default([]),
+
+  labels: Joi.array().items({
+    _id: Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE),
+    text: Joi.string().allow('', null).optional(),
+    color: Joi.string().required()
+  }).default([]),
 
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
   updatedAt: Joi.date().timestamp('javascript').default(null),
@@ -161,6 +167,15 @@ const update = async (boardId, updateData) => {
 
     if (updateData.columnOrderIds) {
       updateData.columnOrderIds = updateData.columnOrderIds.map(_id => new ObjectId(String(_id)))
+    }
+
+    if (updateData.labels) {
+      updateData.labels = updateData.labels.map(label => {
+        return {
+          ...label,
+          _id: new ObjectId(String(label._id))
+        }
+      })
     }
 
     const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(

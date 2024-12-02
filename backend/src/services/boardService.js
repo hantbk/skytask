@@ -7,10 +7,10 @@ import { columnModel } from '~/models/columnModel'
 import { cardModel } from '~/models/cardModel'
 import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
 import { CloudinaryProvider } from '~/providers/CloudinaryProvider'
+import { ObjectId } from 'mongodb'
 
 const createNew = async (userId, reqBody, backgroundImage) => {
   try {
-    
     let backgroundUrl = null
     if (backgroundImage) {
       backgroundUrl = await await CloudinaryProvider.streamUpload(backgroundImage.buffer, 'board-covers')
@@ -62,10 +62,18 @@ const getDetails = async (userId, boardId) => {
 
 const update = async (boardId, reqBody, backgroundImage) => {
   try {
-
-    if(backgroundImage) {
+    if (backgroundImage) {
       const backgroundUrl = await CloudinaryProvider.streamUpload(backgroundImage.buffer, 'board-covers')
       reqBody.backgroundImageUrl = backgroundUrl.secure_url
+    }
+
+    if (reqBody.labels) {
+      reqBody.labels = reqBody.labels.map(label => {
+        return {
+          ...label,
+          _id: label._id || new ObjectId().toString()
+        }
+      })
     }
 
     const updateData = {
