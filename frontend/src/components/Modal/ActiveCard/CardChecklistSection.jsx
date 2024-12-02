@@ -2,20 +2,76 @@ import React, { useState, useEffect } from 'react';
 import { Box, Checkbox, Typography, IconButton, LinearProgress, Divider, Button, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ChecklistIcon from '@mui/icons-material/Checklist';
-import { deleteChecklistAPI, addChecklistItemAPI, setChecklistItemCompletedAPI, setChecklistItemTextAPI } from '~/apis';
+import {
+    deleteChecklistAPI,
+    addChecklistItemAPI,
+    setChecklistItemCompletedAPI,
+    setChecklistItemTextAPI,
+    deleteChecklistItemAPI
+} from '~/apis';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
 
-const ChecklistItem = ({ item, handleUpdate, handleDelete }) => {
+const ChecklistItem = ({ item, handleUpdateText, handleUpdate, handleDelete }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [newText, setNewText] = useState(item.text);
+
+    // Handle the save action for updating the item text
+    const handleSave = async () => {
+        try {
+
+            await handleUpdateText(newText); // Call the parent component function to update the text
+            setIsEditing(false); // Exit edit mode
+        } catch (error) {
+            console.error('Failed to update text:', error);
+        }
+    };
+
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <Checkbox
-                checked={item.completed}
-                onChange={handleUpdate}
-            />
+            <Checkbox checked={item.completed} onChange={handleUpdate} />
             <Typography variant="body2" sx={{ flex: 1 }}>
-                {item.text}
+                {isEditing ? (
+                    <TextField
+                        value={newText}
+                        onChange={(e) => setNewText(e.target.value)}
+                        size="small"
+                        variant="outlined"
+                        autoFocus
+                        sx={{
+                            '& label': { color: 'text.primary' },
+                            '& input': {
+                                color: (theme) => theme.palette.primary.main,
+                                bgcolor: (theme) =>
+                                    theme.palette.mode === 'dark' ? '#333643' : 'white',
+                            },
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                    borderColor: (theme) => theme.palette.primary.main,
+                                },
+                            },
+                        }}
+                    />
+                ) : (
+                    item.text
+                )}
             </Typography>
+            {isEditing ? (
+                <Button
+                    size="small"
+                    onClick={handleSave}
+                    variant="contained"
+                    color="primary"
+                >
+                    Save
+                </Button>
+            ) : (
+                <IconButton onClick={() => setIsEditing(true)} size="small">
+                    <Typography variant="body2" sx={{ color: 'primary.main' }}>
+                        Edit
+                    </Typography>
+                </IconButton>
+            )}
             <IconButton onClick={handleDelete} size="small">
                 <DeleteIcon />
             </IconButton>
@@ -55,6 +111,19 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
         }
     };
 
+    const onSetChecklistItemText = async (checklistId, itemId, newText) => {
+        try {
+            // Update the text of the checklist item
+            const updatedText = newText;
+            const response = await setChecklistItemTextAPI(cardId, checklistId, itemId, updatedText);
+            // Call the handleUpdateCardChecklist to update the parent component with the new checklists
+            handleUpdateCardChecklist(response);
+            toast.success('Checklist item updated successfully');
+        } catch (error) {
+            toast.error('Failed to update checklist item');
+        }
+    }
+
 
     // Delete checklist
     const onDelete = async (checklistId) => {
@@ -69,6 +138,36 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
             toast.error('Failed to delete checklist');
         }
     };
+
+    // Delete checklist item
+    const onDeleteChecklistItem = async (itemId, checklistId) => {
+        try {
+            // Call the API to delete the checklist item
+            const response = await deleteChecklistItemAPI(cardId, checklistId, itemId);
+
+            console.log('response', response);
+
+            if (response._id) {
+                // Update the checklist items by removing the deleted item
+                const updatedChecklists = cardChecklistProp.map((checklist) =>
+                    checklist._id === checklistId
+                        ? {
+                            ...checklist,
+                            items: checklist.items.filter(item => item._id !== itemId)
+                        }
+                        : checklist
+                );
+
+                // console.log('updatedChecklists', updatedChecklists);
+
+                handleUpdateCardChecklist(response);
+                toast.success('Checklist item deleted successfully');
+            }
+        } catch (error) {
+            toast.error('Failed to delete checklist item');
+        }
+    };
+
 
     // Add item to checklist
     const onAddItem = async (checklistId, text) => {
@@ -155,8 +254,9 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
                         <ChecklistItem
                             key={item._id}
                             item={item}
+                            handleUpdateText={(text) => onSetChecklistItemText(checklist._id, item._id, text)}
                             handleUpdate={() => onSetChecklistItemCompleted(checklist._id, item._id)}
-                            handleDelete={() => onDelete(item._id)}
+                            handleDelete={() => onDeleteChecklistItem(item._id, checklist._id)}
                         />
                     ))}
 
