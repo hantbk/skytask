@@ -24,6 +24,9 @@ Router.route('/:id/create-checklist')
 Router.route('/:id/:checklistId/add-checklist-item')
   .post(authMiddleware.isAuthorized, cardValidation.addChecklistItem, cardController.addChecklistItem)
 
+Router.route('/:id/:checklistId/update-checklist')
+  .put(authMiddleware.isAuthorized, cardController.updateChecklist)
+
 Router.route('/:id/:checklistId/delete-checklist')
   .delete(authMiddleware.isAuthorized, cardController.deleteChecklist)
 

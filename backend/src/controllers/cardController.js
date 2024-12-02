@@ -43,6 +43,20 @@ const createChecklist = async (req, res, next) => {
 	} catch (error) { next(error) }
 }
 
+const updateChecklist = async (req, res, next) => {
+	try {
+		// Get params
+		const user = req.jwtDecoded
+		const cardId = req.params.id
+		const checklistId = req.params.checklistId
+		const title = req.body.title
+
+		// Update checklist
+		const updatedCard = await cardService.updateChecklist(user, cardId, checklistId, title)
+		res.status(StatusCodes.OK).json(updatedCard)
+	} catch (error) { next(error) }
+}
+
 const addChecklistItem = async (req, res, next) => {
 	try {
 		// Get params
@@ -188,6 +202,7 @@ export const cardController = {
 	update,
 	deleteItem,
 	createChecklist,
+	updateChecklist,
 	deleteChecklist,
 	addChecklistItem,
 	setChecklistItemCompleted,

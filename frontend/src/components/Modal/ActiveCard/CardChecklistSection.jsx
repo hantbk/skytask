@@ -7,7 +7,8 @@ import {
     addChecklistItemAPI,
     setChecklistItemCompletedAPI,
     setChecklistItemTextAPI,
-    deleteChecklistItemAPI
+    deleteChecklistItemAPI,
+    updateChecklistAPI
 } from '~/apis';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
@@ -215,16 +216,84 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
         [id]: !prev[id],
     }));
 
+    const [isEditing, setIsEditing] = useState(null);  // Null để xác định không có checklist nào đang chỉnh sửa
+    const [newTitles, setNewTitles] = useState([]);     // Mảng lưu trữ các tiêu đề mới của checklist
+
+    useEffect(() => {
+        if (cardChecklistProp) {
+            setNewTitles(cardChecklistProp.map((checklist) => checklist.title));
+        }
+    }, [cardChecklistProp]);
+
+    // Handle the save action for updating the item text
+    const handleSave = async (checklistId, updatedTitle) => {
+        if (!updatedTitle) {
+            toast.error('Title cannot be empty!');
+            return;
+        }
+
+        try {
+            const res = await updateChecklistAPI(cardId, checklistId, { title: updatedTitle });
+
+            handleUpdateCardChecklist(res);
+            setIsEditing(null);
+        } catch (error) {
+            console.error('Failed to update title:', error);
+        }
+    };
+
+    // Handle change for updating the title
+    const handleChange = (index, newValue) => {
+        const updatedTitles = [...newTitles];
+        updatedTitles[index] = newValue;
+        setNewTitles(updatedTitles);
+    };
+
+
     return (
         <Box sx={{ mt: 2 }}>
-            {cardChecklistProp?.map((checklist) => (
+            {cardChecklistProp?.map((checklist, index) => (
                 <Box key={checklist._id} sx={{ mb: 3 }}>
                     {/* Display checklist title with ChecklistIcon */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                         <ChecklistIcon />
-                        <Typography variant="h6" sx={{ flex: 1, fontWeight: 'bold', marginLeft: 1 }}>
-                            {checklist.title}
-                        </Typography>
+                        {isEditing == index ? (
+                            <TextField
+                                value={newTitles[index]}
+                                onChange={(e) => handleChange(index, e.target.value)}
+                                size="small"
+                                variant="outlined"
+                                autoFocus
+                                onBlur={() => handleSave(checklist._id, newTitles[index])}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleSave(checklist._id, newTitles[index]);
+                                    if (e.key === 'Escape') setIsEditing(false);
+                                }}
+                                sx={{
+                                    flex: 1,
+                                    '& input': {
+                                        fontWeight: 'bold',
+                                        fontSize: '1.25rem',
+                                    },
+                                }}
+                            />
+                        ) : (
+                            <Typography
+                                variant="h6"
+                                sx={{ flex: 1, fontWeight: 'bold', marginLeft: 1 }}
+                                onClick={() => {
+                                    setNewTitles((prevTitles) => {
+                                        const updatedTitles = [...prevTitles];
+                                        updatedTitles[index] = checklist.title;
+                                        return updatedTitles;
+                                    });
+                                    setIsEditing(index);  // Đặt index đang chỉnh sửa
+                                }}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {checklist.title}
+                            </Typography>
+                        )}
                         <Button
                             variant="outlined"
                             color="error"
@@ -234,6 +303,7 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
                             Delete
                         </Button>
                     </Box>
+
 
                     {/* Progress bar with completion percentage */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

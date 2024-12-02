@@ -345,14 +345,6 @@ function ActiveCard() {
 
               {/* Checklist Section */}
               <Box sx={{ mb: 3 }}>
-                {/* {activeCard?.checklists && activeCard.checklists.length > 0 && (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <TaskAltOutlinedIcon />
-                  <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>
-                    Checklist
-                  </Typography>
-                </Box>
-              )} */}
                 <CardChecklistSection
                   cardId={activeCard?._id}
                   cardChecklistProp={activeCard?.checklists}

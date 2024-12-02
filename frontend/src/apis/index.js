@@ -78,6 +78,11 @@ export const createChecklistAPI = async (cardId, newChecklistData) => {
   return response.data
 }
 
+export const updateChecklistAPI = async (cardId, checklistId, updatedChecklistData) => {
+  const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/cards/${cardId}/${checklistId}/update-checklist`, updatedChecklistData)
+  return response.data
+}
+
 export const addChecklistItemAPI = async (cardId, checklistId, newChecklistItemData) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards/${cardId}/${checklistId}/add-checklist-item`, newChecklistItemData)
   return response.data
@@ -104,6 +109,32 @@ export const deleteChecklistItemAPI = async (cardId, checklistId, checklistItemI
 }
 
 /** Attachment API */
+export const createAttachmentAPI = async (cardId, attachmentData) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards/${cardId}/attachment`, attachmentData);
+  return response.data;
+};
+
+export const updateAttachmentNameAPI = async (cardId, attachmentId, newName) => {
+  const response = await authorizedAxiosInstance.put(
+    `${API_ROOT}/v1/cards/${cardId}/${attachmentId}/update-name`,
+    { name: newName }
+  );
+  return response.data;
+};
+
+export const updateAttachmentLinkAPI = async (cardId, attachmentId, newLink) => {
+  const response = await authorizedAxiosInstance.put(
+    `${API_ROOT}/v1/cards/${cardId}/${attachmentId}/update-link`,
+    { link: newLink }
+  );
+  return response.data;
+};
+
+export const deleteAttachmentAPI = async (cardId, attachmentId) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/cards/${cardId}/${attachmentId}/delete-attachment`);
+  return response.data;
+};
+
 /** Datetime API */
 
 /** Users */

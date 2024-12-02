@@ -142,6 +142,37 @@ const addChecklistItem = async (user, cardId, checklistId, text) => {
   }
 };
 
+const updateChecklist = async (user, cardId, checklistId, title) => {
+  try {
+    // Convert the IDs to ObjectId instances
+    const cardIdObj = new ObjectId(cardId);
+    const checklistIdObj = new ObjectId(checklistId);
+    const userIdObj = new ObjectId(user._id);
+
+    // Get the card to ensure it's valid and retrieve related data (e.g., columnId, boardId)
+    const card = await cardModel.findOneById(cardIdObj);
+    if (!card) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Card not found!');
+    }
+    const columnIdObj = new ObjectId(card.columnId);
+    const boardIdObj = new ObjectId(card.boardId);
+
+    // Check user permissions to modify the checklist item
+    const isOwnerValid = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+    if (!isOwnerValid) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to update checklist item!');
+    }
+
+    // Update the checklist item
+    const updatedCard = await cardModel.updateChecklist(cardIdObj, checklistIdObj, title);
+
+    return updatedCard;
+
+  } catch (error) {
+    throw error;
+  }
+};
+
 const deleteChecklist = async (user, cardId, checklistId) => {
   try {
     // Chuyển đổi cardId và checklistId sang ObjectId
@@ -405,6 +436,7 @@ export const cardService = {
   update,
   deleteItem,
   createChecklist,
+  updateChecklist,
   deleteChecklist,
   addChecklistItem,
   setChecklistItemCompleted,
