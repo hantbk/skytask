@@ -39,6 +39,8 @@ function CardUserGroup({ cardMemberIds = [], onUpdateCardMembers }) {
       action: cardMemberIds.includes(user._id) ? CARD_MEMBER_ACTIONS.REMOVE : CARD_MEMBER_ACTIONS.ADD
     }
 
+    // console.log('incomingMemberInfo', incomingMemberInfo)
+
     onUpdateCardMembers(incomingMemberInfo)
   }
 
