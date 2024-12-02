@@ -7,7 +7,7 @@ import { API_ROOT } from '~/utils/constants'
  * Giải pháp: Sử dụng Interceptors
 */
 
-// Board API
+/** Board API */
 export const fetchBoardsAPI = async (searchPath) => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/boards${searchPath}`)
   return response.data
@@ -41,7 +41,7 @@ export const moveCardToDifferentColumnAPI = async (updateData) => {
   return response.data
 }
 
-// Column API
+/** Column API */
 export const createNewColumnAPI = async (newColumnData) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/columns`, newColumnData)
   return response.data
@@ -56,7 +56,7 @@ export const deleteColumnDetailsAPI = async (columnId) => {
   return response.data
 }
 
-// Card API
+/** Card API */ 
 export const createNewCardAPI = async (newCardData) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards`, newCardData)
   return response.data
@@ -71,6 +71,40 @@ export const deleteCardDetailsAPI = async (cardId) => {
   const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/cards/${cardId}`)
   return response.data
 }
+
+/** Checklist API  */
+export const createChecklistAPI = async (cardId, newChecklistData) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards/${cardId}/create-checklist`, newChecklistData)
+  return response.data
+}
+
+export const addChecklistItemAPI = async (cardId, checklistId, newChecklistItemData) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards/${cardId}/${checklistId}`, newChecklistItemData)
+  return response.data
+}
+
+export const deleteChecklistAPI = async (cardId, checklistId) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/cards/${cardId}/${checklistId}`)
+  return response.data
+}
+
+export const setChecklistItemCompletedAPI = async (cardId, checklistId, checklistItemId, completed) => {
+  const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/cards/${cardId}/${checklistId}/${checklistItemId}/completed`, { completed })
+  return response.data
+}
+
+export const setChecklistItemTextAPI = async (cardId, checklistId, checklistItemId, text) => {
+  const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/cards/${cardId}/${checklistId}/${checklistItemId}/text`, { text })
+  return response.data
+}
+
+export const deleteChecklistItemAPI = async (cardId, checklistId, checklistItemId) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/cards/${cardId}/${checklistId}/${checklistItemId}`)
+  return response.data
+}
+
+/** Attachment API */
+/** Datetime API */
 
 /** Users */
 export const registerUserAPI = async (data) => {

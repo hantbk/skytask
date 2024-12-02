@@ -8,9 +8,9 @@ import Stack from '@mui/material/Stack'
 import Divider from '@mui/material/Divider'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined'
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
-import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined'
 import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined'
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined'
+import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined'
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
 import AutoFixHighOutlinedIcon from '@mui/icons-material/AutoFixHighOutlined'
 import AspectRatioOutlinedIcon from '@mui/icons-material/AspectRatioOutlined'
@@ -44,12 +44,17 @@ import {
   deleteCardInBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { selectCurrentUser } from '~/redux/user/userSlice'
+import { selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { CARD_MEMBER_ACTIONS } from '~/utils/constants'
 import { useConfirm } from 'material-ui-confirm'
+import ChecklistModal from './ChecklistModal'
+import CardChecklistSection from './CardChecklistSection'
+
 import LabelPopover from './LabelPopover'
+import CardLabelSection from './CardLabelSection'
+
 import { styled } from '@mui/material/styles'
 import { Popover } from '@mui/material'
-import CardLabelSection from './CardLabelSection'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -78,6 +83,7 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 function ActiveCard() {
   const dispatch = useDispatch()
   const activeCard = useSelector(selectCurrentActiveCard)
+  const activeBoard = useSelector(selectCurrentActiveBoard)
   const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
   const currentUser = useSelector(selectCurrentUser)
 
@@ -85,6 +91,12 @@ function ActiveCard() {
     // setIsOpen(false)
     dispatch(clearAndHideCurrentActiveCard())
   }
+
+  // Get the title of the column from activeBoard.columns
+  const getColumnTitle = (columnId) => {
+    const column = activeBoard.columns.find(col => col._id === columnId);
+    return column ? column.title : 'Unknown List';  // Default to 'Unknown List' if not found
+  };
 
   const confirmDeleteCard = useConfirm()
   const handleDeleteCard = () => {
@@ -106,7 +118,7 @@ function ActiveCard() {
           toast.success('Card deleted successfully!')
         })
       })
-      .catch(() => {})
+      .catch(() => { })
   }
 
   // Func dùng chung cho các hành động cập nhật dữ liệu của Card
@@ -159,12 +171,29 @@ function ActiveCard() {
     callApiUpdateCard({ incomingMemberInfo })
   }
 
+
+  const onChecklistCreated = (response) => {
+
+    const updatedCard = {
+      ...activeCard,
+      checklists: response.checklists
+    }
+
+    dispatch(updateCurrentActiveCard(updatedCard))
+  }
+
+  const onUpdateCardChecklist = (updatedChecklists) => {
+
+    dispatch(updateCurrentActiveCard(updatedChecklists))
+  }
+ 
   const [anchorPopoverElement, setAnchorPopoverElement] = useState(null)
   const isOpenPopover = Boolean(anchorPopoverElement)
   const popoverId = isOpenPopover ? 'labels-popover' : undefined
   const handleTogglePopover = (event) => {
     if (!anchorPopoverElement) setAnchorPopoverElement(event.currentTarget)
     else setAnchorPopoverElement(null)
+
   }
 
   return (
@@ -205,6 +234,7 @@ function ActiveCard() {
               onClick={handleCloseModal}
             />
           </Box>
+
           {activeCard?.cover && (
             <Box sx={{ mb: 4 }}>
               <img
@@ -216,94 +246,137 @@ function ActiveCard() {
                 }}
                 src={activeCard?.cover}
                 alt="card-cover"
+
               />
             </Box>
-          )}
+        )}
 
-          <Box
-            sx={{
-              mb: 1,
-              mt: -3,
-              pr: 2.5,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1
-            }}
-          >
-            <CreditCardIcon />
+        <Box
+          sx={{
+            mb: 1,
+            mt: -3,
+            pr: 2.5,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <CreditCardIcon />
 
-            {/* Feature 01: Xử lý tiêu đề của Card */}
-            <ToggleFocusInput
-              inputFontSize="22px"
-              value={activeCard?.title}
-              onChangedValue={onUpdateCardTitle}
-            />
+          {/* Feature 01: Xử lý tiêu đề của Card */}
+          <ToggleFocusInput
+            inputFontSize="22px"
+            value={activeCard?.title}
+            onChangedValue={onUpdateCardTitle}
+          />
+        </Box>
+
+        {/* Display list name based on columnId */}
+        {activeCard?.columnId && (
+          <Box sx={{ mt: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ display: 'inline' }}>
+              in list{' '}
+              <Box
+                component="span"
+                sx={{
+                  fontWeight: 'bold',           // Makes the column title bold
+                  fontSize: '16px',             // Increases the font size slightly
+                  color: 'primary.main',        // Highlights the column title with the primary color
+                  backgroundColor: 'rgba(0, 0, 0, 0.05)',  // Adds subtle background highlight
+                  padding: '4px 8px',           // Adds padding inside the rectangle
+                  borderRadius: '4px',          // Rounds the background corners
+                  display: 'inline-block',      // Keeps it inline but allows block-like styling
+                  marginBottom: '24px',          // Adds space below the box
+                  border: '1px solid #ccc',     // Adds a border to form the rectangle
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                {getColumnTitle(activeCard.columnId)}
+              </Box>
+            </Typography>
           </Box>
+        )}
 
-          <Grid container spacing={2} sx={{ mb: 3 }}>
-            {/* Left side */}
-            <Grid xs={12} sm={9}>
-              <Box sx={{ mb: 3 }}>
-                <Typography
-                  sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}
-                >
-                  Labels
-                </Typography>
-                <CardLabelSection
-                  popoverId={popoverId}
-                  handleTogglePopover={handleTogglePopover}
-                />
-              </Box>
-              <Box sx={{ mb: 3 }}>
-                <Typography
-                  sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}
-                >
+        <Grid container spacing={2} sx={{ mb: 3 }}>
+          {/* Left side */}
+          <Grid xs={12} sm={9}>
+             <Box sx={{ mb: 3 }}>
+              <Typography
+                sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}
+              >
+                Labels
+              </Typography>
+              <CardLabelSection
+                popoverId={popoverId}
+                handleTogglePopover={handleTogglePopover}
+              />
+            </Box>
+            <Box sx={{ mb: 3 }}>
+              <Typography
+                sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}
+              >
                 Members
-                </Typography>
+              </Typography>
 
-                {/* Feature 02: Xử lý các thành viên của Card */}
-                <CardUserGroup
-                  cardMemberIds={activeCard?.memberIds}
-                  onUpdateCardMembers={onUpdateCardMembers}
-                />
-              </Box>
+              <CardUserGroup
+                cardMemberIds={activeCard?.memberIds}
+                onUpdateCardMembers={onUpdateCardMembers}
+              />
+            </Box>
 
-              <Box sx={{ mb: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <SubjectRoundedIcon />
-                  <Typography
-                    variant="span"
-                    sx={{ fontWeight: '600', fontSize: '20px' }}
-                  >
+            <Box sx={{ mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <SubjectRoundedIcon />
+                <Typography
+                  variant="span"
+                  sx={{ fontWeight: '600', fontSize: '20px' }}
+                >
                   Description
-                  </Typography>
-                </Box>
-
-                {/* Feature 03: Xử lý mô tả của Card */}
-                <CardDescriptionMdEditor
-                  cardDescriptionProp={activeCard?.description}
-                  handleUpdateCardDescription={onUpdateCardDescription}
-                />
+                </Typography>
               </Box>
+              
+              <CardDescriptionMdEditor
+                cardDescriptionProp={activeCard?.description}
+                handleUpdateCardDescription={onUpdateCardDescription}
+              />
+            </Box>
 
-              <Box sx={{ mb: 3 }}>
+            {/* Checklist Section */}
+            <Box sx={{ mb: 3 }}>
+              {/* {activeCard?.checklists && activeCard.checklists.length > 0 && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <DvrOutlinedIcon />
-                  <Typography
-                    variant="span"
-                    sx={{ fontWeight: '600', fontSize: '20px' }}
-                  >
-                  Activity
+                  <TaskAltOutlinedIcon />
+                  <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>
+                    Checklist
                   </Typography>
                 </Box>
+              )} */}
+              <CardChecklistSection
+                cardId={activeCard?._id}
+                cardChecklistProp={activeCard?.checklists}
+                handleUpdateCardChecklist={onUpdateCardChecklist}
+              />
+            </Box>
 
-                {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
-                <CardActivitySection
-                  cardComments={activeCard?.comments}
-                  onAddCardComment={onAddCardComment}
-                />
+
+            {/* Activity Section */}
+            <Box sx={{ mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <DvrOutlinedIcon />
+                <Typography
+                  variant="span"
+                  sx={{ fontWeight: '600', fontSize: '20px' }}
+                >
+                  Activity
+                </Typography>
               </Box>
-            </Grid>
+
+              <CardActivitySection
+                cardComments={activeCard?.comments}
+                onAddCardComment={onAddCardComment}
+              />
+            </Box>
+          </Grid>
 
             {/* Right side */}
             <Grid xs={12} sm={3}>
@@ -344,12 +417,14 @@ function ActiveCard() {
                 </SidebarItem>
                 <SidebarItem onClick={handleTogglePopover}>
                   <LocalOfferOutlinedIcon fontSize="small" />
-                Labels
+                   Labels
                 </SidebarItem>
-                <SidebarItem>
-                  <TaskAltOutlinedIcon fontSize="small" />
-                Checklist
-                </SidebarItem>
+
+                <ChecklistModal
+                  cardId={activeCard?._id}
+                  onChecklistCreated={onChecklistCreated}
+                />
+                  
                 <SidebarItem>
                   <WatchLaterOutlinedIcon fontSize="small" />
                 Dates
