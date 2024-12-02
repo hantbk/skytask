@@ -2,21 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Box, Checkbox, Typography, IconButton, LinearProgress, Divider, Button, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ChecklistIcon from '@mui/icons-material/Checklist';
-import { deleteChecklistAPI, addChecklistItemAPI } from '~/apis'; // Make sure the path to API is correct
+import { deleteChecklistAPI, addChecklistItemAPI, setChecklistItemCompletedAPI, setChecklistItemTextAPI } from '~/apis';
 import { toast } from 'react-toastify';
+import AddIcon from '@mui/icons-material/Add';
 
-// Component to render each checklist item
-const ChecklistItem = ({ checklist, handleUpdate, handleDelete }) => {
+const ChecklistItem = ({ item, handleUpdate, handleDelete }) => {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <Checkbox
-                checked={checklist.completed}
-                onChange={() => handleUpdate(checklist._id)}
+                checked={item.completed}
+                onChange={handleUpdate}
             />
             <Typography variant="body2" sx={{ flex: 1 }}>
-                {checklist.title}
+                {item.text}
             </Typography>
-            <IconButton onClick={() => handleDelete(checklist._id)} size="small">
+            <IconButton onClick={handleDelete} size="small">
                 <DeleteIcon />
             </IconButton>
         </Box>
@@ -26,46 +26,43 @@ const ChecklistItem = ({ checklist, handleUpdate, handleDelete }) => {
 // Calculate the completion percentage for each checklist
 const getCompletionPercentage = (items) => {
     if (!items || items.length === 0) return 0;
-    const completedItems = items.filter(item => item.completed).length;
+    const completedItems = items.filter(item => item.completed !== undefined ? item.completed : false).length;
     return (completedItems / items.length) * 100;
 };
 
-// Main component for displaying the checklist section
 const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardChecklist }) => {
 
-    // State to store the new item title
-    const [newItemText, setNewItemText] = useState('');
+    const [loading, setLoading] = useState({}); // Track loading state for each checklist
+    const [openChecklistForm, setOpenChecklistForm] = useState({});
+    const [newItemText, setNewItemText] = useState({});
 
     // Update checklist item completion status
-    const onUpdate = (checklistId, itemId) => {
-        const updatedChecklists = cardChecklistProp.map((checklist) =>
-            checklist._id === checklistId
-                ? {
-                    ...checklist,
-                    items: checklist.items.map((item) =>
-                        item._id === itemId ? { ...item, completed: !item.completed } : item
-                    ),
-                }
-                : checklist
-        );
-        handleUpdateCardChecklist(updatedChecklists);
+    const onSetChecklistItemCompleted = async (checklistId, itemId) => {
+        try {
+            // Toggle the completion status
+            const updatedCompletionStatus = !cardChecklistProp
+                .find(checklist => checklist._id === checklistId)
+                .items.find(item => item._id === itemId).completed;
+
+            // Call the API to update the completion status
+            const response = await setChecklistItemCompletedAPI(cardId, checklistId, itemId, updatedCompletionStatus);
+
+            // Call the handleUpdateCardChecklist to update the parent component with the new checklists
+            handleUpdateCardChecklist(response);
+            toast.success('Checklist item updated successfully');
+        } catch (error) {
+            toast.error('Failed to update checklist item');
+        }
     };
+
 
     // Delete checklist
     const onDelete = async (checklistId) => {
         try {
-            // Call API to delete the checklist
             const response = await deleteChecklistAPI(cardId, checklistId);
-
-            console.log(response);
-
             if (response) {
-                // Remove the checklist from the UI after successful deletion
-                const updatedChecklists = cardChecklistProp.filter(
-                    (checklist) => checklist._id !== checklistId
-                );
+                const updatedChecklists = cardChecklistProp.filter((checklist) => checklist._id !== checklistId);
                 handleUpdateCardChecklist(updatedChecklists);
-                // Optionally show a success message
                 toast.success('Checklist deleted successfully');
             }
         } catch (error) {
@@ -73,44 +70,45 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
         }
     };
 
-    const onAddItem = async (checklistId) => {
-
-        console.log('Adding item:', newItemText);
-        console.log('Checklist ID:', checklistId);
-        console.log('Card ID:', cardId);
-
-        if (newItemText.trim() === '') {
+    // Add item to checklist
+    const onAddItem = async (checklistId, text) => {
+        if (text.trim() === '') {
             toast.error('Item title cannot be empty');
             return;
         }
 
-        try {
-            // Prepare the data to be sent to the API
-            const newChecklistItemData = { text: newItemText };
+        setLoading((prev) => ({ ...prev, [checklistId]: true }));
 
-            // Call the API to add the new checklist item
+        try {
+            const newChecklistItemData = { text: text };
             const response = await addChecklistItemAPI(cardId, checklistId, newChecklistItemData);
 
-            console.log('Response:', response);
-
-            if (response) {
-                // Add the new item to the respective checklist in the UI
+            if (response._id) {
                 const updatedChecklists = cardChecklistProp.map((checklist) =>
                     checklist._id === checklistId
-                        ? { ...checklist, items: [...checklist.items, response] }
+                        ? { ...checklist, items: [...checklist.items, response.data] }
                         : checklist
                 );
-                handleUpdateCardChecklist(updatedChecklists);
 
-                // Clear the input field and show a success message
-                setNewItemTitle('');
+                handleUpdateCardChecklist(response);
                 toast.success('Item added successfully');
+
+                // Close the form and reset the input field
+                toggleOpenChecklistForm(checklistId);
+
+                setNewItemText((prev) => ({ ...prev, [checklistId]: '' }));
             }
         } catch (error) {
             toast.error('Failed to add item');
+        } finally {
+            setLoading((prev) => ({ ...prev, [checklistId]: false }));
         }
     };
 
+    const toggleOpenChecklistForm = (id) => setOpenChecklistForm((prev) => ({
+        ...prev,
+        [id]: !prev[id],
+    }));
 
     return (
         <Box sx={{ mt: 2 }}>
@@ -122,7 +120,6 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
                         <Typography variant="h6" sx={{ flex: 1, fontWeight: 'bold' }}>
                             {checklist.title}
                         </Typography>
-                        {/* Delete button for the checklist */}
                         <Button
                             variant="outlined"
                             color="error"
@@ -135,20 +132,17 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
 
                     {/* Progress bar with completion percentage */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        {/* Percentage Text */}
                         <Typography
                             variant="body2"
-                            sx={{ fontWeight: '600', width: 'auto', flexShrink: 0 }} // Make sure the percentage text doesn't shrink
+                            sx={{ fontWeight: '600', width: 'auto', flexShrink: 0 }}
                         >
                             {`${getCompletionPercentage(checklist.items).toFixed(0)}%`}
                         </Typography>
-
-                        {/* Progress Bar */}
                         <LinearProgress
                             variant="determinate"
                             value={getCompletionPercentage(checklist.items)}
                             sx={{
-                                width: '100%',  // Reduced width to give more space to percentage
+                                width: '100%',
                                 height: 6,
                                 borderRadius: 5,
                                 marginBottom: 1,
@@ -160,31 +154,95 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
                     {checklist.items?.map((item) => (
                         <ChecklistItem
                             key={item._id}
-                            checklist={item}
-                            handleUpdate={() => onUpdate(checklist._id, item._id)}
+                            item={item}
+                            handleUpdate={() => onSetChecklistItemCompleted(checklist._id, item._id)}
                             handleDelete={() => onDelete(item._id)}
                         />
                     ))}
 
                     {/* Add Item Input Field */}
-                    <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-                        <TextField
-                            variant="outlined"
-                            fullWidth
-                            value={newItemText}
-                            onChange={(e) => setNewItemText(e.target.value)}
-                            placeholder="Add new item"
-                        />
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => onAddItem(checklist._id)}
-                        >
-                            Add
-                        </Button>
+                    <Box sx={{ mt: 2 }}>
+                        {!openChecklistForm[checklist._id] ? (
+                            <Box
+                                sx={{
+                                    height: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <Button
+                                    startIcon={<AddIcon />}
+                                    onClick={() => toggleOpenChecklistForm(checklist._id)}
+                                >
+                                    Add an item
+                                </Button>
+                            </Box>
+                        ) : (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                <TextField
+                                    label="Add an item..."
+                                    type="text"
+                                    size="small"
+                                    variant="outlined"
+                                    autoFocus
+                                    value={newItemText[checklist._id] || ''}
+                                    onChange={(e) =>
+                                        setNewItemText((prev) => ({
+                                            ...prev,
+                                            [checklist._id]: e.target.value,
+                                        }))
+                                    }
+                                    sx={{
+                                        '& label': { color: 'text.primary' },
+                                        '& input': {
+                                            color: (theme) => theme.palette.primary.main,
+                                            bgcolor: (theme) =>
+                                                theme.palette.mode === 'dark' ? '#333643' : 'white',
+                                        },
+                                        '& .MuiOutlinedInput-root': {
+                                            '& fieldset': {
+                                                borderColor: (theme) => theme.palette.primary.main,
+                                            },
+                                        },
+                                    }}
+                                />
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 1,
+                                    }}
+                                >
+                                    <Button
+                                        onClick={() => onAddItem(checklist._id, newItemText[checklist._id])}
+                                        variant="contained"
+                                        color="success"
+                                        size="small"
+                                        disabled={loading[checklist._id]}
+                                        sx={{
+                                            boxShadow: 'none',
+                                            border: '0.5px solid',
+                                            borderColor: (theme) => theme.palette.success.main,
+                                            '&:hover': {
+                                                bgcolor: (theme) => theme.palette.success.main,
+                                            },
+                                        }}
+                                    >
+                                        {loading[checklist._id] ? 'Adding...' : 'Add'}
+                                    </Button>
+                                    <Button
+                                        onClick={() => toggleOpenChecklistForm(checklist._id)}
+                                        color="error"
+                                        size="small"
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Box>
+                            </Box>
+                        )}
                     </Box>
 
-                    {/* Divider between checklists */}
                     <Divider sx={{ my: 2 }} />
                 </Box>
             ))}

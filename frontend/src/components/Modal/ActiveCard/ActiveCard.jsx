@@ -165,26 +165,20 @@ function ActiveCard() {
     callApiUpdateCard({ incomingMemberInfo })
   }
 
-  const onChecklistCreated = (updatedChecklists) => {
+  const onChecklistCreated = (response) => {
+
     const updatedCard = {
       ...activeCard,
-      checklists: updatedChecklists,
+      checklists: response.checklists
     }
 
-    console.log('updatedCard', updatedCard)
-
-    const res = callApiUpdateCard(updatedCard)
-
-    console.log('res', res)
+    dispatch(updateCurrentActiveCard(updatedCard))
   }
 
-  // const onUpdateCardChecklist = (updatedChecklists) => {
-  //   const updatedCard = {
-  //     ...activeCard,
-  //     checklists: updatedChecklists,
-  //   }
-  //   callApiUpdateCard(updatedCard)
-  // }
+  const onUpdateCardChecklist = (updatedChecklists) => {
+
+    dispatch(updateCurrentActiveCard(updatedChecklists))
+  }
 
   return (
     <Modal
@@ -327,11 +321,11 @@ function ActiveCard() {
                   </Typography>
                 </Box>
               )}
-              {/* <CardChecklistSection
+              <CardChecklistSection
                 cardId={activeCard?._id}
                 cardChecklistProp={activeCard?.checklists}
                 handleUpdateCardChecklist={onUpdateCardChecklist}
-              /> */}
+              />
             </Box>
 
 

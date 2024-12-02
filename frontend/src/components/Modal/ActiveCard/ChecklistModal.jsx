@@ -66,13 +66,7 @@ const ChecklistModal = ({ cardId, onChecklistCreated }) => {
         try {
             const response = await createChecklistAPI(cardId, { title });
 
-            // Extract the checklists array from the response
-            const updatedChecklists = response.checklists;
-
-            console.log('Updated checklists:', updatedChecklists);
-
-            // Pass the updated checklists array to onChecklistCreated
-            onChecklistCreated(updatedChecklists);
+            onChecklistCreated(response);
             toast.success('Checklist created successfully!');
             handleClose();
         } catch (error) {
