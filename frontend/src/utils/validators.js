@@ -6,7 +6,8 @@ export const PASSWORD_RULE = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d\W]{8,256}$/
 export const PASSWORD_RULE_MESSAGE = 'Password must include at least 1 letter, a number, and at least 8 character.'
 
 // Liên quan đến Validate File
-export const LIMIT_COMMON_FILE_SIZE = 10485760 // byte = 10MB
+// export const LIMIT_COMMON_FILE_SIZE = 10485760 // byte = 10MB
+export const LIMIT_COMMON_FILE_SIZE = 5242880 // byte = 5MB
 export const ALLOW_COMMON_FILE_TYPES = ['image/jpg', 'image/jpeg', 'image/png']
 export const singleFileValidator = (file) => {
   if (!file || !file.name || !file.size || !file.type) {
