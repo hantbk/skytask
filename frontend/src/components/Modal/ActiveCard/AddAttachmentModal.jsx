@@ -146,7 +146,7 @@ const AddAttachmentModal = ({ cardId, attachments, onAddAttachmentCreated }) => 
                         </Button>
                     </Box>
 
-                    <Typography variant="subtitle1" mt={3}>
+                    {/* <Typography variant="subtitle1" mt={3}>
                         Existing Attachments
                     </Typography>
 
@@ -177,7 +177,7 @@ const AddAttachmentModal = ({ cardId, attachments, onAddAttachmentCreated }) => 
                                 />
                             </ListItem>
                         ))}
-                    </List>
+                    </List> */}
                 </Box>
             </Modal>
         </>
