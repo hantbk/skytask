@@ -15,6 +15,7 @@ import { createAttachmentAPI } from '~/apis';
 import { toast } from 'react-toastify';
 import { styled } from '@mui/material/styles';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const SidebarItem = styled(Box)(({ theme }) => ({
@@ -38,7 +39,7 @@ const SidebarItem = styled(Box)(({ theme }) => ({
     }
 }))
 
-const AttachmentModal = ({ cardId, attachments, onAttachmentCreated }) => {
+const AttachmentModal = ({ cardId, attachments, onAttachmentCreated, iconShow, textShow }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [link, setLink] = useState('');
     const [name, setName] = useState('');
@@ -81,11 +82,13 @@ const AttachmentModal = ({ cardId, attachments, onAttachmentCreated }) => {
         }
     };
 
+    const IconComponent = iconShow === 'attach' ? AttachFileOutlinedIcon : AddIcon;
+
     return (
         <>
             <SidebarItem onClick={handleOpen} className="active">
-                <AttachFileOutlinedIcon fontSize="small" />
-                Attachment
+                <IconComponent fontSize="small" />
+                { textShow }
             </SidebarItem>
 
             <Modal

@@ -191,7 +191,7 @@ function ActiveCard() {
 
   const onAttachmentCreated = (updatedAttachments) => {
     // Gọi onUpdateCardAttachments bên trong onAttachmentCreated
-    onUpdateCardAttachments(updatedAttachments);
+    // onUpdateCardAttachments(updatedAttachments);
 
     dispatch(updateCurrentActiveCard(updatedAttachments));
     dispatch(updateCardInBoard(updatedAttachments));
@@ -436,6 +436,8 @@ function ActiveCard() {
                   cardId={activeCard?._id}
                   attachments={activeCard?.attachments || []}
                   onAttachmentCreated={onAttachmentCreated}
+                  iconShow={"attach"}
+                  textShow={"Attach"}
                 />
 
 

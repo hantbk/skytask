@@ -3,7 +3,7 @@ import { Box, Button, IconButton, List, ListItem, ListItemIcon, ListItemText, To
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import { useTheme } from '@mui/material/styles';
 import { deleteAttachmentAPI, updateAttachmentNameAPI, updateAttachmentLinkAPI } from '~/apis'; // Import the delete function
-import AddAttachmentModal from './AddAttachmentModal';
+import AttachmentModal from './AttachmentModal';
 import TextField from '@mui/material/TextField';
 
 const CardAttachmentSection = ({ cardId, cardAttachmentProp, handleUpdateCardAttachments }) => {
@@ -89,7 +89,7 @@ const CardAttachmentSection = ({ cardId, cardAttachmentProp, handleUpdateCardAtt
     };
 
     // Handle attachment creation callback from modal
-    const onAddAttachmentCreated = (newAttachment) => {
+    const onAttachmentCreated = (newAttachment) => {
 
         setAttachments(newAttachment.attachments);
         handleUpdateCardAttachments(newAttachment);
@@ -110,10 +110,12 @@ const CardAttachmentSection = ({ cardId, cardAttachmentProp, handleUpdateCardAtt
 
                 {/* Flex container to align the modal trigger button on the right */}
                 <Box sx={{ ml: 'auto' }}>
-                    <AddAttachmentModal
+                    <AttachmentModal
                         cardId={cardId}
                         attachments={cardId?.attachments || []}
-                        onAddAttachmentCreated={onAddAttachmentCreated}
+                        onAttachmentCreated={onAttachmentCreated}
+                        iconShow={"add"}
+                        textShow={"Add"}
                     />
                 </Box>
             </Box>
