@@ -7,10 +7,12 @@ import {
     addChecklistItemAPI,
     setChecklistItemCompletedAPI,
     setChecklistItemTextAPI,
-    deleteChecklistItemAPI
+    deleteChecklistItemAPI,
+    updateChecklistAPI
 } from '~/apis';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
+import EditableTitle from './EditableTitle';
 
 const ChecklistItem = ({ item, handleUpdateText, handleUpdate, handleDelete }) => {
     const [isEditing, setIsEditing] = useState(false);
@@ -215,6 +217,28 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
         [id]: !prev[id],
     }));
 
+    // Hàm để cập nhật tiêu đề checklist
+    const onUpdateChecklistTitle = async (checklistId, newTitle) => {
+        try {
+            const response = await updateChecklistAPI(cardId, checklistId, { title: newTitle });
+
+            // Tìm và cập nhật checklist trong danh sách
+            const updatedChecklists = cardChecklistProp.map((checklist) =>
+                checklist._id === checklistId
+                    ? { ...checklist, title: newTitle } // Cập nhật tiêu đề checklist
+                    : checklist
+            );
+
+            // Cập nhật lại danh sách checklist trong component cha
+            handleUpdateCardChecklist({ ...response, checklists: updatedChecklists });
+            // Cập nhật danh sách checklist trong parent component
+            // handleUpdateCardChecklist(response);
+            toast.success('Checklist title updated successfully');
+        } catch (error) {
+            toast.error('Failed to update checklist title');
+        }
+    };
+
     return (
         <Box sx={{ mt: 2 }}>
             {cardChecklistProp?.map((checklist) => (
@@ -222,9 +246,10 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
                     {/* Display checklist title with ChecklistIcon */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                         <ChecklistIcon />
-                        <Typography variant="h6" sx={{ flex: 1, fontWeight: 'bold', marginLeft: 1 }}>
-                            {checklist.title}
-                        </Typography>
+                        <EditableTitle
+                            title={checklist.title}
+                            onUpdateTitle={(newTitle) => onUpdateChecklistTitle(checklist._id, newTitle)}
+                        />
                         <Button
                             variant="outlined"
                             color="error"

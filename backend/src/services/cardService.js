@@ -6,6 +6,7 @@ import { CloudinaryProvider } from '~/providers/CloudinaryProvider'
 import { StatusCodes } from 'http-status-codes'
 import { validateCardOwners } from '~/utils/helperMethods'
 import { ObjectId } from 'mongodb'
+import axios from 'axios'
 
 const createNew = async (reqBody) => {
   try {
@@ -141,6 +142,37 @@ const addChecklistItem = async (user, cardId, checklistId, text) => {
   }
 };
 
+const updateChecklist = async (user, cardId, checklistId, title) => {
+  try {
+    // Convert the IDs to ObjectId instances
+    const cardIdObj = new ObjectId(cardId);
+    const checklistIdObj = new ObjectId(checklistId);
+    const userIdObj = new ObjectId(user._id);
+
+    // Get the card to ensure it's valid and retrieve related data (e.g., columnId, boardId)
+    const card = await cardModel.findOneById(cardIdObj);
+    if (!card) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Card not found!');
+    }
+    const columnIdObj = new ObjectId(card.columnId);
+    const boardIdObj = new ObjectId(card.boardId);
+
+    // Check user permissions to modify the checklist item
+    const isOwnerValid = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+    if (!isOwnerValid) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to update checklist item!');
+    }
+
+    // Update the checklist item
+    const updatedCard = await cardModel.updateChecklist(cardIdObj, checklistIdObj, title);
+
+    return updatedCard;
+
+  } catch (error) {
+    throw error;
+  }
+};
+
 const deleteChecklist = async (user, cardId, checklistId) => {
   try {
     // Chuyển đổi cardId và checklistId sang ObjectId
@@ -267,14 +299,151 @@ const deleteChecklistItem = async (user, cardId, checklistId, checklistItemId) =
   }
 }
 
+const addAttachment = async (user, cardId, attachment) => {
+  try {
+    // Convert the IDs to ObjectId instances
+    const cardIdObj = new ObjectId(cardId);
+
+    // Get the card to ensure it's valid and retrieve related data (e.g., columnId)
+    const card = await cardModel.findOneById(cardIdObj);
+    if (!card) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Card not found!');
+    }
+
+    // Check user permissions to add attachment
+    const columnIdObj = new ObjectId(card.columnId);
+    const boardIdObj = new ObjectId(card.boardId);
+    const isOwnerValid = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+    if (!isOwnerValid) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to add attachment!');
+    }
+
+    // Validate and normalize the link
+    const validLink = new RegExp(/^https?:\/\//).test(attachment.link) ? attachment.link : `http://${attachment.link}`;
+
+    // Check if the link is accessible
+    try {
+      await axios.head(validLink, { timeout: 5000 }); // 5-second timeout for the request
+    } catch (error) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Provided link is not accessible!');
+    }
+
+    // Add attachment
+    const newAttachment = {
+      link: validLink,
+      name: attachment.name,
+    };
+
+    const updatedCard = await cardModel.addAttachment(cardIdObj, newAttachment);
+    return updatedCard;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateAttachmentName = async (user, cardId, attachmentId, name) => {
+  try {
+    // Convert the IDs to ObjectId instances
+    const cardIdObj = new ObjectId(cardId);
+    const attachmentIdObj = new ObjectId(attachmentId);
+    // Get the card to ensure it's valid and retrieve related data (e.g., columnId
+    const card = await cardModel.findOneById(cardIdObj);
+
+    if (!card) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Card not found!');
+    }
+    // Check user permissions to update attachment
+    const columnIdObj = new ObjectId(card.columnId);
+    const boardIdObj = new ObjectId(card.boardId);
+    const isOwnerValid = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+    if (!isOwnerValid) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to update attachment!');
+    }
+    // Update attachment name
+    const updatedAttachment = await cardModel.updateAttachmentName(cardIdObj, attachmentIdObj, name);
+    return updatedAttachment;
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
+const updateAttachmentLink = async (user, cardId, attachmentId, link) => {
+  try {
+    // Convert the IDs to ObjectId instances
+    const cardIdObj = new ObjectId(cardId);
+    const attachmentIdObj = new ObjectId(attachmentId);
+    // Get the card to ensure it's valid and retrieve related data (e.g., columnId
+    const card = await cardModel.findOneById(cardIdObj);
+    if (!card) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Card not found!');
+    }
+    // Check user permissions to update attachment
+    const columnIdObj = new ObjectId(card.columnId);
+    const boardIdObj = new ObjectId(card.boardId);
+    const isOwnerValid = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+    if (!isOwnerValid) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to update attachment!');
+    }
+
+    // Validate and normalize the link
+    const validLink = new RegExp(/^https?:\/\//).test(link) ? link : `http://${link}`;
+
+    // Check if the link is accessible
+    try {
+      await axios.head(validLink, { timeout: 5000 }); // 5-second timeout for the request
+    } catch (error) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Provided link is not accessible!');
+    }
+
+    // Update attachment link
+    const updatedAttachment = await cardModel.updateAttachmentLink(cardIdObj, attachmentIdObj, validLink);
+    return updatedAttachment;
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
+const removeAttachment = async (user, cardId, attachmentId) => {
+  try {
+    // Convert the IDs to ObjectId instances
+    const cardIdObj = new ObjectId(cardId);
+    const attachmentIdObj = new ObjectId(attachmentId);
+    // Get the card to ensure it's valid and retrieve related data (e.g., columnId and boardId)
+    const card = await cardModel.findOneById(cardIdObj);
+    if (!card) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Card not found!');
+    }
+    // Check user permissions to remove attachment
+    const columnIdObj = new ObjectId(card.columnId);
+    const boardIdObj = new ObjectId(card.boardId);
+    const isOwnerValid = await validateCardOwners(cardIdObj, columnIdObj, boardIdObj, user);
+    if (!isOwnerValid) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'You do not have permission to remove attachment!');
+    }
+    // Remove attachment
+    const removedAttachment = await cardModel.removeAttachment(cardIdObj, attachmentIdObj);
+    return removedAttachment;
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
 export const cardService = {
   createNew,
   update,
   deleteItem,
   createChecklist,
+  updateChecklist,
   deleteChecklist,
   addChecklistItem,
   setChecklistItemCompleted,
   setChecklistItemText,
-  deleteChecklistItem
+  deleteChecklistItem,
+  addAttachment,
+  updateAttachmentName,
+  updateAttachmentLink,
+  removeAttachment
 }

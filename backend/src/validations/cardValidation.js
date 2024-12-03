@@ -80,10 +80,26 @@ const addChecklistItem = async (req, res, next) => {
   }
 }
 
+const addAttachment = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    link: Joi.string().required().uri().trim().strict(),
+    name: Joi.string().optional().trim().strict()
+  })
+
+  try {
+    await correctCondition.validateAsync(req.body)
+    next()
+  }
+  catch (error) {
+    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
+  }
+}
+
 export const cardValidation = {
   createNew,
   update,
   deleteItem,
   createChecklist,
-  addChecklistItem
+  addChecklistItem,
+  addAttachment
 }

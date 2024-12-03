@@ -21,8 +21,13 @@ Router.route('/:id')
 Router.route('/:id/create-checklist')
   .post(authMiddleware.isAuthorized, cardValidation.createChecklist, cardController.createChecklist)
 
-Router.route('/:id/:checklistId')
+Router.route('/:id/:checklistId/add-checklist-item')
   .post(authMiddleware.isAuthorized, cardValidation.addChecklistItem, cardController.addChecklistItem)
+
+Router.route('/:id/:checklistId/update-checklist')
+  .put(authMiddleware.isAuthorized, cardController.updateChecklist)
+
+Router.route('/:id/:checklistId/delete-checklist')
   .delete(authMiddleware.isAuthorized, cardController.deleteChecklist)
 
 Router.route('/:id/:checklistId/:checklistItemId/completed')
@@ -31,7 +36,20 @@ Router.route('/:id/:checklistId/:checklistItemId/completed')
 Router.route('/:id/:checklistId/:checklistItemId/text')
   .put(authMiddleware.isAuthorized, cardController.setChecklistItemText)
 
-Router.route('/:id/:checklistId/:checklistItemId')
+Router.route('/:id/:checklistId/:checklistItemId/delete-checklist-item')
   .delete(authMiddleware.isAuthorized, cardController.deleteChecklistItem)
+
+Router.route('/:id/attachment')
+  .post(authMiddleware.isAuthorized, cardValidation.addAttachment, cardController.addAttachment)
+
+Router.route('/:id/:attachmentId/update-name')
+  .put(authMiddleware.isAuthorized, cardController.updateAttachmentName)
+// .delete(authMiddleware.isAuthorized, cardController.deleteAttachment)
+
+Router.route('/:id/:attachmentId/update-link')
+  .put(authMiddleware.isAuthorized, cardController.updateAttachmentLink)
+
+Router.route('/:id/:attachmentId/delete-attachment')
+  .delete(authMiddleware.isAuthorized, cardController.removeAttachment)
 
 export const cardRoute = Router
