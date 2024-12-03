@@ -83,7 +83,7 @@ const addChecklistItem = async (req, res, next) => {
 const addAttachment = async (req, res, next) => {
   const correctCondition = Joi.object({
     link: Joi.string().required().uri().trim().strict(),
-    name: Joi.string().optional().trim().strict()
+    name: Joi.string().allow('').optional().trim().strict()
   })
 
   try {
