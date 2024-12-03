@@ -78,6 +78,7 @@ function AutoCompleteSearchBoard({ setIsSearchOpen }) {
   return (
     <Autocomplete
       sx={{ width: 220 }}
+      inputRef={searchRef}
       id="asynchronous-search-board"
       // Cái text này hiện ra khi boards là null hoặc sau khi đã fetch boards nhưng rỗng - không có kết quả
       noOptionsText={!boards ? 'Type to search board...' : 'No board found!'}
@@ -109,7 +110,6 @@ function AutoCompleteSearchBoard({ setIsSearchOpen }) {
           {...params}
           label="Type to search..."
           size="small"
-          inputRef={searchRef}
           InputProps={{
             ...params.InputProps,
             startAdornment: (

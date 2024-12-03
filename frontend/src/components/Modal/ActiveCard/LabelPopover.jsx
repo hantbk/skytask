@@ -182,7 +182,10 @@ const LabelPopover = () => {
         variant="contained"
         fullWidth
         sx={{ mt: 2 }}
-        onClick={() => setViewMode(VIEW_MODE.CREATE_LABEL)}
+        onClick={() => {
+          setViewMode(VIEW_MODE.CREATE_LABEL)
+          setSearchText('')
+        }}
       >
         Add new label
       </Button>

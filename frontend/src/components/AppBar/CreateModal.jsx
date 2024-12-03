@@ -126,7 +126,9 @@ const CreateModal = ({
                 boxShadow: 24,
                 borderRadius: '8px',
                 padding: '20px 30px',
-                backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : 'white'
+                backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : 'white',
+                maxHeight: '100vh',
+                overflowY: 'auto'
             }}>
                 <Box sx={{
                     position: 'absolute',
