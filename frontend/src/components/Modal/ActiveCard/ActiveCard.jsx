@@ -9,8 +9,6 @@ import Divider from '@mui/material/Divider'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined'
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
 import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined'
-import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined'
-import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined'
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
 import AutoFixHighOutlinedIcon from '@mui/icons-material/AutoFixHighOutlined'
 import AspectRatioOutlinedIcon from '@mui/icons-material/AspectRatioOutlined'
@@ -55,6 +53,8 @@ import CardLabelSection from './CardLabelSection'
 
 import { styled } from '@mui/material/styles'
 import { Popover } from '@mui/material'
+import AttachmentModal from './AttachmentModal'
+import CardAttachmentSection from './CardAttachmentSection'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -188,6 +188,21 @@ function ActiveCard() {
     dispatch(updateCurrentActiveCard(updatedChecklists))
     dispatch(updateCardInBoard(updatedChecklists))
   }
+
+  const onAttachmentCreated = (updatedAttachments) => {
+    // Gọi onUpdateCardAttachments bên trong onAttachmentCreated
+    onUpdateCardAttachments(updatedAttachments);
+
+    dispatch(updateCurrentActiveCard(updatedAttachments));
+    dispatch(updateCardInBoard(updatedAttachments));
+  };
+
+  const onUpdateCardAttachments = (updatedAttachments) => {
+
+    dispatch(updateCurrentActiveCard(updatedAttachments));
+    dispatch(updateCardInBoard(updatedAttachments));
+  };
+
 
   const [anchorPopoverElement, setAnchorPopoverElement] = useState(null)
   const isOpenPopover = Boolean(anchorPopoverElement)
@@ -343,6 +358,18 @@ function ActiveCard() {
                 />
               </Box>
 
+              { /* Attachment Section */}
+              <Box sx={{ mb: 3 }}>
+                {/* Render CardAttachmentSection only if there are attachments */}
+                {activeCard?.attachments?.length > 0 && (
+                  <CardAttachmentSection
+                    cardId={activeCard?._id}
+                    cardAttachmentProp={activeCard?.attachments}
+                    handleUpdateCardAttachments={onUpdateCardAttachments}
+                  />
+                )}
+              </Box>
+
               {/* Checklist Section */}
               <Box sx={{ mb: 3 }}>
                 <CardChecklistSection
@@ -405,10 +432,13 @@ function ActiveCard() {
                   <VisuallyHiddenInput type="file" onChange={onUploadCardCover} />
                 </SidebarItem>
 
-                <SidebarItem>
-                  <AttachFileOutlinedIcon fontSize="small" />
-                  Attachment
-                </SidebarItem>
+                <AttachmentModal
+                  cardId={activeCard?._id}
+                  attachments={activeCard?.attachments || []}
+                  onAttachmentCreated={onAttachmentCreated}
+                />
+
+
                 <SidebarItem onClick={handleTogglePopover}>
                   <LocalOfferOutlinedIcon fontSize="small" />
                   Labels

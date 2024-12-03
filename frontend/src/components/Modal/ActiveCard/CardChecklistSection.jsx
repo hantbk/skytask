@@ -153,8 +153,6 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
             // Call the API to delete the checklist item
             const response = await deleteChecklistItemAPI(cardId, checklistId, itemId);
 
-            console.log('response', response);
-
             if (response._id) {
                 // Update the checklist items by removing the deleted item
                 const updatedChecklists = cardChecklistProp.map((checklist) =>
