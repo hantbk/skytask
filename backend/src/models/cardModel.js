@@ -202,19 +202,18 @@ const updateChecklist = async (cardId, checklistId, title) => {
     const cardIdObj = cardId instanceof ObjectId ? cardId : new ObjectId(cardId);
     const checklistIdObj = checklistId instanceof ObjectId ? checklistId : new ObjectId(checklistId);
 
-    const updatedChecklistObj = {
-      title: title,
-    };
     const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
       { _id: cardIdObj, 'checklists._id': checklistIdObj },
-      { $set: { 'checklists.$.title': updatedChecklistObj.title, 'checklists.$.items': updatedChecklistObj.items } },
+      { $set: { 'checklists.$.title': title } },
       { returnDocument: 'after' }
     );
+
     return result;
   } catch (error) {
     throw error;
   }
 };
+
 
 const deleteChecklist = async (cardId, checklistId) => {
   try {

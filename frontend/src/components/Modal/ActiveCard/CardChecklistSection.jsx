@@ -12,6 +12,7 @@ import {
 } from '~/apis';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
+import EditableTitle from './EditableTitle';
 
 const ChecklistItem = ({ item, handleUpdateText, handleUpdate, handleDelete }) => {
     const [isEditing, setIsEditing] = useState(false);
@@ -216,84 +217,39 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
         [id]: !prev[id],
     }));
 
-    const [isEditing, setIsEditing] = useState(null);  // Null để xác định không có checklist nào đang chỉnh sửa
-    const [newTitles, setNewTitles] = useState([]);     // Mảng lưu trữ các tiêu đề mới của checklist
-
-    useEffect(() => {
-        if (cardChecklistProp) {
-            setNewTitles(cardChecklistProp.map((checklist) => checklist.title));
-        }
-    }, [cardChecklistProp]);
-
-    // Handle the save action for updating the item text
-    const handleSave = async (checklistId, updatedTitle) => {
-        if (!updatedTitle) {
-            toast.error('Title cannot be empty!');
-            return;
-        }
-
+    // Hàm để cập nhật tiêu đề checklist
+    const onUpdateChecklistTitle = async (checklistId, newTitle) => {
         try {
-            const res = await updateChecklistAPI(cardId, checklistId, { title: updatedTitle });
+            const response = await updateChecklistAPI(cardId, checklistId, { title: newTitle });
 
-            handleUpdateCardChecklist(res);
-            setIsEditing(null);
+            // Tìm và cập nhật checklist trong danh sách
+            const updatedChecklists = cardChecklistProp.map((checklist) =>
+                checklist._id === checklistId
+                    ? { ...checklist, title: newTitle } // Cập nhật tiêu đề checklist
+                    : checklist
+            );
+
+            // Cập nhật lại danh sách checklist trong component cha
+            handleUpdateCardChecklist({ ...response, checklists: updatedChecklists });
+            // Cập nhật danh sách checklist trong parent component
+            // handleUpdateCardChecklist(response);
+            toast.success('Checklist title updated successfully');
         } catch (error) {
-            console.error('Failed to update title:', error);
+            toast.error('Failed to update checklist title');
         }
     };
-
-    // Handle change for updating the title
-    const handleChange = (index, newValue) => {
-        const updatedTitles = [...newTitles];
-        updatedTitles[index] = newValue;
-        setNewTitles(updatedTitles);
-    };
-
 
     return (
         <Box sx={{ mt: 2 }}>
-            {cardChecklistProp?.map((checklist, index) => (
+            {cardChecklistProp?.map((checklist) => (
                 <Box key={checklist._id} sx={{ mb: 3 }}>
                     {/* Display checklist title with ChecklistIcon */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                         <ChecklistIcon />
-                        {isEditing == index ? (
-                            <TextField
-                                value={newTitles[index]}
-                                onChange={(e) => handleChange(index, e.target.value)}
-                                size="small"
-                                variant="outlined"
-                                autoFocus
-                                onBlur={() => handleSave(checklist._id, newTitles[index])}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') handleSave(checklist._id, newTitles[index]);
-                                    if (e.key === 'Escape') setIsEditing(false);
-                                }}
-                                sx={{
-                                    flex: 1,
-                                    '& input': {
-                                        fontWeight: 'bold',
-                                        fontSize: '1.25rem',
-                                    },
-                                }}
-                            />
-                        ) : (
-                            <Typography
-                                variant="h6"
-                                sx={{ flex: 1, fontWeight: 'bold', marginLeft: 1 }}
-                                onClick={() => {
-                                    setNewTitles((prevTitles) => {
-                                        const updatedTitles = [...prevTitles];
-                                        updatedTitles[index] = checklist.title;
-                                        return updatedTitles;
-                                    });
-                                    setIsEditing(index);  // Đặt index đang chỉnh sửa
-                                }}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                {checklist.title}
-                            </Typography>
-                        )}
+                        <EditableTitle
+                            title={checklist.title}
+                            onUpdateTitle={(newTitle) => onUpdateChecklistTitle(checklist._id, newTitle)}
+                        />
                         <Button
                             variant="outlined"
                             color="error"
@@ -303,7 +259,6 @@ const CardChecklistSection = ({ cardId, cardChecklistProp, handleUpdateCardCheck
                             Delete
                         </Button>
                     </Box>
-
 
                     {/* Progress bar with completion percentage */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
