@@ -8,19 +8,19 @@ import {
   CardContent,
   CardMedia,
   Container
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { ReactComponent as TrelloIcon } from '~/assets/trello.svg';
-import { ReactComponent as HomeIllustration } from '~/assets/homepage/home-illustration.svg';
-import { Link, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '~/redux/user/userSlice';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import GithubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import IconButton from '@mui/material/IconButton';
-import RoomIcon from '@mui/icons-material/Room';
+} from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
+import { ReactComponent as HomeIllustration } from '~/assets/homepage/home-illustration.svg'
+import { Link, Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '~/redux/user/userSlice'
+import FacebookIcon from '@mui/icons-material/Facebook'
+import TwitterIcon from '@mui/icons-material/Twitter'
+import GithubIcon from '@mui/icons-material/GitHub'
+import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import IconButton from '@mui/material/IconButton'
+import RoomIcon from '@mui/icons-material/Room'
 
 function Header({ isDarkMode, theme }) {
   return (
@@ -40,7 +40,7 @@ function Header({ isDarkMode, theme }) {
           ? theme.palette.background.default
           : theme.palette.background.paper,
         borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.2)' : 'none',
-        zIndex: 10,
+        zIndex: 10
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -58,7 +58,7 @@ function Header({ isDarkMode, theme }) {
               color: theme.palette.text.primary,
               '&:hover': {
                 textDecoration: 'underline',
-                color: theme.palette.primary.main,
+                color: theme.palette.primary.main
               },
             }}
           >
@@ -73,8 +73,8 @@ function Header({ isDarkMode, theme }) {
               backgroundColor: theme.palette.success.main,
               color: theme.palette.common.white,
               '&:hover': {
-                backgroundColor: theme.palette.success.dark,
-              },
+                backgroundColor: theme.palette.success.dark
+              }
             }}
           >
             Sign up
@@ -94,7 +94,7 @@ function FeatureCard({ title, description, color, img }) {
           boxShadow: 3,
           transition: 'transform 0.2s',
           ':hover': { transform: 'scale(1.03)' },
-          position: 'relative',
+          position: 'relative'
         }}
       >
         <CardContent sx={{ paddingBottom: '60px', height: '200px' }}>
@@ -110,7 +110,7 @@ function FeatureCard({ title, description, color, img }) {
             height: 50,
             position: 'absolute',
             bottom: 16,
-            right: 16,
+            right: 16
           }}
           image={img}
           alt={`${title} Icon`}
@@ -121,12 +121,12 @@ function FeatureCard({ title, description, color, img }) {
 }
 
 function Welcome() {
-  const theme = useTheme();
-  const isDarkMode = theme.palette.mode === 'dark';
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === 'dark'
 
-  const currentUser = useSelector(selectCurrentUser);
+  const currentUser = useSelector(selectCurrentUser)
   if (currentUser) {
-    return <Navigate to="/" replace={true} />;
+    return <Navigate to="/" replace={true} />
   }
 
   const featureCards = [
@@ -134,25 +134,25 @@ function Welcome() {
       title: 'Supervisor',
       description: 'Monitors activity to identify project roadblocks.',
       color: 'cyan',
-      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-supervisor.svg',
+      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-supervisor.svg'
     },
     {
       title: 'IT Leaders',
       description: 'Secure all leave and accommodation data in one platform, cloud-based.',
       color: 'red',
-      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-team-builder.svg',
+      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-team-builder.svg'
     },
     {
       title: 'Administrators',
       description: 'Automate the handling of daily leave of absence and accommodation tasks.',
       color: 'orange',
-      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-karma.svg',
+      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-karma.svg'
     },
     {
       title: 'HR Leaders',
       description: 'Bring leave of absence and accommodation 100% in-house to own the end-to-end employee experience.',
       color: 'blue',
-      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-calculator.svg',
+      img: 'https://raw.githubusercontent.com/hantbk/taskflow/main/frontend/src/assets/homepage/icon-calculator.svg'
     },
   ];
 
@@ -162,7 +162,7 @@ function Welcome() {
         backgroundImage: `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.paper})`,
         height: '100vh',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column'
       }}
     >
       <Header isDarkMode={isDarkMode} theme={theme} />
@@ -175,7 +175,7 @@ function Welcome() {
           flexDirection: { xs: 'column', md: 'row' },
           textAlign: 'center',
           padding: { xs: '24px', md: '64px' },
-          gap: { xs: 3, md: 5 },
+          gap: { xs: 3, md: 5 }
         }}
       >
         {/* Board */}
