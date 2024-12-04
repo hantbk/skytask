@@ -351,7 +351,7 @@ function Welcome() {
                     textDecoration: 'none',
                   }}
                 >
-                  info@hust.edu.vn
+                  captainnemot1k60@gmail.com
                 </a>
               </Typography>
             </Grid>
@@ -369,8 +369,8 @@ function Welcome() {
                   padding: '10px 0',
                 }}
               >
-                <IconButton
-                  href="https://facebook.com"
+                {/* <IconButton
+                  href="https://facebook.com/hantbka"
                   target="_blank"
                   sx={{
                     color: isDarkMode ? '#e0e0e0' : '#333333',
@@ -378,9 +378,9 @@ function Welcome() {
                   }}
                 >
                   <FacebookIcon />
-                </IconButton>
-                <IconButton
-                  href="https://twitter.com"
+                </IconButton> */}
+                {/* <IconButton
+                  href="https://twitter.com/hantbka"
                   target="_blank"
                   sx={{
                     color: isDarkMode ? '#e0e0e0' : '#333333',
@@ -388,9 +388,9 @@ function Welcome() {
                   }}
                 >
                   <TwitterIcon />
-                </IconButton>
+                </IconButton> */}
                 <IconButton
-                  href="https://linkedin.com"
+                  href="https://linkedin.com/hantbk"
                   target="_blank"
                   sx={{
                     color: isDarkMode ? '#e0e0e0' : '#333333',
@@ -419,7 +419,7 @@ function Welcome() {
                   fontSize: '0.9rem',
                 }}
               >
-                &copy; 2024 TaskFlow. All rights reserved.
+                Copyright &copy; 2024 TaskFlow. All rights reserved.
               </Typography>
             </Grid>
           </Grid>
