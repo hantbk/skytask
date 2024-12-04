@@ -390,7 +390,7 @@ function Welcome() {
                   <TwitterIcon />
                 </IconButton> */}
                 <IconButton
-                  href="https://linkedin.com/hantbk"
+                  href="www.linkedin.com/in/hantbk"
                   target="_blank"
                   sx={{
                     color: isDarkMode ? '#e0e0e0' : '#333333',
