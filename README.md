@@ -1,5 +1,9 @@
 # TaskFlow
 
+![TaskFlow](./docs/demo.gif)
+
+![TaskFlow](./docs/demo1.gif)
+
 ## A popular, simple, and easy-to-use collaboration tool that enables you to organize projects and everything related to them into boards. It is a simple and intuitive tool that helps you manage your projects and tasks more efficiently
 
 ### Features
@@ -68,7 +72,25 @@ Ensure that the environment variables are correctly set in the `.env` file.
 
 3. Open your browser and navigate to `http://localhost` to access the application.
 
-### Screenshots
+### Some screenshot
+
+![login](./docs/1.png)
+
+![register](./docs/2.png)
+
+![home](./docs/3.png)
+
+![setting](./docs/4.png)
+
+![board](./docs/9.png)
+
+![setting](./docs/5.png)
+
+![board](./docs/6.png)
+
+![card](./docs/7.png)
+
+![card](./docs/8.png)
 
 ### ERD Diagram
 
